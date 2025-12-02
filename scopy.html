@@ -43,7 +43,6 @@
         body {
             background-color: #FDFBF7;
             color: #3E2F22;
-            cursor: none; 
             overflow-x: hidden;
         }
 
@@ -53,22 +52,29 @@
         ::-webkit-scrollbar-thumb { background: #E6E0D4; }
         ::-webkit-scrollbar-thumb:hover { background: #BFA15F; }
 
-        /* Custom Cursor */
-        #cursor {
-            position: fixed;
-            top: 0; left: 0;
-            width: 20px; height: 20px;
-            border: 1px solid rgba(62, 47, 34, 0.5);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s ease, width 0.3s, height 0.3s, background-color 0.3s;
+        /* Custom Cursor - Desktop Only */
+        @media (min-width: 1024px) {
+            body { cursor: none; }
+            #cursor {
+                position: fixed;
+                top: 0; left: 0;
+                width: 20px; height: 20px;
+                border: 1px solid rgba(62, 47, 34, 0.5);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+                transition: transform 0.1s ease, width 0.3s, height 0.3s, background-color 0.3s;
+                display: block;
+            }
+            #cursor.hovered {
+                width: 50px; height: 50px;
+                background-color: rgba(62, 47, 34, 0.1);
+                border-color: transparent;
+                transform: translate(-15px, -15px);
+            }
         }
-        #cursor.hovered {
-            width: 50px; height: 50px;
-            background-color: rgba(62, 47, 34, 0.1);
-            border-color: transparent;
-            transform: translate(-15px, -15px);
+        @media (max-width: 1023px) {
+            #cursor { display: none; }
         }
 
         ::selection { background: #BFA15F; color: #FDFBF7; }
@@ -124,13 +130,16 @@
         }
 
         /* Timeline Connector */
-        .timeline-line::before {
-            content: '';
-            position: absolute;
-            top: 0; bottom: 0; left: 50%;
-            width: 1px;
-            background: rgba(62, 47, 34, 0.2);
-            transform: translateX(-50%);
+        .timeline-line { position: relative; }
+        @media (min-width: 768px) {
+            .timeline-line::before {
+                content: '';
+                position: absolute;
+                top: 0; bottom: 0; left: 50%;
+                width: 1px;
+                background: rgba(62, 47, 34, 0.2);
+                transform: translateX(-50%);
+            }
         }
 
         input:-webkit-autofill,
@@ -159,43 +168,53 @@
             <a href="#methodology" class="hover:text-lab-gold transition-colors hover-trigger" data-cursor="hover">Process</a>
             <a href="#contact" class="hover:text-lab-gold transition-colors hover-trigger" data-cursor="hover">Contact</a>
         </div>
-        <button class="md:hidden text-lab-text hover-trigger" data-cursor="hover">
+        <button id="mobile-menu-btn" class="md:hidden text-lab-text hover-trigger" data-cursor="hover">
             <i data-lucide="menu"></i>
         </button>
     </nav>
 
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-lab-bg z-40 flex flex-col items-center justify-center space-y-8 transform translate-x-full transition-transform duration-300 md:hidden">
+        <button id="close-menu-btn" class="absolute top-6 right-6 text-lab-text hover-trigger" data-cursor="hover">
+            <i data-lucide="x"></i>
+        </button>
+        <a href="#about" class="mobile-link font-serif text-3xl text-lab-text hover:text-lab-gold transition-colors">About</a>
+        <a href="#cultures" class="mobile-link font-serif text-3xl text-lab-text hover:text-lab-gold transition-colors">Cultures</a>
+        <a href="#projects" class="mobile-link font-serif text-3xl text-lab-text hover:text-lab-gold transition-colors">Initiatives</a>
+        <a href="#methodology" class="mobile-link font-serif text-3xl text-lab-text hover:text-lab-gold transition-colors">Process</a>
+        <a href="#contact" class="mobile-link font-serif text-3xl text-lab-text hover:text-lab-gold transition-colors">Contact</a>
+    </div>
+
     <!-- Hero Section -->
-    <header class="h-screen flex flex-col justify-center items-center relative px-4 text-lab-text">
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-lab-text/10 rounded-full animate-spin-slow pointer-events-none"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-lab-text/20 rounded-full animate-pulse pointer-events-none"></div>
+    <header class="min-h-screen flex flex-col justify-center items-center relative px-4 text-lab-text py-20">
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 md:w-[600px] md:h-[600px] border border-lab-text/10 rounded-full animate-spin-slow pointer-events-none"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 md:w-[400px] md:h-[400px] border border-lab-text/20 rounded-full animate-pulse pointer-events-none"></div>
         
         <p class="font-sans text-xs tracking-[0.3em] text-lab-gold mb-4 reveal-load hover-trigger" data-cursor="hover">EST. 2022</p>
-        <h1 class="font-serif text-5xl md:text-8xl text-center leading-none mb-6">
+        <h1 class="font-serif text-4xl sm:text-6xl md:text-8xl text-center leading-none mb-6">
             <span class="line-wrapper"><span class="line-inner delay-100">COOKING IS</span></span>
             <span class="line-wrapper"><span class="line-inner delay-200 italic text-lab-text/60">SCIENCE</span></span>
         </h1>
-        <p class="font-sans text-sm md:text-base text-lab-text/70 max-w-lg text-center leading-relaxed mt-4 fade-in-up delay-500">
+        <p class="font-sans text-sm md:text-base text-lab-text/70 max-w-xs md:max-w-lg text-center leading-relaxed mt-4 fade-in-up delay-500">
             Reestablishing that cooking is the Chemistry of Flavours and Aromas. A wonderland of microbes driving metabolism in a fun science approach.
         </p>
 
-        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 fade-in-up delay-700">
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 fade-in-up delay-700 hidden md:block">
             <div class="w-[1px] h-16 bg-gradient-to-b from-transparent via-lab-text/50 to-transparent animate-pulse"></div>
         </div>
     </header>
 
     <!-- About Section -->
-    <section id="about" class="min-h-screen flex items-center justify-center py-20 px-6 relative bg-lab-accent/30">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-6xl w-full items-center">
+    <section id="about" class="min-h-screen flex items-center justify-center py-12 md:py-20 px-6 relative bg-lab-accent/30">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 max-w-6xl w-full items-center">
             <div class="order-2 md:order-1 relative">
                 <div class="grid grid-cols-2 gap-4">
-                    
-                
                     <div class="aspect-square col-span-2 overflow-hidden bg-lab-accent relative group dish-card">
                         <img src="https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&q=80&w=1000" alt="Microscope View" class="object-cover w-full h-full dish-img opacity-90">
                         <div class="absolute inset-0 border border-lab-text/10 pointer-events-none z-10"></div>
                     </div>
                 </div>
-                <div class="absolute -bottom-6 -right-6 font-serif text-8xl text-transparent stroke-text opacity-10 pointer-events-none" style="-webkit-text-stroke: 1px #3E2F22;">01</div>
+                <div class="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 font-serif text-6xl md:text-8xl text-transparent stroke-text opacity-10 pointer-events-none" style="-webkit-text-stroke: 1px #3E2F22;">01</div>
             </div>
             
             <div class="order-1 md:order-2 space-y-8 scroll-trigger text-lab-text">
@@ -222,49 +241,49 @@
     </section>
 
     <!-- NEW SECTION 1: The Culture Archive -->
-    <section id="cultures" class="py-24 px-6 bg-lab-bg relative overflow-hidden">
+    <section id="cultures" class="py-12 md:py-24 px-6 bg-lab-bg relative overflow-hidden">
         <div class="max-w-7xl mx-auto relative z-10">
-            <div class="text-center mb-20 scroll-trigger">
+            <div class="text-center mb-12 md:mb-20 scroll-trigger">
                 <span class="font-sans text-xs tracking-[0.3em] text-lab-gold uppercase">Specimen Collection</span>
-                <h2 class="font-serif text-5xl mt-4 text-lab-text">THE ARCHIVE</h2>
+                <h2 class="font-serif text-4xl md:text-5xl mt-4 text-lab-text">THE ARCHIVE</h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                 <!-- Specimen 1 -->
                 <div class="flex flex-col items-center group scroll-trigger hover-trigger" data-cursor="hover">
-                    <div class="w-64 h-64 rounded-full bg-lab-accent/50 relative mb-8 petri-dish overflow-hidden border border-lab-text/10 shadow-inner flex items-center justify-center">
+                    <div class="w-48 h-48 md:w-64 md:h-64 rounded-full bg-lab-accent/50 relative mb-6 md:mb-8 petri-dish overflow-hidden border border-lab-text/10 shadow-inner flex items-center justify-center">
                         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80&w=1000')] bg-cover bg-center opacity-40 mix-blend-multiply"></div>
-                        <div class="w-48 h-48 bg-white/30 rounded-full blur-2xl animate-pulse-slow"></div>
+                        <div class="w-32 h-32 md:w-48 md:h-48 bg-white/30 rounded-full blur-2xl animate-pulse-slow"></div>
                     </div>
                     <h3 class="font-serif text-2xl text-lab-text">Aspergillus Oryzae</h3>
                     <p class="font-sans text-xs text-lab-text/50 mt-2 tracking-widest uppercase">The Noble Mold</p>
-                    <p class="text-center text-sm text-lab-text/70 mt-4 max-w-xs leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
+                    <p class="text-center text-sm text-lab-text/70 mt-4 max-w-xs leading-relaxed opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-0 md:translate-y-2 group-hover:translate-y-0">
                         Responsible for transforming starches into sugars, the heart of sake, miso, and soy sauce.
                     </p>
                 </div>
 
                 <!-- Specimen 2 -->
                 <div class="flex flex-col items-center group scroll-trigger hover-trigger" data-cursor="hover">
-                    <div class="w-64 h-64 rounded-full bg-lab-accent/50 relative mb-8 petri-dish overflow-hidden border border-lab-text/10 shadow-inner flex items-center justify-center">
-                         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504386106331-3e4e71712b38?auto=format&fit=crop&q=80&w=1000')] bg-cover bg-center opacity-40 mix-blend-multiply"></div>
-                         <div class="w-32 h-32 bg-lab-gold/20 rounded-full blur-xl animate-float"></div>
+                    <div class="w-48 h-48 md:w-64 md:h-64 rounded-full bg-lab-accent/50 relative mb-6 md:mb-8 petri-dish overflow-hidden border border-lab-text/10 shadow-inner flex items-center justify-center">
+                         <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/9/95/Saccharomyces_cerevisiae_SEM.jpg')] bg-cover bg-center opacity-40 mix-blend-multiply"></div>
+                         <div class="w-24 h-24 md:w-32 md:h-32 bg-lab-gold/20 rounded-full blur-xl animate-float"></div>
                     </div>
                     <h3 class="font-serif text-2xl text-lab-text">Saccharomyces</h3>
                     <p class="font-sans text-xs text-lab-text/50 mt-2 tracking-widest uppercase">Sugar Fungus</p>
-                    <p class="text-center text-sm text-lab-text/70 mt-4 max-w-xs leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
+                    <p class="text-center text-sm text-lab-text/70 mt-4 max-w-xs leading-relaxed opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-0 md:translate-y-2 group-hover:translate-y-0">
                         The microscopic engine of fermentation, converting sugars into alcohol and carbon dioxide.
                     </p>
                 </div>
 
                 <!-- Specimen 3 -->
                 <div class="flex flex-col items-center group scroll-trigger hover-trigger" data-cursor="hover">
-                    <div class="w-64 h-64 rounded-full bg-lab-accent/50 relative mb-8 petri-dish overflow-hidden border border-lab-text/10 shadow-inner flex items-center justify-center">
-                         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550989460-0adf9ea622e2?auto=format&fit=crop&q=80&w=1000')] bg-cover bg-center opacity-40 mix-blend-multiply"></div>
+                    <div class="w-48 h-48 md:w-64 md:h-64 rounded-full bg-lab-accent/50 relative mb-6 md:mb-8 petri-dish overflow-hidden border border-lab-text/10 shadow-inner flex items-center justify-center">
+                         <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/c/cf/C0015116-Acetobacter_Aceti_Bacteria.jpg')] bg-cover bg-center opacity-40 mix-blend-multiply"></div>
                          <div class="w-full h-full bg-gradient-to-tr from-transparent to-lab-text/10 opacity-50"></div>
                     </div>
                     <h3 class="font-serif text-2xl text-lab-text">Acetobacter</h3>
                     <p class="font-sans text-xs text-lab-text/50 mt-2 tracking-widest uppercase">The Acidifier</p>
-                    <p class="text-center text-sm text-lab-text/70 mt-4 max-w-xs leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
+                    <p class="text-center text-sm text-lab-text/70 mt-4 max-w-xs leading-relaxed opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-0 md:translate-y-2 group-hover:translate-y-0">
                         Creators of acetic acid, giving vinegar and kombucha their distinctive sharp profile.
                     </p>
                 </div>
@@ -273,18 +292,18 @@
     </section>
 
     <!-- Specialties / Projects Section -->
-    <section id="projects" class="py-24 px-6 bg-lab-accent/20">
+    <section id="projects" class="py-12 md:py-24 px-6 bg-lab-accent/20">
         <div class="max-w-4xl mx-auto">
-            <div class="text-center mb-16 scroll-trigger">
+            <div class="text-center mb-12 md:mb-16 scroll-trigger">
                 <span class="font-sans text-xs tracking-[0.3em] text-lab-gold uppercase">What We Do</span>
-                <h2 class="font-serif text-5xl mt-4 text-lab-text">LAB INITIATIVES</h2>
+                <h2 class="font-serif text-4xl md:text-5xl mt-4 text-lab-text">LAB INITIATIVES</h2>
             </div>
 
-            <div class="space-y-12">
+            <div class="space-y-8 md:space-y-12">
                 <!-- Item 1 -->
                 <div class="group flex flex-col md:flex-row justify-between items-baseline border-b border-lab-text/10 pb-6 hover:border-lab-gold/50 transition-colors cursor-pointer hover-trigger scroll-trigger" data-cursor="hover">
                     <div class="mb-2 md:mb-0">
-                        <h3 class="font-serif text-3xl text-lab-text group-hover:text-lab-gold transition-colors">Recipe R&D</h3>
+                        <h3 class="font-serif text-2xl md:text-3xl text-lab-text group-hover:text-lab-gold transition-colors">Recipe R&D</h3>
                         <p class="font-sans text-xs text-lab-text/50 mt-2 tracking-wide uppercase">Trying and Testing Recipes / Formulation</p>
                     </div>
                     <div class="font-sans text-xs font-light text-lab-text/60 tracking-widest uppercase">Ongoing</div>
@@ -293,7 +312,7 @@
                 <!-- Item 2 -->
                 <div class="group flex flex-col md:flex-row justify-between items-baseline border-b border-lab-text/10 pb-6 hover:border-lab-gold/50 transition-colors cursor-pointer hover-trigger scroll-trigger" data-cursor="hover">
                     <div class="mb-2 md:mb-0">
-                        <h3 class="font-serif text-3xl text-lab-text group-hover:text-lab-gold transition-colors">Inclusive Classroom</h3>
+                        <h3 class="font-serif text-2xl md:text-3xl text-lab-text group-hover:text-lab-gold transition-colors">Inclusive Classroom</h3>
                         <p class="font-sans text-xs text-lab-text/50 mt-2 tracking-wide uppercase">Practical Biology / Chemistry of Cooking</p>
                     </div>
                     <div class="font-sans text-xs font-light text-lab-text/60 tracking-widest uppercase">Education</div>
@@ -302,7 +321,7 @@
                 <!-- Item 3 -->
                 <div class="group flex flex-col md:flex-row justify-between items-baseline border-b border-lab-text/10 pb-6 hover:border-lab-gold/50 transition-colors cursor-pointer hover-trigger scroll-trigger" data-cursor="hover">
                     <div class="mb-2 md:mb-0">
-                        <h3 class="font-serif text-3xl text-lab-text group-hover:text-lab-gold transition-colors">Sustainable Foods</h3>
+                        <h3 class="font-serif text-2xl md:text-3xl text-lab-text group-hover:text-lab-gold transition-colors">Sustainable Foods</h3>
                         <p class="font-sans text-xs text-lab-text/50 mt-2 tracking-wide uppercase">Eco-friendly Production / Manufacturing</p>
                     </div>
                     <div class="font-sans text-xs font-light text-lab-text/60 tracking-widest uppercase">Impact</div>
@@ -311,7 +330,7 @@
                 <!-- Item 4 -->
                 <div class="group flex flex-col md:flex-row justify-between items-baseline border-b border-lab-text/10 pb-6 hover:border-lab-gold/50 transition-colors cursor-pointer hover-trigger scroll-trigger" data-cursor="hover">
                     <div class="mb-2 md:mb-0">
-                        <h3 class="font-serif text-3xl text-lab-text group-hover:text-lab-gold transition-colors">Flavor Chemistry</h3>
+                        <h3 class="font-serif text-2xl md:text-3xl text-lab-text group-hover:text-lab-gold transition-colors">Flavor Chemistry</h3>
                         <p class="font-sans text-xs text-lab-text/50 mt-2 tracking-wide uppercase">Aroma Extraction / Molecular Analysis</p>
                     </div>
                     <div class="font-sans text-xs font-light text-lab-text/60 tracking-widest uppercase">Science</div>
@@ -321,20 +340,20 @@
     </section>
 
     <!-- NEW SECTION 2: Methodology Timeline -->
-    <section id="methodology" class="py-24 px-6 bg-lab-bg relative">
+    <section id="methodology" class="py-12 md:py-24 px-6 bg-lab-bg relative">
         <div class="max-w-5xl mx-auto">
-            <div class="text-center mb-24 scroll-trigger">
+            <div class="text-center mb-12 md:mb-24 scroll-trigger">
                 <span class="font-sans text-xs tracking-[0.3em] text-lab-gold uppercase">The Process</span>
-                <h2 class="font-serif text-5xl mt-4 text-lab-text">SCIENTIFIC METHOD</h2>
+                <h2 class="font-serif text-4xl md:text-5xl mt-4 text-lab-text">SCIENTIFIC METHOD</h2>
             </div>
 
             <div class="relative timeline-line">
                 <!-- Step 1 -->
-                <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 mb-24 items-center group scroll-trigger">
+                <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 mb-12 md:mb-24 items-center group scroll-trigger">
                     <div class="md:text-right">
-                        <h3 class="font-serif text-3xl text-lab-text flex items-center md:justify-end gap-4">
-                            Inquiry & Hypothesis
+                        <h3 class="font-serif text-2xl md:text-3xl text-lab-text flex items-center md:justify-end gap-4">
                             <i data-lucide="brain-circuit" class="w-6 h-6 text-lab-gold md:hidden"></i>
+                            Inquiry & Hypothesis
                         </h3>
                         <p class="font-sans text-sm text-lab-text/60 mt-4 leading-relaxed">
                             It starts with a question. How does the microbial terroir of local grains influence the flavor profile of a miso? We formulate a hypothesis to guide our culinary exploration.
@@ -345,20 +364,20 @@
                             <i data-lucide="brain-circuit" class="w-5 h-5 text-lab-gold"></i>
                         </div>
                     </div>
-                    <div class="md:hidden flex items-center mb-4">
+                    <div class="md:hidden flex items-center mb-4 order-first">
                         <span class="text-lab-gold font-sans text-xs tracking-widest">01. INQUIRY</span>
                     </div>
                 </div>
 
                 <!-- Step 2 -->
-                <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 mb-24 items-center group scroll-trigger">
+                <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 mb-12 md:mb-24 items-center group scroll-trigger">
                     <div class="hidden md:flex justify-center items-center relative order-2 md:order-1">
                         <div class="w-12 h-12 rounded-full bg-lab-bg border border-lab-text flex items-center justify-center group-hover:border-lab-gold group-hover:scale-110 transition-all duration-500 z-10">
                             <i data-lucide="flask-conical" class="w-5 h-5 text-lab-text group-hover:text-lab-gold transition-colors"></i>
                         </div>
                     </div>
                     <div class="order-1 md:order-2">
-                        <h3 class="font-serif text-3xl text-lab-text flex items-center gap-4">
+                        <h3 class="font-serif text-2xl md:text-3xl text-lab-text flex items-center gap-4">
                             <i data-lucide="flask-conical" class="w-6 h-6 text-lab-gold md:hidden"></i>
                             Inoculation & Incubation
                         </h3>
@@ -372,11 +391,11 @@
                 </div>
 
                 <!-- Step 3 -->
-                <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 mb-24 items-center group scroll-trigger">
+                <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 mb-12 md:mb-24 items-center group scroll-trigger">
                     <div class="md:text-right">
-                        <h3 class="font-serif text-3xl text-lab-text flex items-center md:justify-end gap-4">
-                            Metabolic Transformation
+                        <h3 class="font-serif text-2xl md:text-3xl text-lab-text flex items-center md:justify-end gap-4">
                             <i data-lucide="activity" class="w-6 h-6 text-lab-gold md:hidden"></i>
+                            Metabolic Transformation
                         </h3>
                         <p class="font-sans text-sm text-lab-text/60 mt-4 leading-relaxed">
                             The alchemy of time and temperature. Complex starches break down into simple sugars, proteins into amino acids (umami), and sugars into alcohols and acids. We monitor this invisible dance.
@@ -387,20 +406,20 @@
                             <i data-lucide="activity" class="w-5 h-5 text-lab-text group-hover:text-lab-gold transition-colors"></i>
                          </div>
                     </div>
-                    <div class="md:hidden flex items-center mb-4">
+                    <div class="md:hidden flex items-center mb-4 order-first">
                         <span class="text-lab-gold font-sans text-xs tracking-widest">03. METABOLISM</span>
                     </div>
                 </div>
 
                 <!-- Step 4 -->
-                <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center group scroll-trigger">
+                <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 items-center group scroll-trigger">
                     <div class="hidden md:flex justify-center items-center relative order-2 md:order-1">
                          <div class="w-12 h-12 rounded-full bg-lab-bg border border-lab-text flex items-center justify-center group-hover:border-lab-gold group-hover:scale-110 transition-all duration-500 z-10">
                             <i data-lucide="clipboard-check" class="w-5 h-5 text-lab-text group-hover:text-lab-gold transition-colors"></i>
                          </div>
                     </div>
                     <div class="order-1 md:order-2">
-                        <h3 class="font-serif text-3xl text-lab-text flex items-center gap-4">
+                        <h3 class="font-serif text-2xl md:text-3xl text-lab-text flex items-center gap-4">
                             <i data-lucide="clipboard-check" class="w-6 h-6 text-lab-gold md:hidden"></i>
                             Sensory & Chemical Analysis
                         </h3>
@@ -417,22 +436,22 @@
     </section>
 
     <!-- Visual Interlude -->
-    <section class="h-[50vh] relative overflow-hidden flex items-center justify-center">
+    <section class="h-[40vh] md:h-[50vh] relative overflow-hidden flex items-center justify-center">
         <div class="absolute inset-0 bg-fixed bg-center bg-cover opacity-60" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=1000');"></div>
-        <div class="relative z-10 text-center">
-            <h2 class="font-serif text-6xl md:text-8xl italic text-lab-bg drop-shadow-lg">Chemistry of Taste</h2>
+        <div class="relative z-10 text-center px-4">
+            <h2 class="font-serif text-4xl md:text-6xl lg:text-8xl italic text-lab-bg drop-shadow-lg">Chemistry of Taste</h2>
         </div>
     </section>
 
     <!-- NEW SECTION 3: The Classroom -->
-    <section class="py-24 px-6 bg-lab-text text-lab-bg relative overflow-hidden">
+    <section class="py-12 md:py-24 px-6 bg-lab-text text-lab-bg relative overflow-hidden">
         <!-- Decorative Circle -->
-        <div class="absolute -top-20 -right-20 w-96 h-96 border border-lab-gold/20 rounded-full animate-spin-slow pointer-events-none"></div>
+        <div class="absolute -top-20 -right-20 w-64 h-64 md:w-96 md:h-96 border border-lab-gold/20 rounded-full animate-spin-slow pointer-events-none"></div>
         
-        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div class="scroll-trigger">
                  <span class="font-sans text-xs tracking-[0.3em] text-lab-gold uppercase">Knowledge Sharing</span>
-                <h2 class="font-serif text-5xl md:text-6xl mt-6 mb-8 leading-tight">THE INCLUSIVE <br/><span class="italic text-lab-gold">CLASSROOM</span></h2>
+                <h2 class="font-serif text-4xl md:text-5xl lg:text-6xl mt-6 mb-8 leading-tight">THE INCLUSIVE <br/><span class="italic text-lab-gold">CLASSROOM</span></h2>
                 <p class="font-sans text-lab-bg/70 leading-loose mb-8">
                     We believe science belongs in the kitchen. Our workshops demystify the microbial world, offering practical understanding of fermentation biology. Join us to explore the hidden potential of your food.
                 </p>
@@ -441,23 +460,23 @@
                 </a>
             </div>
             
-            <div class="grid grid-cols-2 gap-4 scroll-trigger">
-                <div class="bg-lab-bg/5 p-8 backdrop-blur-sm border border-white/5 hover:border-lab-gold/30 transition-colors">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 scroll-trigger">
+                <div class="bg-lab-bg/5 p-6 md:p-8 backdrop-blur-sm border border-white/5 hover:border-lab-gold/30 transition-colors">
                     <i data-lucide="microscope" class="w-8 h-8 text-lab-gold mb-4"></i>
                     <h4 class="font-serif text-xl mb-2">Biology</h4>
                     <p class="text-xs font-sans text-lab-bg/50">Understanding microbial life cycles.</p>
                 </div>
-                <div class="bg-lab-bg/5 p-8 backdrop-blur-sm border border-white/5 hover:border-lab-gold/30 transition-colors mt-8">
+                <div class="bg-lab-bg/5 p-6 md:p-8 backdrop-blur-sm border border-white/5 hover:border-lab-gold/30 transition-colors mt-4 sm:mt-8">
                     <i data-lucide="flask-conical" class="w-8 h-8 text-lab-gold mb-4"></i>
                     <h4 class="font-serif text-xl mb-2">Chemistry</h4>
                     <p class="text-xs font-sans text-lab-bg/50">PH levels, enzymatic reactions.</p>
                 </div>
-                <div class="bg-lab-bg/5 p-8 backdrop-blur-sm border border-white/5 hover:border-lab-gold/30 transition-colors">
+                <div class="bg-lab-bg/5 p-6 md:p-8 backdrop-blur-sm border border-white/5 hover:border-lab-gold/30 transition-colors">
                     <i data-lucide="chef-hat" class="w-8 h-8 text-lab-gold mb-4"></i>
                     <h4 class="font-serif text-xl mb-2">Culinary</h4>
                     <p class="text-xs font-sans text-lab-bg/50">Applying science to flavor.</p>
                 </div>
-                <div class="bg-lab-bg/5 p-8 backdrop-blur-sm border border-white/5 hover:border-lab-gold/30 transition-colors mt-8">
+                <div class="bg-lab-bg/5 p-6 md:p-8 backdrop-blur-sm border border-white/5 hover:border-lab-gold/30 transition-colors mt-4 sm:mt-8">
                      <i data-lucide="users" class="w-8 h-8 text-lab-gold mb-4"></i>
                     <h4 class="font-serif text-xl mb-2">Community</h4>
                     <p class="text-xs font-sans text-lab-bg/50">Inclusive learning environment.</p>
@@ -467,11 +486,11 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="min-h-screen flex items-center justify-center py-20 px-6 relative bg-lab-accent/20">
-        <div class="max-w-xl w-full relative z-10 bg-lab-bg/90 backdrop-blur-md p-8 md:p-12 border border-lab-text/5 shadow-xl">
-            <div class="text-center mb-10 scroll-trigger">
+    <section id="contact" class="min-h-screen flex items-center justify-center py-12 md:py-20 px-6 relative bg-lab-accent/20">
+        <div class="max-w-xl w-full relative z-10 bg-lab-bg/90 backdrop-blur-md p-6 md:p-12 border border-lab-text/5 shadow-xl">
+            <div class="text-center mb-8 md:mb-10 scroll-trigger">
                 <span class="font-sans text-xs tracking-[0.3em] text-lab-gold uppercase">Bengaluru South, Karnataka</span>
-                <h2 class="font-serif text-4xl mt-3 text-lab-text">CONNECT WITH US</h2>
+                <h2 class="font-serif text-3xl md:text-4xl mt-3 text-lab-text">CONNECT WITH US</h2>
             </div>
             
             <div class="mb-8 text-center text-lab-text/70 font-sans text-sm">
@@ -523,6 +542,24 @@
     </footer>
 
     <script>
+        // --- Mobile Menu Logic ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('translate-x-full');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
+        if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleMenu);
+        if (closeMenuBtn) closeMenuBtn.addEventListener('click', toggleMenu);
+        
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
+
         // --- 1. Custom Cursor Logic ---
         const cursor = document.getElementById('cursor');
         const hoverTriggers = document.querySelectorAll('.hover-trigger');
