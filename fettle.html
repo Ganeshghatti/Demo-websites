@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fettle | Health-Conscious Professional Community</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon / Touch Icon -->
+    <link rel="icon" href="./assets/logo.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="./assets/logo.png" />
+    <meta name="theme-color" content="#024d40">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        // Custom Palette based on Fettle images
+                        primary: {
+                            50: '#f2f9f8',
+                            100: '#e0f0ed',
+                            200: '#c2e1dc',
+                            300: '#95cac2',
+                            400: '#62aaa2',
+                            500: '#3f8d85',
+                            600: '#024d40', // Fettle Deep Green (Main Brand)
+                            700: '#0f5d52',
+                            800: '#114a43',
+                            900: '#01322a', // Darker Green for text
+                        },
+                        secondary: {
+                            400: '#facc15',
+                            500: '#F4C430', // Fettle Mustard/Yellow Accent
+                            600: '#ca8a04',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Utilities for Framer-like interactions */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden; /* Fix horizontal scroll on mobile */
+        }
+
+        /* Reveal Animation Base Styles */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); /* Ease Out Expo feel */
+            will-change: opacity, transform;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Stagger delays */
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* Smooth image hover */
+        .hover-zoom-img {
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .group:hover .hover-zoom-img {
+            transform: scale(1.05);
+        }
+
+        /* Subtle gradient text */
+        .text-gradient {
+            background: linear-gradient(135deg, #024d40 0%, #3f8d85 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Mobile Menu Transition */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+        /* Hero Background Pattern */
+        .bg-pattern {
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-600 antialiased selection:bg-secondary-500 selection:text-primary-900">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="absolute inset-0 bg-white/90 backdrop-blur-md border-b border-slate-100/50 shadow-sm transition-opacity duration-300" id="nav-bg"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+                    <!-- Updated Logo Colors: Yellow Icon, Green Text -->
+                    <img src="./assets/fettle_logo.png" alt="Fettle Logo" class="w-32 h-32 rounded-lg object-contain  flex items-center justify-center" />
+                   
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#mission" class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors">Our Mission</a>
+                    <a href="#solutions" class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors">Solutions</a>
+                    <a href="#community" class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors">Community</a>
+                    <a href="#community" class="px-5 py-2.5 text-sm font-medium text-white bg-primary-900 hover:bg-primary-800 rounded-full transition-all hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 duration-300">Join Us</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-primary-900 focus:outline-none p-2">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Container -->
+        <div id="mobile-menu" class="fixed inset-x-0 top-20 bg-white border-b border-slate-100 p-4 md:hidden transform -translate-y-[150%] opacity-0 z-40 shadow-xl">
+            <div class="flex flex-col space-y-4">
+                <a href="#mission" class="text-base font-medium text-slate-700 hover:text-primary-600 py-2 border-b border-slate-50">Our Mission</a>
+                <a href="#solutions" class="text-base font-medium text-slate-700 hover:text-primary-600 py-2 border-b border-slate-50">Solutions</a>
+                <a href="#community" class="text-base font-medium text-slate-700 hover:text-primary-600 py-2 border-b border-slate-50">Community</a>
+                <a href="#community" class="w-full text-center px-5 py-3 text-base font-medium text-white bg-primary-900 rounded-lg">Join Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-pattern">
+        <!-- Abstract Background Blobs -->
+        <div class="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[800px] h-[800px] bg-primary-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-float pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[600px] h-[600px] bg-secondary-500/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-float pointer-events-none" style="animation-delay: 2s;"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="max-w-4xl mx-auto text-center">
+                <!-- Hero Content -->
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-900 text-xs font-semibold uppercase tracking-wide mb-6 reveal">
+                        <span class="w-2 h-2 rounded-full bg-secondary-500 animate-pulse"></span>
+                        One Step at a Time
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold text-primary-900 leading-[1.1] mb-6 reveal delay-100">
+                        Transforming <br>
+                        <span class="text-gradient">Health & Wellness.</span>
+                    </h1>
+                    <p class="text-lg text-slate-600 mb-8 leading-relaxed max-w-2xl mx-auto reveal delay-200">
+                        We are building a health-conscious professional community. Through awareness and smart solutions, we help you build a better life—one step at a time.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center reveal delay-300">
+                        <!-- Primary Link (Green) -->
+                        <a href="#solutions" class="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-full font-semibold transition-all hover:shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2 group">
+                            Explore Solutions
+                            <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1"></i>
+                        </a>
+                        <!-- Secondary Link -->
+                        <a href="#community" class="px-8 py-4 bg-white border border-slate-200 hover:border-secondary-500 hover:text-secondary-600 text-slate-700 rounded-full font-semibold transition-all hover:bg-slate-50">
+                            Join the Community
+                        </a>
+                    </div>
+                    
+                    <!-- Trust Indicators -->
+                    <div class="mt-12 pt-8 border-t border-slate-100 flex items-center justify-center gap-8 reveal delay-300">
+                        <div class="flex -space-x-3">
+                            <img class="w-10 h-10 rounded-full border-2 border-white" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=64&h=64" alt="User">
+                            <img class="w-10 h-10 rounded-full border-2 border-white" src="https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&w=64&h=64" alt="User">
+                            <img class="w-10 h-10 rounded-full border-2 border-white" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&h=64" alt="User">
+                            <div class="w-10 h-10 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600">5k+</div>
+                        </div>
+                        <div class="text-sm">
+                            <div class="flex items-center gap-1 text-secondary-500">
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            </div>
+                            <span class="text-slate-500">Professionals engaged</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section id="mission" class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12 reveal">
+                <h2 class="text-3xl lg:text-4xl font-bold text-primary-900 mb-4">Our Mission</h2>
+                <p class="text-slate-600 text-lg">We exist to build a health-conscious professional community by raising awareness, creating meaningful connections, and providing smart solutions that integrate into busy lives.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-2xl shadow-sm reveal">
+                    <h3 class="text-lg font-bold text-primary-900 mb-2">Educate</h3>
+                    <p class="text-slate-500">Deliver straightforward, actionable guidance to improve everyday health.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm reveal">
+                    <h3 class="text-lg font-bold text-primary-900 mb-2">Connect</h3>
+                    <p class="text-slate-500">Create opportunities for professionals to support one another's wellbeing journeys.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm reveal">
+                    <h3 class="text-lg font-bold text-primary-900 mb-2">Enable</h3>
+                    <p class="text-slate-500">Provide tools and partnerships that make healthy choices easier and more effective.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pillars Section -->
+    <section id="solutions" class="py-24 bg-primary-50/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+                <h2 class="text-3xl lg:text-4xl font-bold text-primary-900 mb-4">Our Core Pillars</h2>
+                <p class="text-slate-600 text-lg">We believe in a holistic approach driven by three key elements to improve your quality of life.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1: Awareness -->
+                <div class="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100 reveal delay-100">
+                    <div class="w-14 h-14 bg-primary-50 text-primary-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="lightbulb" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary-900 mb-3">Awareness</h3>
+                    <p class="text-slate-500 leading-relaxed mb-6">Empowering you with the knowledge to make informed decisions about your physical and mental well-being.</p>
+                    <a href="#mission" class="inline-flex items-center text-primary-600 font-semibold hover:gap-2 transition-all">
+                        Learn more <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+
+                <!-- Card 2: Community -->
+                <div class="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100 reveal delay-200">
+                    <div class="w-14 h-14 bg-secondary-500/10 text-secondary-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="heart-handshake" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary-900 mb-3">Community</h3>
+                    <p class="text-slate-500 leading-relaxed mb-6">Building a health-conscious professional network where support and shared goals drive real progress.</p>
+                    <a href="#community" class="inline-flex items-center text-secondary-600 font-semibold hover:gap-2 transition-all">
+                        Join us <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+
+                <!-- Card 3: Smart Solutions -->
+                <div class="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-slate-100 reveal delay-300">
+                    <div class="w-14 h-14 bg-primary-50 text-primary-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="smartphone" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary-900 mb-3">Smart Solutions</h3>
+                    <p class="text-slate-500 leading-relaxed mb-6">Leveraging technology and innovation to provide accessible, efficient, and effective tools for a better life.</p>
+                    <a href="#solutions" class="inline-flex items-center text-primary-600 font-semibold hover:gap-2 transition-all">
+                        Discover tools <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section id="community" class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <div class="lg:w-1/2 relative reveal">
+                    <div class="absolute -inset-4 bg-secondary-500/20 rounded-full blur-3xl opacity-50"></div>
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Professional community" class="relative rounded-3xl shadow-xl w-full object-cover aspect-[4/3]">
+                </div>
+                <div class="lg:w-1/2">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/20 text-secondary-600 text-xs font-semibold uppercase tracking-wide mb-6">
+                        For Professionals
+                    </div>
+                    <h2 class="text-3xl lg:text-4xl font-bold text-primary-900 mb-6 reveal delay-100">A Community That<br>Grows Together.</h2>
+                    <p class="text-lg text-slate-600 mb-8 reveal delay-200">We are connecting professionals who prioritize health as a key component of success. Share experiences, access exclusive resources, and find the motivation to keep moving forward.</p>
+                    
+                    <div class="space-y-6 reveal delay-300">
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-secondary-500/10 flex-shrink-0 flex items-center justify-center text-secondary-600">
+                                <i data-lucide="users" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-primary-900 text-lg">Network & Connect</h4>
+                                <p class="text-slate-500">Meet like-minded individuals committed to a healthier lifestyle.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-primary-50 flex-shrink-0 flex items-center justify-center text-primary-600">
+                                <i data-lucide="trending-up" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-primary-900 text-lg">Growth & Development</h4>
+                                <p class="text-slate-500">Workshops, webinars, and tools to support your personal journey.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-20 bg-primary-900 text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-white/10">
+                <div class="reveal">
+                    <p class="text-4xl lg:text-5xl font-bold mb-2 text-secondary-500">10k+</p>
+                    <p class="text-primary-100 font-medium">Community Members</p>
+                </div>
+                <div class="reveal delay-100">
+                    <p class="text-4xl lg:text-5xl font-bold mb-2 text-secondary-500">24/7</p>
+                    <p class="text-primary-100 font-medium">Access to Resources</p>
+                </div>
+                <div class="reveal delay-200">
+                    <p class="text-4xl lg:text-5xl font-bold mb-2 text-secondary-500">500+</p>
+                    <p class="text-primary-100 font-medium">Smart Solutions</p>
+                </div>
+                <div class="reveal delay-300">
+                    <p class="text-4xl lg:text-5xl font-bold mb-2 text-secondary-500">100%</p>
+                    <p class="text-primary-100 font-medium">Dedicated Support</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-primary-600 rounded-[2.5rem] p-8 md:p-16 text-center relative overflow-hidden reveal">
+                <!-- Decorative Circles -->
+                <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-secondary-500 rounded-full opacity-20"></div>
+                <div class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-64 h-64 bg-primary-900 rounded-full opacity-50"></div>
+
+                <div class="relative z-10">
+                    <h2 class="text-3xl lg:text-5xl font-bold text-white mb-6">Start Your Journey Today.</h2>
+                    <p class="text-primary-100 text-lg mb-8 max-w-2xl mx-auto">Transform your health, connect with a supportive community, and discover smart solutions for a better life.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="mailto:hello@fettle.community" class="px-8 py-4 bg-white text-primary-900 rounded-full font-bold hover:shadow-lg hover:scale-105 transition-all duration-300 inline-flex items-center justify-center">Get Started</a>
+                        <a href="#mission" class="px-8 py-4 bg-transparent border border-primary-400 text-white rounded-full font-bold hover:bg-primary-800 transition-all duration-300 inline-flex items-center justify-center">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-primary-900 text-primary-200 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-2 mb-6 text-white">
+                        <i data-lucide="sparkles" class="w-6 h-6 text-secondary-500"></i>
+                        <span class="font-bold text-xl">Fettle.</span>
+                    </div>
+                    <p class="text-sm leading-relaxed mb-6">
+                        Transforming health and wellness through awareness, community, and smart solutions for a better life—one step at a time.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="https://www.linkedin.com/company/fettle-health-and-support/posts/?feedView=all&viewAsMember=true" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-6">Platform</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li><a href="#mission" class="hover:text-secondary-500 transition-colors">Our Mission</a></li>
+                        <li><a href="#community" class="hover:text-secondary-500 transition-colors">Community</a></li>
+                        <li><a href="#solutions" class="hover:text-secondary-500 transition-colors">Solutions</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-6">Support</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li><a href="mailto:hello@fettle.community" class="hover:text-secondary-500 transition-colors">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-6">Get in Touch</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="map-pin" class="w-5 h-5 flex-shrink-0 text-secondary-500"></i>
+                            <span>Hyderabad, Telangana</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="mail" class="w-5 h-5 flex-shrink-0 text-secondary-500"></i>
+                            <span>hello@fettle.community</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-primary-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+                <p>&copy; 2025 Fettle. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Scroll Reveal Animation (Intersection Observer)
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Only animate once
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        const navBg = document.getElementById('nav-bg');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navBg.classList.add('opacity-100');
+                navBg.classList.remove('opacity-0');
+            } else {
+                navBg.classList.add('opacity-0');
+                navBg.classList.remove('opacity-100');
+            }
+        });
+
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = mobileMenuBtn.querySelector('i');
+        let isMenuOpen = false;
+
+        mobileMenuBtn.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('-translate-y-[150%]', 'opacity-0');
+                mobileMenu.classList.add('translate-y-0', 'opacity-100');
+            } else {
+                mobileMenu.classList.add('-translate-y-[150%]', 'opacity-0');
+                mobileMenu.classList.remove('translate-y-0', 'opacity-100');
+            }
+        });
+
+        // Close mobile menu when clicking a link
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                isMenuOpen = false;
+                mobileMenu.classList.add('-translate-y-[150%]', 'opacity-0');
+                mobileMenu.classList.remove('translate-y-0', 'opacity-100');
+            });
+        });
+
+    </script>
+</body>
+</html>
