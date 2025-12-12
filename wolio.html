@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wolio | The Future of Personalized Reading</title>
+    <link
+      rel="icon"
+      href="assets/wolio_logo.jpg"
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- React & Libraries via Import Map -->
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@18.2.0",
+          "react-dom": "https://esm.sh/react-dom@18.2.0?deps=react@18.2.0",
+          "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?deps=react@18.2.0",
+          "framer-motion": "https://esm.sh/framer-motion@10.16.4?deps=react@18.2.0,react-dom@18.2.0",
+          "lucide-react": "https://esm.sh/lucide-react@0.292.0?deps=react@18.2.0",
+          "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+          "react/": "https://esm.sh/react@^19.2.3/"
+        }
+      }
+    </script>
+
+    <!-- Babel for in-browser compilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Manrope", "sans-serif"],
+              display: ["Space Grotesk", "sans-serif"],
+            },
+            colors: {
+              wolio: {
+                950: "#050505", // Ultra dark background
+                900: "#0a0a0c",
+                800: "#121216",
+                mint: "#98f5d8", // Brand Color extracted from logo
+                "mint-dim": "#5eb399",
+                "mint-dark": "#2d4f45",
+                secondary: "#8899ac",
+              },
+            },
+            backgroundImage: {
+              "mint-gradient":
+                "linear-gradient(135deg, #98f5d8 0%, #5eead4 100%)",
+              "mint-glow":
+                "radial-gradient(circle at center, rgba(152, 245, 216, 0.15) 0%, rgba(5, 5, 5, 0) 70%)",
+            },
+            animation: {
+              float: "float 8s ease-in-out infinite",
+              "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+              shimmer: "shimmer 2s infinite",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-20px)" },
+              },
+              shimmer: {
+                "0%": { transform: "translateX(-100%)" },
+                "100%": { transform: "translateX(100%)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #050505;
+        color: #f8fafc;
+        overflow-x: hidden;
+      }
+      ::selection {
+        background-color: #98f5d8;
+        color: #050505;
+      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #050505;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #98f5d8;
+      }
+      .perspective-1000 {
+        perspective: 1000px;
+      }
+      .drop-cap {
+        float: left;
+        margin-right: 4px;
+        line-height: 0.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script
+      type="text/babel"
+      data-type="module"
+      data-presets="react,typescript"
+    >
+      import React, { useState, useEffect } from "react";
+      import { createRoot } from "react-dom/client";
+      import { motion, AnimatePresence } from "framer-motion";
+      import {
+        Menu,
+        X,
+        ArrowRight,
+        Sparkles,
+        BookOpen,
+        Wand2,
+        Brain,
+        RefreshCw,
+        Layers,
+        UserCheck,
+        Zap,
+        Twitter,
+        Linkedin,
+        Github,
+        Instagram,
+        ScanEye,
+        Smartphone,
+        GraduationCap,
+        Briefcase,
+        Coffee,
+        ArrowUpRight,
+        Users,
+        Code2,
+        Palette,
+      } from "lucide-react";
+
+      // --- ANIMATIONS ---
+      const fadeInUp = {
+        hidden: { opacity: 0, y: 40 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+        },
+      };
+
+      const staggerContainer = {
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: {
+            staggerChildren: 0.15,
+          },
+        },
+      };
+
+      // --- COMPONENTS ---
+
+      // Button Component
+      const Button = ({
+        children,
+        variant = "primary",
+        className = "",
+        onClick,
+        icon,
+      }) => {
+        const baseStyles =
+          "inline-flex items-center justify-center px-8 py-3 text-sm font-semibold rounded-full transition-all duration-300 focus:outline-none disabled:opacity-50 disabled:pointer-events-none tracking-wide font-display cursor-pointer";
+
+        const variants = {
+          primary:
+            "bg-wolio-mint text-wolio-950 hover:bg-white hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(152,245,216,0.25)] hover:shadow-[0_0_30px_rgba(152,245,216,0.4)]",
+          outline:
+            "border border-wolio-mint/40 text-wolio-mint hover:border-wolio-mint hover:bg-wolio-mint/10 backdrop-blur-sm",
+          ghost: "text-gray-400 hover:text-wolio-mint hover:bg-white/5",
+        };
+
+        return (
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            className={`${baseStyles} ${variants[variant]} ${className}`}
+            onClick={onClick}
+          >
+            {children}
+            {icon && (
+              <span className="ml-2 group-hover:translate-x-1 transition-transform">
+                {icon}
+              </span>
+            )}
+          </motion.button>
+        );
+      };
+
+      // Navbar Component
+      const Navbar = () => {
+        const [scrolled, setScrolled] = useState(false);
+        const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+        const navItems = [
+          { label: "Technology", href: "#features" },
+          { label: "Vision", href: "#about" },
+          { label: "Team", href: "#team" },
+        ];
+
+        useEffect(() => {
+          const handleScroll = () => {
+            setScrolled(window.scrollY > 50);
+          };
+          window.addEventListener("scroll", handleScroll);
+          return () => window.removeEventListener("scroll", handleScroll);
+        }, []);
+
+        return (
+          <header
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+              scrolled
+                ? "bg-wolio-950/80 backdrop-blur-md border-b border-white/5 py-4"
+                : "bg-transparent py-6"
+            }`}
+          >
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+              <div className="flex items-center justify-between">
+                {/* Logo */}
+                <a href="#" className="flex items-center gap-4 group">
+                  <div className="flex flex-col gap-[3px] w-8">
+                    {[...Array(5)].map((_, i) => (
+                      <div
+                        key={i}
+                        className={`h-[2px] bg-wolio-mint rounded-full transition-all duration-300 group-hover:bg-white`}
+                        style={{ width: "100%", opacity: 1 - i * 0.1 }}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-2xl font-display font-medium text-white tracking-wide group-hover:text-wolio-mint transition-colors">
+                    Wolio
+                  </span>
+                </a>
+
+                {/* Desktop Nav */}
+                <nav className="hidden md:flex items-center gap-8">
+                  {navItems.map((item) => (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      className="text-sm font-medium text-gray-400 hover:text-wolio-mint transition-colors relative group"
+                    >
+                      {item.label}
+                      <span className="absolute -bottom-1 left-0 w-0 h-px bg-wolio-mint transition-all duration-300 group-hover:w-full" />
+                    </a>
+                  ))}
+                </nav>
+
+                {/* Desktop CTA */}
+                <div className="hidden md:block">
+                  <a href="#footer">
+                  <Button variant="outline" className="px-6 py-2 text-xs">
+                    Early Access
+                  </Button>
+                  </a>
+                </div>
+
+                {/* Mobile Menu Button */}
+                <button
+                  className="md:hidden text-white"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                >
+                  {mobileMenuOpen ? <X /> : <Menu />}
+                </button>
+              </div>
+            </div>
+
+            {/* Mobile Menu */}
+            <AnimatePresence>
+              {mobileMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="md:hidden bg-wolio-950 border-b border-white/10 overflow-hidden"
+                >
+                  <div className="px-6 py-8 space-y-6">
+                    {navItems.map((item) => (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        className="block text-lg font-medium text-white hover:text-wolio-mint"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                    <div className="pt-4">
+                      <Button className="w-full">Get Early Access</Button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </header>
+        );
+      };
+
+      // Hero Component
+      const Hero = () => {
+        const [mode, setMode] = useState(0);
+        // 0: Scanning/Analyzing
+        // 1: Simplifying (ELI5)
+        // 2: Engaging (Story/Blog)
+
+        useEffect(() => {
+          const timer = setInterval(() => {
+            setMode((prev) => (prev + 1) % 3);
+          }, 6000);
+          return () => clearInterval(timer);
+        }, []);
+
+        const getStatusText = () => {
+          if (mode === 0) return "Analyzing Text Structure...";
+          if (mode === 1) return "Generating: Simplified Summary";
+          if (mode === 2) return "Generating: Narrative Adaptation";
+          return "Ready";
+        };
+
+        const getStatusIcon = () => {
+          if (mode === 0)
+            return (
+              <ScanEye size={14} className="text-wolio-mint animate-pulse" />
+            );
+          if (mode === 1) return <Brain size={14} className="text-amber-400" />;
+          if (mode === 2) return <Zap size={14} className="text-purple-400" />;
+        };
+
+        return (
+          <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-wolio-950">
+            {/* Background Gradients */}
+            <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-wolio-mint/5 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-wolio-mint/10 rounded-full blur-[100px] pointer-events-none" />
+
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              {/* Left Content */}
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="relative z-10"
+              >
+                <motion.div
+                  variants={fadeInUp}
+                  className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-wolio-mint/10 border border-wolio-mint/20 mb-8 backdrop-blur-md"
+                >
+                  <Sparkles
+                    size={14}
+                    className="text-wolio-mint animate-pulse"
+                  />
+                  <span className="text-xs font-semibold text-wolio-mint tracking-wider uppercase">
+                    Context-Aware Reading
+                  </span>
+                </motion.div>
+
+                <motion.h1
+                  variants={fadeInUp}
+                  className="text-5xl lg:text-7xl font-display font-medium text-white leading-[1.1] tracking-tight mb-8"
+                >
+                  One book. <br />
+                  Infinite{" "}
+                  <span className="text-transparent bg-clip-text bg-mint-gradient">
+                    Contexts.
+                  </span>
+                </motion.h1>
+
+                <motion.p
+                  variants={fadeInUp}
+                  className="text-xl text-gray-400 mb-10 max-w-lg leading-relaxed font-light"
+                >
+                  Wolio rewrites content in real-time. Whether you are a student
+                  needing clarity or an expert needing density, the text adapts
+                  to you.
+                </motion.p>
+
+                <motion.div
+                  variants={fadeInUp}
+                  className="flex flex-col sm:flex-row gap-4"
+                >
+                  <a href="#footer"><Button icon={<ArrowRight size={18} />}>Start Reading</Button></a>
+                  <a href="#"><Button variant="outline" icon={<BookOpen size={18} />}>
+                    Explore Library
+                  </Button>
+                  </a>
+                </motion.div>
+              </motion.div>
+
+              {/* Right Content - The Living Book */}
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="relative lg:h-[600px] flex items-center justify-center w-full"
+              >
+                {/* Mobile Placeholder (Visible only on small screens) */}
+                <div className="md:hidden w-full bg-wolio-900/50 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                  <div className="flex items-center gap-2 mb-4 border-b border-white/5 pb-4">
+                    <Smartphone className="text-wolio-mint" size={20} />
+                    <span className="text-sm font-medium text-white">
+                      Live Adaptation Demo
+                    </span>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="bg-black/30 p-3 rounded-lg">
+                      <span className="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">
+                        Input: Dense Text
+                      </span>
+                      <div className="h-1.5 bg-gray-700 rounded w-full mb-1"></div>
+                      <div className="h-1.5 bg-gray-700 rounded w-5/6 mb-1"></div>
+                    </div>
+                    <div className="flex justify-center">
+                      <ArrowRight
+                        className="text-wolio-mint rotate-90"
+                        size={20}
+                      />
+                    </div>
+                    <div className="bg-wolio-mint/10 border border-wolio-mint/20 p-3 rounded-lg">
+                      <span className="text-[10px] text-wolio-mint uppercase tracking-widest block mb-1">
+                        Output: Contextualized
+                      </span>
+                      <p className="text-xs text-gray-300 leading-relaxed">
+                        "Things keep moving unless stopped. It's the law of
+                        inertia."
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Desktop 3D Perspective Container (Hidden on mobile) */}
+                <div className="hidden md:block relative w-full max-w-lg aspect-[4/3] perspective-1000 group">
+                  {/* Floating Status Pill */}
+                  <motion.div
+                    key={mode}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="absolute -top-16 left-0 right-0 mx-auto w-fit bg-wolio-800/90 backdrop-blur-md border border-wolio-mint/20 px-6 py-3 rounded-full flex items-center gap-3 z-30 shadow-[0_0_30px_rgba(0,0,0,0.6)]"
+                  >
+                    <div className="bg-wolio-950 p-1.5 rounded-full border border-white/10">
+                      {getStatusIcon()}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">
+                        System Status
+                      </span>
+                      <span className="text-xs font-mono text-gray-200 tracking-wide font-medium">
+                        {getStatusText()}
+                      </span>
+                    </div>
+                  </motion.div>
+
+                  {/* The Book Object */}
+                  <motion.div
+                    initial={{ rotateX: 5, rotateY: -15 }}
+                    animate={{
+                      rotateX: [5, 2, 5],
+                      rotateY: [-15, -12, -15],
+                    }}
+                    transition={{
+                      duration: 8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="w-full h-full bg-[#0F0F11] rounded-r-xl rounded-l-md border-r-[6px] border-b-[8px] border-[#050505] shadow-[20px_40px_80px_-15px_rgba(0,0,0,0.8)] flex overflow-hidden relative"
+                    style={{ transformStyle: "preserve-3d" }}
+                  >
+                    {/* Left Page (Source Material) */}
+                    <div className="w-1/2 h-full bg-[#e3e3e3] p-10 relative overflow-hidden text-gray-900 shadow-inner">
+                      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-50 mix-blend-multiply pointer-events-none"></div>
+
+                      <div className="relative z-10 opacity-70">
+                        <div className="text-[10px] text-gray-500 font-serif mb-6 text-center tracking-widest uppercase border-b border-gray-300 pb-2">
+                          Source: Principia
+                        </div>
+                        <div className="text-[11px] leading-[1.8] font-serif font-medium text-justify select-none">
+                          <span className="drop-cap text-4xl float-left mr-2 leading-[0.8] font-bold text-black font-serif">
+                            E
+                          </span>
+                          very body perseveres in its state of rest, or of
+                          uniform motion in a right line, unless it is compelled
+                          to change that state by forces impressed thereon.
+                          Projectiles persevere in their motions, so far as they
+                          are not retarded by the resistance of the air.
+                        </div>
+                      </div>
+
+                      {/* Scanning Bar */}
+                      <AnimatePresence>
+                        <motion.div
+                          className="w-full h-[2px] bg-wolio-mint shadow-[0_0_20px_2px_rgba(152,245,216,0.6)] absolute left-0 z-20"
+                          animate={{ top: ["5%", "95%"], opacity: [0, 1, 0] }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
+                        />
+                      </AnimatePresence>
+                    </div>
+
+                    {/* Right Page (Transformed Material) */}
+                    <div className="w-1/2 h-full bg-[#161618] p-10 relative overflow-hidden flex flex-col justify-center border-l border-white/5">
+                      <div className="absolute top-6 right-6 flex gap-2">
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            mode === 1 ? "bg-amber-400" : "bg-white/10"
+                          }`}
+                        ></div>
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            mode === 2 ? "bg-purple-400" : "bg-white/10"
+                          }`}
+                        ></div>
+                      </div>
+
+                      <AnimatePresence mode="wait">
+                        <motion.div
+                          key={mode}
+                          initial={{ opacity: 0, x: 10, filter: "blur(8px)" }}
+                          animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                          exit={{ opacity: 0, x: -10, filter: "blur(8px)" }}
+                          transition={{ duration: 0.6 }}
+                          className="text-sm text-gray-200 leading-relaxed font-sans relative z-10"
+                        >
+                          {mode === 0 && (
+                            <div className="space-y-4">
+                              <div className="flex items-center gap-2 text-wolio-mint/50 text-xs font-mono mb-4">
+                                <ScanEye className="animate-spin" size={14} />{" "}
+                                Processing Context...
+                              </div>
+                              <div className="h-2 w-full bg-white/10 rounded animate-pulse" />
+                              <div className="h-2 w-5/6 bg-white/10 rounded animate-pulse delay-75" />
+                              <div className="h-2 w-4/5 bg-white/10 rounded animate-pulse delay-100" />
+                              <div className="h-2 w-full bg-white/10 rounded animate-pulse delay-150" />
+                            </div>
+                          )}
+
+                          {mode === 1 && (
+                            <div className="bg-amber-900/10 border-l-2 border-amber-400 pl-4 py-2">
+                              <span className="text-amber-400 text-xs font-bold uppercase tracking-wide block mb-3">
+                                Simple Summary
+                              </span>
+                              <p className="font-medium text-amber-100/90 text-lg leading-relaxed">
+                                "Objects keep doing what they're doing. If
+                                moving, they keep moving. If still, they stay
+                                still."
+                              </p>
+                            </div>
+                          )}
+
+                          {mode === 2 && (
+                            <div className="bg-purple-900/10 border-l-2 border-purple-500 pl-4 py-2">
+                              <span className="text-purple-400 text-xs font-bold uppercase tracking-wide block mb-3">
+                                Narrative Mode
+                              </span>
+                              <p className="font-light italic text-purple-100/90 text-base leading-loose">
+                                "The ship drifted through the void, silent and
+                                eternal. Without an engine's thrust to change
+                                its course, it would sail forever in a straight
+                                line..."
+                              </p>
+                            </div>
+                          )}
+                        </motion.div>
+                      </AnimatePresence>
+
+                      <div className="absolute inset-0 bg-gradient-to-t from-wolio-mint/5 to-transparent pointer-events-none"></div>
+                    </div>
+                  </motion.div>
+                </div>
+              </motion.div>
+            </div>
+          </section>
+        );
+      };
+
+      // Features Component
+      const features = [
+        {
+          title: "Adaptive Voice",
+          description:
+            "Whether you prefer a conversational tone or academic rigor, Wolio shifts the narrative voice instantly.",
+          icon: Wand2,
+        },
+        {
+          title: "Mindset Matching",
+          description:
+            "Our AI analyzes your reading goals and adjusts the content complexity to match your current expertise.",
+          icon: Brain,
+        },
+        {
+          title: "Real-Time Rewriting",
+          description:
+            "Experience books that evolve as you read. No static pages—just dynamic, living text.",
+          icon: RefreshCw,
+        },
+        {
+          title: "Multi-Persona Support",
+          description:
+            'Switch between "Curious Learner", "Deep Thinker", or "Casual Reader" modes on the fly.',
+          icon: UserCheck,
+        },
+        {
+          title: "Contextual Depth",
+          description:
+            "Need more background? Wolio expands concepts instantly. Already an expert? It condenses them.",
+          icon: Layers,
+        },
+        {
+          title: "Infinite Versions",
+          description:
+            "One book becomes millions of unique variations, personalized specifically for you.",
+          icon: Zap,
+        },
+      ];
+
+      const Features = () => {
+        return (
+          <section id="features" className="py-32 relative bg-wolio-950">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                className="text-center max-w-3xl mx-auto mb-20"
+              >
+                <motion.h2
+                  variants={fadeInUp}
+                  className="text-3xl md:text-5xl font-display font-medium text-white mb-6"
+                >
+                  Not just reading. <br />
+                  <span className="text-wolio-mint">Experiencing.</span>
+                </motion.h2>
+                <motion.p
+                  variants={fadeInUp}
+                  className="text-gray-400 text-lg font-light leading-relaxed"
+                >
+                  Traditional books are static monologues. Wolio transforms them
+                  into a dialogue tailored to your unique perspective.
+                </motion.p>
+              </motion.div>
+
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              >
+                {features.map((feature, index) => (
+                  <motion.div
+                    key={index}
+                    variants={fadeInUp}
+                    className="group p-8 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-wolio-mint/30 hover:bg-wolio-mint/[0.03] transition-all duration-500"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-wolio-mint/5 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-wolio-mint/10 transition-all duration-300">
+                      <feature.icon className="text-wolio-mint w-5 h-5" />
+                    </div>
+                    <h3 className="text-xl font-display font-medium text-white mb-3 group-hover:text-wolio-mint transition-colors">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-400 leading-relaxed text-sm font-light">
+                      {feature.description}
+                    </p>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          </section>
+        );
+      };
+
+      // Personas Component
+      const personas = [
+        {
+          id: "student",
+          icon: GraduationCap,
+          title: "The Student",
+          color: "text-blue-400",
+          bgColor: "bg-blue-400/10",
+          borderColor: "group-hover:border-blue-400/50",
+          description:
+            "Transform dense textbooks into exam-ready summaries and flashcards instantly.",
+          quote:
+            '"Finally, I can actually understand quantum mechanics without falling asleep."',
+        },
+        {
+          id: "professional",
+          icon: Briefcase,
+          title: "The Executive",
+          color: "text-emerald-400",
+          bgColor: "bg-emerald-400/10",
+          borderColor: "group-hover:border-emerald-400/50",
+          description:
+            "Turn 300-page business biographies into actionable strategy memos.",
+          quote:
+            '"I read 5 books a week now. The insights are identical, but the time spent is 10%."',
+        },
+        {
+          id: "casual",
+          icon: Coffee,
+          title: "The Explorer",
+          color: "text-amber-400",
+          bgColor: "bg-amber-400/10",
+          borderColor: "group-hover:border-amber-400/50",
+          description:
+            "Remix classic literature into modern thrillers or simplified narratives.",
+          quote:
+            '"I finally finished War and Peace. Wolio made it read like a modern Netflix drama."',
+        },
+      ];
+
+      const Personas = () => {
+        return (
+          <section className="py-24 bg-black relative overflow-hidden">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="mb-16 text-center"
+              >
+                <motion.h2
+                  variants={fadeInUp}
+                  className="text-3xl md:text-5xl font-display font-medium text-white mb-6"
+                >
+                  Tailored for{" "}
+                  <span className="text-wolio-mint">Every Mind.</span>
+                </motion.h2>
+                <motion.p
+                  variants={fadeInUp}
+                  className="text-gray-400 max-w-2xl mx-auto text-lg font-light"
+                >
+                  Wolio isn't just a reader; it's a chameleon. See how it adapts
+                  to your life.
+                </motion.p>
+              </motion.div>
+
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="grid grid-cols-1 md:grid-cols-3 gap-8"
+              >
+                {personas.map((persona) => (
+                  <motion.div
+                    key={persona.id}
+                    variants={fadeInUp}
+                    className={`group relative p-8 rounded-2xl bg-wolio-900 border border-white/5 transition-all duration-500 hover:-translate-y-2 ${persona.borderColor}`}
+                  >
+                    <div
+                      className={`w-14 h-14 rounded-xl ${persona.bgColor} flex items-center justify-center mb-6 transition-transform duration-500 group-hover:scale-110`}
+                    >
+                      <persona.icon className={`w-7 h-7 ${persona.color}`} />
+                    </div>
+
+                    <h3 className="text-2xl font-display font-medium text-white mb-3 group-hover:text-white transition-colors">
+                      {persona.title}
+                    </h3>
+
+                    <p className="text-gray-400 mb-6 font-light leading-relaxed">
+                      {persona.description}
+                    </p>
+
+                    <div className="pt-6 border-t border-white/5">
+                      <p className="text-sm text-gray-500 italic">
+                        {persona.quote}
+                      </p>
+                    </div>
+
+                    <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <ArrowUpRight className="text-white/20" />
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          </section>
+        );
+      };
+
+      // --- TEAM COMPONENT (NEW) ---
+      const TEAM_MEMBERS = [
+        {
+          name: "Akshaya Manorama",
+          role: "Founder",
+          image: "assets/team_members/1699629032561.jpg",
+          linkedin: "https://www.linkedin.com/in/amanorama/",
+        },
+        {
+          name: "Rohan Anwekar",
+          role: "Manager",
+          image: "assets/team_members/1703240327738.jpg",
+          linkedin: "https://www.linkedin.com/in/rohan-anwekar/",
+        },
+        {
+          name: "Rajesh Patil",
+          role: "Sales Executive",
+          image: "assets/team_members/1653840151580.jpg",
+          linkedin: "https://www.linkedin.com/in/rajesh-patil-9a953373/",
+        },
+        {
+          name: "Oindrila Roy",
+          role: "Content Writer",
+          image: "assets/team_members/1683059218038.jpg",
+          linkedin:
+            "https://www.linkedin.com/in/oindrila-roy-content-and-copywriter-768420144/",
+        },
+      ];
+
+      // Team
+      const Team = () => {
+        return (
+          <div
+            id="team"
+            className="bg-gemba-black border-t border-white/5 md:px-10 max-w-7xl mx-auto"
+          >
+            <div className="flex flex-col md:flex-row justify-between items-end mb-4 px-2">
+              <div className="max-w-4xl">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  className="flex items-center gap-4 mb-6 max-w-7xl"
+                >
+                  <div className="h-[1px] w-12 bg-gemba-blue"></div>
+                </motion.div>
+                <motion.h2
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif text-white leading-[1.1]"
+                ></motion.h2>
+              </div>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="hidden md:block"
+              >
+                <Button variant="outline" className="px-6">
+                  Join the Team
+                </Button>
+              </motion.div>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-1">
+              {TEAM_MEMBERS.map((member, index) => (
+                <motion.div
+                  key={member.name}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, duration: 0.6 }}
+                  className="group cursor-pointer"
+                >
+                  <div className="relative overflow-hidden mb-6 aspect-[3/4] bg-white/5 rounded-sm">
+                    {/* Gradient Overlay on Hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-gemba-blue/60 to-gemba-green/60 mix-blend-overlay z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 filter grayscale group-hover:grayscale-0 contrast-125"
+                    />
+                    {/* Overlay with LinkedIn icon */}
+                    <div className="absolute bottom-0 left-0 right-0 p-6 z-20 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out bg-gradient-to-t from-black/90 to-transparent">
+                      <div className="flex items-center gap-2 text-white text-xs uppercase tracking-widest">
+                        <a href={member.linkedin}>LinkedIn</a>
+                        <ArrowUpRight className="w-3 h-3" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="border-l border-white/10 pl-4 transition-all duration-300 group-hover:border-gemba-blue">
+                    <h3 className="text-xl font-serif text-white mb-1 group-hover:translate-x-1 transition-transform duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-gemba-blue group-hover:to-gemba-green">
+                      {member.name}
+                    </h3>
+                    <p className="text-xs uppercase tracking-widest text-gemba-gray">
+                      {member.role}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="md:hidden mt-12 flex justify-center">
+              <Button variant="outline" className="px-8 w-full">
+                Join the Team
+              </Button>
+            </div>
+          </div>
+        );
+      };
+
+      // About Component
+      const stats = [
+        { label: "Books Ingested", value: "1M+" },
+        { label: "Unique Versions", value: "∞" },
+        { label: "Active Readers", value: "50k" },
+        { label: "Knowledge Points", value: "10B" },
+      ];
+
+      const About = () => {
+        return (
+          <section
+            id="about"
+            className="py-24 mt-20 relative overflow-hidden bg-wolio-900/30"
+          >
+            {/* Decorative background */}
+            <div className="absolute left-0 top-1/4 w-1/3 h-1/2 bg-gradient-to-r from-wolio-mint/5 to-transparent blur-[120px] pointer-events-none" />
+
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8 }}
+                  viewport={{ once: true }}
+                >
+                  <h2 className="text-3xl md:text-5xl font-display font-medium text-white mb-8 leading-[1.2]">
+                    Welcome to the <br />
+                    <span className="text-wolio-mint">future of reading.</span>
+                  </h2>
+                  <div className="space-y-6 text-gray-400 text-lg leading-relaxed font-light">
+                    <p>
+                      We believe that knowledge shouldn't be one-size-fits-all.
+                      Every reader brings a unique background, a unique set of
+                      goals, and a unique way of understanding the world.
+                    </p>
+                    <p>
+                      Wolio bridges the gap between the author's intent and the
+                      reader's mind. By leveraging advanced LLMs, we transform
+                      static text into a fluid medium that adapts to you—not the
+                      other way around.
+                    </p>
+                  </div>
+                  <div className="mt-10">
+                    <a href="#">
+                    <Button variant="outline">Read Our Manifesto</Button>
+                    </a>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  viewport={{ once: true }}
+                  className="grid grid-cols-2 gap-px bg-white/10 rounded-2xl overflow-hidden border border-white/5"
+                >
+                  {stats.map((stat, idx) => (
+                    <div
+                      key={idx}
+                      className="p-10 bg-wolio-950 hover:bg-wolio-900 transition-colors group"
+                    >
+                      <div className="text-3xl lg:text-4xl font-display font-bold text-white mb-2 group-hover:text-wolio-mint transition-colors">
+                        {stat.value}
+                      </div>
+                      <div className="text-xs font-medium text-gray-500 uppercase tracking-widest">
+                        {stat.label}
+                      </div>
+                    </div>
+                  ))}
+                </motion.div>
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // Footer Component
+      const Footer = () => {
+        const[email , setemail] = useState('');
+        const handler = ()=>{
+          if(!email) return alert("please fill your email first");
+          setemail('');
+          alert("we connect soon");
+        }
+        return (
+          <footer className="bg-black border-t border-white/10 pt-20 pb-10" id="footer">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div className="col-span-1 md:col-span-1">
+                  <a href="#" className="flex items-center gap-3 mb-6">
+                    <div className="flex flex-col gap-[2px] w-6">
+                      {[...Array(5)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="h-[1.5px] bg-wolio-mint rounded-full"
+                          style={{ width: "100%", opacity: 1 - i * 0.1 }}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-xl font-display font-medium text-white tracking-wide">
+                      Wolio
+                    </span>
+                  </a>
+                  <p className="text-gray-500 text-sm leading-relaxed">
+                    Transforming every book into{" "}
+                    <span className="text-gray-300 italic">your</span> book.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="text-white font-medium mb-6">Product</h4>
+                  <ul className="space-y-4 text-sm text-gray-500">
+                    <li>
+                      <a
+                        href="#"
+                        className="hover:text-wolio-mint transition-colors"
+                      >
+                        Library
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="hover:text-wolio-mint transition-colors"
+                      >
+                        Pricing
+                      </a>
+                    </li>
+                  
+                    <li>
+                      <a
+                        href="#"
+                        className="hover:text-wolio-mint transition-colors"
+                      >
+                        For Education
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="text-white font-medium mb-6">Company</h4>
+                  <ul className="space-y-4 text-sm text-gray-500">
+                    <li>
+                      <a
+                        href="#"
+                        className="hover:text-wolio-mint transition-colors"
+                      >
+                        Mission
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="hover:text-wolio-mint transition-colors"
+                      >
+                        Careers
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="hover:text-wolio-mint transition-colors"
+                      >
+                        Blog
+                      </a>
+                    </li>
+                  
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="text-white font-medium mb-6">
+                    Join the Waitlist
+                  </h4>
+                  <p className="text-gray-500 text-sm mb-4">
+                    Be the first to experience the future of reading.
+                  </p>
+                  <div className="flex gap-2">
+          
+                    <input
+                      type="email"
+                      name="email"
+                      value={email}
+                      onChange={(e)=>setemail(e.target.value)}
+                      placeholder="Enter email"
+                      className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-wolio-mint/50 w-full placeholder:text-gray-600"
+                    />
+                    <button onClick={handler} className="bg-wolio-mint hover:bg-white text-wolio-950 px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
+                      Join
+                    </button>
+                 
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between  gap-4">
+                <p className="text-gray-600 text-xs">
+                  © {new Date().getFullYear()} Wolio Inc. All rights reserved.
+                </p>
+                <div className="flex gap-6">
+              
+                  <a
+                    href="https://www.linkedin.com/company/wolio/people/"
+                    className="text-gray-600 hover:text-wolio-mint transition-colors"
+                  >
+                    <Linkedin size={18} />
+                  </a>
+              
+                </div>
+              </div>
+            </div>
+          </footer>
+        );
+      };
+
+      // App Component
+      const App = () => {
+        return (
+          <div className="antialiased bg-wolio-950 min-h-screen text-slate-50 selection:bg-wolio-mint selection:text-wolio-950">
+            <Navbar />
+            <main>
+              <Hero />
+              <Features />
+              <Personas />
+              <Team />
+              <About />
+
+              {/* Call to Action Section */}
+              <section className="py-24 px-6 relative overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-wolio-mint/5 rounded-full blur-[120px] pointer-events-none" />
+
+                <div className="max-w-5xl mx-auto bg-gradient-to-b from-wolio-900 to-black border border-white/10 rounded-3xl p-12 md:p-20 text-center relative overflow-hidden">
+                  {/* Abstract shapes for visual interest */}
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-wolio-mint/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+
+                  <div className="relative z-10">
+                    <h2 className="text-3xl md:text-5xl font-display font-medium text-white mb-6">
+                      Start reading smarter today.
+                    </h2>
+                    <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light">
+                      Join the platform that is redefining how knowledge is
+                      consumed. Your personal AI editor is waiting.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <a href="#">
+                      <button className="px-8 py-4 bg-wolio-mint text-wolio-950 rounded-full font-bold text-lg hover:bg-white transition-all shadow-[0_0_30px_rgba(152,245,216,0.2)] hover:shadow-[0_0_40px_rgba(152,245,216,0.4)] hover:-translate-y-1">
+                        Get Started Free
+                      </button>
+                      </a>
+                      <button className="px-8 py-4 bg-transparent border border-white/20 text-white rounded-full font-semibold text-lg hover:bg-white/5 transition-all">
+                        View Demo
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </main>
+            <Footer />
+          </div>
+        );
+      };
+
+      // MOUNT
+      const root = createRoot(document.getElementById("root"));
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
+    </script>
+  </body>
+</html>

@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chanakya.fyi | Strategic Intelligence</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%234c1d95%22 rx=%2220%22/><text x=%2250%22 y=%2250%22 font-family=%22serif%22 font-weight=%22bold%22 font-size=%2260%22 fill=%22white%22 text-anchor=%22middle%22 dy=%22.35em%22>C</text></svg>" type="image/svg+xml">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                900: '#2e1065', // Violet 950 - Deep Navy/Purple
+                800: '#4c1d95', // Violet 900
+                700: '#5b21b6', // Violet 800
+                accent: '#7c3aed', // Violet 600 - Primary Brand Purple
+                light: '#f5f3ff', // Violet 50
+                300: '#c4b5fd', // Violet 300 - For accents/borders
+              }
+            },
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+              serif: ['"Cormorant Garamond"', 'serif'],
+            },
+            animation: {
+              'float': 'float 6s ease-in-out infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    
+    <style>
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #a78bfa;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #7c3aed;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+
+    <!-- Import Map for Modules -->
+    <!-- Fixed: Added ?deps=react@18.2.0 to ensure a single React instance and removed confusing 19.x mapping -->
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "framer-motion": "https://esm.sh/framer-motion@10.16.4?deps=react@18.2.0,react-dom@18.2.0",
+    "lucide-react": "https://esm.sh/lucide-react@0.292.0?deps=react@18.2.0,react-dom@18.2.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.1/",
+    "react/": "https://esm.sh/react@^19.2.1/"
+  }
+}
+</script>
+    
+    <!-- Babel Standalone for JSX/TSX compilation in browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased selection:bg-brand-300 selection:text-brand-900">
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module" data-presets="typescript,react">
+      import React, { useState, useEffect } from 'react';
+      import { createRoot } from 'react-dom/client';
+      import { motion, AnimatePresence } from 'framer-motion';
+      import { 
+        Menu, X, ArrowRight, ChevronRight, Target, Users, Lightbulb,
+        BarChart3, Globe, Cpu, BookOpen, ShieldCheck, Zap,
+        Linkedin, Twitter, Instagram, Mail, Send, CheckCircle, 
+        AlertCircle, Loader2, MapPin, ArrowUpRight 
+      } from 'lucide-react';
+
+      // --- TYPES ---
+  
+
+      // --- COMPONENTS ---
+
+      // Button Component
+      const Button = ({ 
+        variant = 'primary', 
+        children, 
+        className = '', 
+        icon,
+        ...props 
+      }) => {
+        const baseStyles = "inline-flex items-center justify-center px-6 py-3 text-sm font-medium transition-all duration-300 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+        
+        const variants = {
+          primary: "bg-brand-900 text-white hover:bg-brand-800 hover:shadow-lg hover:shadow-brand-900/20 focus:ring-brand-900",
+          secondary: "bg-white text-brand-900 border border-slate-200 hover:bg-slate-50 hover:border-brand-300 focus:ring-slate-200",
+          outline: "border-2 border-brand-900 text-brand-900 hover:bg-brand-900 hover:text-white"
+        };
+
+        return (
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className={`${baseStyles} ${variants[variant]} ${className}`}
+            {...props}
+          >
+            {children}
+            {icon && <span className="ml-2">{icon}</span>}
+          </motion.button>
+        );
+      };
+
+      // Header Component
+      const Header = () => {
+        const [isScrolled, setIsScrolled] = useState(false);
+        const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+        const navItems = [
+          { label: 'About', href: '#about' },
+          { label: 'Services', href: '#services' },
+          { label: 'Team', href: '#team' },
+          { label: 'Contact', href: '#contact' },
+        ];
+
+        useEffect(() => {
+          const handleScroll = () => {
+            setIsScrolled(window.scrollY > 20);
+          };
+          window.addEventListener('scroll', handleScroll);
+          return () => window.removeEventListener('scroll', handleScroll);
+        }, []);
+
+        return (
+          <header 
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+              isScrolled 
+                ? 'bg-white/90 backdrop-blur-md border-b border-slate-200 py-3 md:py-4 shadow-sm' 
+                : 'bg-transparent py-4 md:py-6'
+            }`}
+          >
+            <div className="container mx-auto px-4 md:px-6 lg:px-12 flex items-center justify-between">
+              <a href="#" className="flex items-center gap-2 group">
+                <div className="w-8 h-8 bg-brand-900 rounded-lg flex items-center justify-center text-white font-serif font-bold text-xl group-hover:bg-brand-accent transition-colors duration-300">
+                  C
+                </div>
+                <span className="text-lg md:text-xl font-bold tracking-tight text-brand-900">
+                  Chanakya.fyi
+                </span>
+              </a>
+
+              {/* Desktop Nav */}
+              <nav className="hidden md:flex items-center gap-8">
+                {navItems.map((item) => (
+                  <a 
+                    key={item.label}
+                    href={item.href}
+                    className="text-sm font-medium text-slate-600 hover:text-brand-accent transition-colors relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-brand-accent after:transition-all after:duration-300 hover:after:w-full"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+                <a 
+                  href="#contact"
+                  className="inline-flex items-center text-sm font-medium bg-brand-900 text-white px-5 py-2 rounded-full hover:bg-brand-800 transition-colors"
+                >
+                  Get Started
+                </a>
+              </nav>
+
+              {/* Mobile Toggle */}
+              <button 
+                className="md:hidden p-2 text-brand-900"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label="Toggle Menu"
+              >
+                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+
+            {/* Mobile Menu */}
+            <AnimatePresence>
+              {isMobileMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="md:hidden bg-white border-b border-slate-200 overflow-hidden shadow-xl"
+                >
+                  <div className="container mx-auto px-6 py-8 flex flex-col gap-6">
+                    {navItems.map((item) => (
+                      <a 
+                        key={item.label}
+                        href={item.href}
+                        className="text-lg font-medium text-slate-800"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                    <a 
+                      href="#contact" 
+                      className="flex items-center justify-between text-brand-accent font-medium pt-4 border-t border-slate-100"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Get Started <ArrowRight size={18} />
+                    </a>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </header>
+        );
+      };
+
+      // Hero Component
+      const Hero = () => {
+        return (
+          <section className="relative pt-28 pb-16 md:pt-32 md:pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+            {/* Background Decorative Elements */}
+            <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-100/50 -skew-x-12 translate-x-32 -z-10 hidden lg:block" />
+            <div className="absolute top-20 right-[-10%] w-64 h-64 bg-brand-accent/5 rounded-full blur-3xl -z-10 lg:hidden" />
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-accent/5 rounded-full blur-3xl -z-10" />
+
+            <div className="container mx-auto px-4 md:px-6 lg:px-12">
+              <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+                
+                {/* Content */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  className="lg:w-1/2 text-center lg:text-left"
+                >
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-semibold text-brand-800 uppercase tracking-wide mb-8 mx-auto lg:mx-0">
+                    <span className="w-2 h-2 rounded-full bg-brand-accent animate-pulse"></span>
+                    Strategic Intelligence
+                  </div>
+                  
+                  <h1 className="text-4xl md:text-5xl lg:text-7xl font-serif font-medium text-brand-900 leading-[1.1] mb-6">
+                    Wisdom meets <br />
+                    <span className="text-brand-accent italic">Innovation.</span>
+                  </h1>
+                  
+                  <p className="text-base md:text-lg text-slate-600 mb-10 max-w-lg mx-auto lg:mx-0 leading-relaxed">
+                    At Chanakya.fyi, we decode complexity. We leverage cutting-edge analytics and timeless strategic principles to empower governance, business, and educational growth.
+                  </p>
+                  
+                  <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                    <Button icon={<ArrowRight size={18} />}>
+                      Explore Solutions
+                    </Button>
+                    <Button variant="secondary">
+                      Our Philosophy
+                    </Button>
+                  </div>
+                  
+                  <div className="mt-12 flex flex-wrap justify-center lg:justify-start gap-x-8 gap-y-4 text-sm text-slate-500 font-medium">
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-4 bg-brand-300 rounded-full"></div>
+                      <span>Data-Driven</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-4 bg-brand-300 rounded-full"></div>
+                      <span>Policy Experts</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-4 bg-brand-300 rounded-full"></div>
+                      <span>Global Vision</span>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Visual/Image */}
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="lg:w-1/2 relative w-full"
+                >
+                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl mx-auto max-w-lg lg:max-w-none">
+                    <img 
+                      src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop" 
+                      alt="Strategic Planning" 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-brand-900/20 mix-blend-multiply"></div>
+                    
+                    {/* Floating UI Card 1 */}
+                    <motion.div 
+                      animate={{ y: [0, -10, 0] }}
+                      transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+                      className="absolute bottom-6 left-6 md:bottom-8 md:left-8 bg-white/95 backdrop-blur p-4 rounded-xl shadow-lg max-w-[200px] md:max-w-xs border border-slate-100"
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0">
+                          <ChevronRight size={16} />
+                        </div>
+                        <div>
+                          <p className="text-xs text-slate-500">Growth Metric</p>
+                          <p className="text-sm font-bold text-slate-900">+127% Efficiency</p>
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    {/* Floating UI Card 2 */}
+                    <motion.div 
+                      animate={{ y: [0, 10, 0] }}
+                      transition={{ repeat: Infinity, duration: 7, delay: 1, ease: "easeInOut" }}
+                      className="absolute top-6 right-6 md:top-8 md:right-8 bg-brand-900 text-white p-4 rounded-xl shadow-xl border border-brand-700"
+                    >
+                       <p className="text-xs text-brand-300 mb-1">Active Analysis</p>
+                       <div className="flex gap-1 items-end h-6">
+                          <span className="w-1 h-4 bg-brand-accent rounded-sm"></span>
+                          <span className="w-1 h-6 bg-brand-accent/80 rounded-sm"></span>
+                          <span className="w-1 h-3 bg-brand-accent/60 rounded-sm"></span>
+                          <span className="w-1 h-5 bg-brand-accent/40 rounded-sm"></span>
+                       </div>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // About Component
+      const About = () => {
+        return (
+          <section id="about" className="py-16 md:py-24 bg-white relative">
+            <div className="container mx-auto px-4 md:px-6 lg:px-12">
+              
+              <div className="max-w-4xl mx-auto text-center mb-16 md:mb-20">
+                <motion.h2 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-3xl md:text-5xl font-serif text-brand-900 mb-6"
+                >
+                  Bridging Ancient Wisdom & <br className="hidden md:block" />Modern Technology
+                </motion.h2>
+                <motion.p 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 }}
+                  className="text-base md:text-lg text-slate-600 leading-relaxed"
+                >
+                  Chanakya.fyi represents a convergence of deep strategic thought and the boundless potential of the digital age. We are not just an organization; we are a movement dedicated to decoding the intricacies of policy, economy, and leadership.
+                </motion.p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-8 md:gap-12">
+                {[
+                  {
+                    icon: <Lightbulb className="w-6 h-6" />,
+                    title: "Strategic Insight",
+                    desc: "Deriving actionable intelligence from complex datasets to guide decision-making in uncertain times."
+                  },
+                  {
+                    icon: <Target className="w-6 h-6" />,
+                    title: "Policy Advocacy",
+                    desc: "Framing robust policy frameworks that stand the test of time, inspired by classic economic theories."
+                  },
+                  {
+                    icon: <Users className="w-6 h-6" />,
+                    title: "Community Growth",
+                    desc: "Building a network of thinkers, leaders, and innovators who share a vision for a smarter future."
+                  }
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="group p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:border-brand-accent/30 hover:shadow-lg hover:shadow-brand-accent/5 transition-all duration-300"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-brand-900 mb-6 group-hover:bg-brand-900 group-hover:text-white transition-colors duration-300 shadow-sm">
+                      {item.icon}
+                    </div>
+                    <h3 className="text-xl font-bold text-brand-900 mb-3">{item.title}</h3>
+                    <p className="text-slate-600 leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // Services Component
+      const Services = () => {
+        const services = [
+          {
+            title: "Political Analytics",
+            description: "Advanced sentiment analysis and demographic modeling to forecast trends and optimize campaign strategies.",
+            icon: BarChart3
+          },
+          {
+            title: "Global Affairs",
+            description: "Deep-dive research into international relations, trade economics, and geopolitical shifts.",
+            icon: Globe
+          },
+          {
+            title: "AI Governance",
+            description: "Consulting on the ethical and effective implementation of AI in public and private sector administration.",
+            icon: Cpu
+          },
+          {
+            title: "Leadership Education",
+            description: "Curated programs for emerging leaders, blending historical case studies with modern management science.",
+            icon: BookOpen
+          },
+          {
+            title: "Risk Assessment",
+            description: "Comprehensive threat analysis and mitigation strategies for enterprises operating in volatile markets.",
+            icon: ShieldCheck
+          },
+          {
+            title: "Digital Transformation",
+            description: "Guiding traditional institutions through the digital leap while preserving their core values and integrity.",
+            icon: Zap
+          }
+        ];
+
+        return (
+          <section id="services" className="py-16 md:py-24 bg-brand-900 text-white overflow-hidden">
+            <div className="container mx-auto px-4 md:px-6 lg:px-12 relative">
+              {/* Background Accents */}
+              <div className="absolute top-0 right-0 w-96 h-96 bg-brand-accent/20 rounded-full blur-[100px] pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-violet-600/20 rounded-full blur-[80px] pointer-events-none" />
+
+              <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 mb-16">
+                <div className="lg:w-1/3">
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif mb-6">
+                    Our Core <br />
+                    <span className="text-brand-accent">Offerings</span>
+                  </h2>
+                  <p className="text-brand-light/80 text-lg leading-relaxed mb-8">
+                    We provide a suite of specialized services designed to give you the upper hand in a complex world. Precision, foresight, and adaptability are at the heart of what we do.
+                  </p>
+                  <button className="text-brand-accent font-medium hover:text-white transition-colors flex items-center gap-2 group">
+                    View All Services <span className="group-hover:translate-x-1 transition-transform">→</span>
+                  </button>
+                </div>
+
+                <div className="lg:w-2/3 grid md:grid-cols-2 gap-6 md:gap-8">
+                  {services.map((service, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: 20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className="group p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-brand-accent/50 transition-all duration-300"
+                    >
+                      <service.icon className="w-8 h-8 text-brand-accent mb-4 group-hover:scale-110 transition-transform duration-300" />
+                      <h3 className="text-xl font-bold mb-3">{service.title}</h3>
+                      <p className="text-brand-light/70 text-sm leading-relaxed">
+                        {service.description}
+                      </p>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // Team Component
+      const Team = () => {
+        const team = [
+          {
+            name: "Visionary Leadership",
+            role: "Principal Strategist",
+            image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1887&auto=format&fit=crop",
+            bio: "Merging the timeless principles of Chanakya Niti with contemporary geopolitical strategy to guide leaders through uncertainty.",
+            socials: { linkedin: "#", twitter: "#" }
+          },
+          {
+            name: "Data Sciences Lead",
+            role: "Head of Analytics",
+            image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1888&auto=format&fit=crop",
+            bio: "Decoding complex electoral demographics and sentiment patterns using advanced predictive modeling and AI governance tools.",
+            socials: { linkedin: "#", twitter: "#" }
+          },
+          {
+            name: "Policy Director",
+            role: "Governance & Affairs",
+            image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1887&auto=format&fit=crop",
+            bio: "Crafting robust policy frameworks that bridge the gap between administrative intent and public impact.",
+            socials: { linkedin: "#", twitter: "#" }
+          }
+        ];
+
+        return (
+          <section id="team" className="py-16 md:py-24 bg-slate-50 relative overflow-hidden">
+            {/* Subtle Background Pattern */}
+            <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none" 
+                style={{ backgroundImage: 'radial-gradient(#334155 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
+            </div>
+
+            <div className="container mx-auto px-4 md:px-6 lg:px-12 relative z-10">
+              <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6">
+                <div className="max-w-2xl">
+                  <motion.span 
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="text-brand-accent font-bold tracking-wider text-sm uppercase mb-4 block"
+                  >
+                    Our Minds
+                  </motion.span>
+                  <motion.h2 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1 }}
+                    className="text-3xl md:text-5xl font-serif text-brand-900"
+                  >
+                    Architects of <span className="italic text-slate-500">Influence</span>
+                  </motion.h2>
+                </div>
+                <motion.p 
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 }}
+                  className="text-slate-600 max-w-md text-sm leading-relaxed"
+                >
+                  A collective of strategists, data scientists, and policy experts dedicated to the art of statecraft and modern governance.
+                </motion.p>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {team.map((member, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.15 }}
+                    className="group relative"
+                  >
+                    <div className="relative overflow-hidden rounded-2xl aspect-[3/4] mb-6 bg-slate-200 shadow-sm">
+                      <img 
+                        src={member.image} 
+                        alt={member.name} 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter grayscale group-hover:grayscale-0"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-brand-900/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
+                      
+                      {/* Social Overlay */}
+                      <div className="absolute top-4 right-4 flex flex-col gap-2 translate-x-10 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
+                        <a href={member.socials.linkedin} className="w-10 h-10 rounded-full bg-white/90 backdrop-blur flex items-center justify-center text-brand-900 hover:bg-brand-accent hover:text-white transition-colors shadow-lg">
+                          <Linkedin size={18} />
+                        </a>
+                        <a href={member.socials.twitter} className="w-10 h-10 rounded-full bg-white/90 backdrop-blur flex items-center justify-center text-brand-900 hover:bg-brand-accent hover:text-white transition-colors shadow-lg">
+                          <Twitter size={18} />
+                        </a>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <h3 className="text-xl font-bold text-brand-900 group-hover:text-brand-accent transition-colors duration-300">
+                            {member.name}
+                          </h3>
+                          <p className="text-xs font-semibold uppercase tracking-wider text-brand-accent/80 mb-3">
+                            {member.role}
+                          </p>
+                        </div>
+                        <ArrowUpRight className="text-slate-300 group-hover:text-brand-accent group-hover:-translate-y-1 group-hover:translate-x-1 transition-all duration-300" size={20} />
+                      </div>
+                      <p className="text-slate-600 text-sm leading-relaxed border-l-2 border-slate-200 pl-4 group-hover:border-brand-accent transition-colors duration-300">
+                        {member.bio}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // Contact Component
+      const Contact = () => {
+        const [formData, setFormData] = useState({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+        const [status, setStatus] = useState('idle');
+        const [errorMessage, setErrorMessage] = useState('');
+
+        const handleChange = (e) => {
+          const { name, value } = e.target;
+          setFormData(prev => ({ ...prev, [name]: value }));
+          if (status === 'error') setStatus('idle');
+        };
+
+        const validate = () => {
+          if (!formData.name.trim()) {
+            setErrorMessage('Name is required');
+            return false;
+          }
+          if (!formData.email.trim() || !/^\S+@\S+\.\S+$/.test(formData.email)) {
+            setErrorMessage('Please enter a valid email address');
+            return false;
+          }
+          if (!formData.subject.trim()) {
+            setErrorMessage('Subject is required');
+            return false;
+          }
+          if (!formData.message.trim()) {
+            setErrorMessage('Message is required');
+            return false;
+          }
+          return true;
+        };
+
+        // Fixed: Removed 'FormEvent' type from import and used generic handler or React.FormEvent from default import if needed
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+          setErrorMessage('');
+          
+          if (!validate()) {
+            setStatus('error');
+            return;
+          }
+
+          setStatus('submitting');
+
+          try {
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            const existing = JSON.parse(localStorage.getItem('contact_submissions') || '[]');
+            localStorage.setItem('contact_submissions', JSON.stringify([...existing, { ...formData, date: new Date().toISOString() }]));
+
+            setStatus('success');
+            setFormData({ name: '', email: '', subject: '', message: '' });
+            setTimeout(() => setStatus('idle'), 5000);
+          } catch (err) {
+            setStatus('error');
+            setErrorMessage('Something went wrong. Please try again.');
+          }
+        };
+
+        return (
+          <section id="contact" className="py-16 md:py-24 bg-white relative overflow-hidden">
+            {/* Background Decor */}
+            <div className="absolute top-0 left-0 w-64 h-64 bg-slate-50 rounded-full blur-3xl -z-10 translate-x-[-50%] translate-y-[-50%]" />
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-accent/5 rounded-full blur-3xl -z-10 translate-x-[20%] translate-y-[20%]" />
+
+            <div className="container mx-auto px-4 md:px-6 lg:px-12">
+              <div className="flex flex-col lg:flex-row gap-12 lg:gap-24">
+                
+                {/* Text Content */}
+                <div className="lg:w-1/3">
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                  >
+                    <span className="text-brand-accent font-bold tracking-wider text-sm uppercase mb-4 block">Get in Touch</span>
+                    <h2 className="text-3xl md:text-5xl font-serif text-brand-900 mb-6">Let's build the future together.</h2>
+                    <p className="text-slate-600 text-lg leading-relaxed mb-8">
+                      Whether you need data analytics, policy guidance, or leadership training, our team is ready to assist. Fill out the form, and we'll get back to you shortly.
+                    </p>
+                    
+                    <div className="space-y-6 mt-12">
+                      <div className="flex items-start gap-4 group cursor-pointer">
+                        <div className="w-10 h-10 rounded-full bg-brand-accent/10 flex items-center justify-center text-brand-accent group-hover:bg-brand-accent group-hover:text-white transition-colors duration-300">
+                          <Mail size={18} />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-brand-900 text-sm mb-1">Email Us</h4>
+                          <a href="mailto:hello@chanakya.fyi" className="text-slate-500 hover:text-brand-accent transition-colors">hello@chanakya.fyi</a>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start gap-4 group">
+                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-brand-900 group-hover:text-white transition-colors duration-300">
+                          <MapPin size={18} />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-brand-900 text-sm mb-1">Global HQ</h4>
+                          <p className="text-slate-500">New Delhi, India</p>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Form */}
+                <div className="lg:w-2/3 max-w-2xl">
+                  <motion.form 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 }}
+                    className="space-y-6 bg-slate-50 p-6 md:p-10 rounded-3xl border border-slate-100 shadow-sm"
+                    onSubmit={handleSubmit}
+                  >
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label htmlFor="name" className="text-sm font-medium text-slate-700">Name</label>
+                        <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:border-brand-900 focus:ring-1 focus:ring-brand-900 outline-none transition-all placeholder:text-slate-300"
+                          placeholder="John Doe"
+                          disabled={status === 'submitting'}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label htmlFor="email" className="text-sm font-medium text-slate-700">Email</label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:border-brand-900 focus:ring-1 focus:ring-brand-900 outline-none transition-all placeholder:text-slate-300"
+                          placeholder="john@company.com"
+                          disabled={status === 'submitting'}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="subject" className="text-sm font-medium text-slate-700">Subject</label>
+                      <input
+                        type="text"
+                        id="subject"
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:border-brand-900 focus:ring-1 focus:ring-brand-900 outline-none transition-all placeholder:text-slate-300"
+                        placeholder="Strategic Consulting Inquiry"
+                        disabled={status === 'submitting'}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="message" className="text-sm font-medium text-slate-700">Message</label>
+                      <textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
+                        onChange={handleChange}
+                        rows={4}
+                        className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:border-brand-900 focus:ring-1 focus:ring-brand-900 outline-none transition-all resize-none placeholder:text-slate-300"
+                        placeholder="How can we help you?"
+                        disabled={status === 'submitting'}
+                      />
+                    </div>
+
+                    <AnimatePresence mode="wait">
+                      {status === 'error' && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                          animate={{ opacity: 1, height: 'auto', marginBottom: 16 }}
+                          exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                          className="flex items-center gap-2 text-red-600 bg-red-50 p-3 rounded-lg text-sm border border-red-100"
+                        >
+                          <AlertCircle size={16} className="shrink-0" />
+                          {errorMessage}
+                        </motion.div>
+                      )}
+                      
+                      {status === 'success' && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                          animate={{ opacity: 1, height: 'auto', marginBottom: 16 }}
+                          exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                          className="flex items-center gap-2 text-emerald-700 bg-emerald-50 p-3 rounded-lg text-sm border border-emerald-100"
+                        >
+                          <CheckCircle size={16} className="shrink-0" />
+                          Message sent successfully! We'll be in touch soon.
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    <div className="pt-2">
+                      <Button 
+                        type="submit" 
+                        disabled={status === 'submitting' || status === 'success'}
+                        className="w-full md:w-auto min-w-[180px]"
+                      >
+                        {status === 'submitting' ? (
+                          <>
+                            <Loader2 className="animate-spin mr-2" size={18} /> Sending...
+                          </>
+                        ) : (
+                          <>
+                            Send Message <Send className="ml-2" size={16} />
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </motion.form>
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // Footer Component
+      const Footer = () => {
+        return (
+          <footer className="bg-white border-t border-slate-200 pt-16 md:pt-20 pb-10">
+            <div className="container mx-auto px-4 md:px-6 lg:px-12">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                
+                {/* Brand */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-brand-900 rounded-lg flex items-center justify-center text-white font-serif font-bold text-xl">
+                      C
+                    </div>
+                    <span className="text-xl font-bold text-brand-900">Chanakya.fyi</span>
+                  </div>
+                  <p className="text-slate-500 text-sm leading-relaxed">
+                    Empowering the next generation of leaders with ancient wisdom and modern tools. Strategy, simplified.
+                  </p>
+                  <div className="flex gap-4">
+                    <a href="#" className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-600 hover:bg-brand-900 hover:text-white transition-all duration-300">
+                      <Linkedin size={18} />
+                    </a>
+                    <a href="#" className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-600 hover:bg-brand-900 hover:text-white transition-all duration-300">
+                      <Twitter size={18} />
+                    </a>
+                    <a href="#" className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-600 hover:bg-brand-900 hover:text-white transition-all duration-300">
+                      <Instagram size={18} />
+                    </a>
+                  </div>
+                </div>
+
+                {/* Links */}
+                <div>
+                  <h4 className="font-bold text-brand-900 mb-6">Company</h4>
+                  <ul className="space-y-4 text-sm text-slate-600">
+                    <li><a href="#" className="hover:text-brand-accent transition-colors">About Us</a></li>
+                    <li><a href="#" className="hover:text-brand-accent transition-colors">Careers</a></li>
+                    <li><a href="#" className="hover:text-brand-accent transition-colors">Press</a></li>
+                    <li><a href="#" className="hover:text-brand-accent transition-colors">Contact</a></li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-brand-900 mb-6">Resources</h4>
+                  <ul className="space-y-4 text-sm text-slate-600">
+                    <li><a href="#" className="hover:text-brand-accent transition-colors">Blog</a></li>
+                    <li><a href="#" className="hover:text-brand-accent transition-colors">Whitepapers</a></li>
+                    <li><a href="#" className="hover:text-brand-accent transition-colors">Case Studies</a></li>
+                    <li><a href="#" className="hover:text-brand-accent transition-colors">Privacy Policy</a></li>
+                  </ul>
+                </div>
+
+                {/* Newsletter */}
+                <div>
+                  <h4 className="font-bold text-brand-900 mb-6">Stay Updated</h4>
+                  <p className="text-slate-500 text-sm mb-4">
+                    Get the latest strategic insights delivered to your inbox.
+                  </p>
+                  <form className="flex flex-col gap-3">
+                    <input 
+                      type="email" 
+                      placeholder="Enter your email" 
+                      className="px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-900/10 focus:border-brand-900 text-sm w-full"
+                    />
+                    <button className="px-4 py-3 rounded-lg bg-brand-900 text-white text-sm font-medium hover:bg-brand-800 transition-colors w-full">
+                      Subscribe
+                    </button>
+                  </form>
+                </div>
+              </div>
+
+              <div className="border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-400">
+                <p>&copy; {new Date().getFullYear()} Chanakya.fyi. All rights reserved.</p>
+                <div className="flex gap-8">
+                  <a href="#" className="hover:text-brand-900">Terms</a>
+                  <a href="#" className="hover:text-brand-900">Privacy</a>
+                  <a href="#" className="hover:text-brand-900">Cookies</a>
+                </div>
+              </div>
+            </div>
+          </footer>
+        );
+      };
+
+      // Main App Component
+      const App = () => {
+        return (
+          <div className="min-h-screen bg-slate-50 selection:bg-brand-accent/30">
+            <Header />
+            <main>
+              <Hero />
+              <About />
+              {/* Separator / CTA Strip */}
+              <div className="bg-brand-accent py-12 px-6">
+                <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+                  <h3 className="text-xl md:text-2xl font-serif text-white font-medium">Ready to transform your strategic vision?</h3>
+                  <button className="px-8 py-3 bg-white text-brand-accent font-bold rounded-full hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 whitespace-nowrap">
+                    Schedule Consultation
+                  </button>
+                </div>
+              </div>
+              <Services />
+              <Team />
+              <Contact />
+            </main>
+            <Footer />
+          </div>
+        );
+      };
+
+      // Render
+      const root = createRoot(document.getElementById('root'));
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
+    </script>
+  </body>
+</html>
