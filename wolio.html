@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wolio | The Future of Personalized Reading</title>
-    <link
-      rel="icon"
-      href="assets/wolio_logo.jpg"
-    />
+    <link rel="icon" href="assets/wolio_logo.jpg" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -273,9 +270,9 @@
                 {/* Desktop CTA */}
                 <div className="hidden md:block">
                   <a href="#footer">
-                  <Button variant="outline" className="px-6 py-2 text-xs">
-                    Early Access
-                  </Button>
+                    <Button variant="outline" className="px-6 py-2 text-xs">
+                      Early Access
+                    </Button>
                   </a>
                 </div>
 
@@ -402,10 +399,15 @@
                   variants={fadeInUp}
                   className="flex flex-col sm:flex-row gap-4"
                 >
-                  <a href="#footer"><Button icon={<ArrowRight size={18} />}>Start Reading</Button></a>
-                  <a href="#"><Button variant="outline" icon={<BookOpen size={18} />}>
-                    Explore Library
-                  </Button>
+                  <a href="#footer">
+                    <Button icon={<ArrowRight size={18} />}>
+                      Start Reading
+                    </Button>
+                  </a>
+                  <a href="#footer">
+                    <Button variant="outline" icon={<BookOpen size={18} />}>
+                      Explore Library
+                    </Button>
                   </a>
                 </motion.div>
               </motion.div>
@@ -821,12 +823,12 @@
           image: "assets/team_members/1703240327738.jpg",
           linkedin: "https://www.linkedin.com/in/rohan-anwekar/",
         },
-        {
-          name: "Rajesh Patil",
-          role: "Sales Executive",
-          image: "assets/team_members/1653840151580.jpg",
-          linkedin: "https://www.linkedin.com/in/rajesh-patil-9a953373/",
-        },
+        // {
+        //   name: "Rajesh Patil",
+        //   role: "Sales Executive",
+        //   image: "assets/team_members/1653840151580.jpg",
+        //   linkedin: "https://www.linkedin.com/in/rajesh-patil-9a953373/",
+        // },
         {
           name: "Oindrila Roy",
           role: "Content Writer",
@@ -872,7 +874,7 @@
               </motion.div>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-1">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 px-10 mt-5 gap-y-1">
               {TEAM_MEMBERS.map((member, index) => (
                 <motion.div
                   key={member.name}
@@ -964,7 +966,7 @@
                   </div>
                   <div className="mt-10">
                     <a href="#">
-                    <Button variant="outline">Read Our Manifesto</Button>
+                      <Button variant="outline">Read Our Manifesto</Button>
                     </a>
                   </div>
                 </motion.div>
@@ -998,14 +1000,17 @@
 
       // Footer Component
       const Footer = () => {
-        const[email , setemail] = useState('');
-        const handler = ()=>{
-          if(!email) return alert("please fill your email first");
-          setemail('');
+        const [email, setemail] = useState("");
+        const handler = () => {
+          if (!email) return alert("please fill your email first");
+          setemail("");
           alert("we connect soon");
-        }
+        };
         return (
-          <footer className="bg-black border-t border-white/10 pt-20 pb-10" id="footer">
+          <footer
+            className="bg-black border-t border-white/10 pt-20 pb-10"
+            id="footer"
+          >
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
                 <div className="col-span-1 md:col-span-1">
@@ -1027,6 +1032,14 @@
                     Transforming every book into{" "}
                     <span className="text-gray-300 italic">your</span> book.
                   </p>
+                  <div className="flex gap-6 mt-5">
+                    <a
+                      href="https://www.linkedin.com/company/wolio/people/"
+                      className="text-gray-600 hover:text-wolio-mint transition-colors"
+                    >
+                      <Linkedin size={18} />
+                    </a>
+                  </div>
                 </div>
 
                 <div>
@@ -1048,7 +1061,7 @@
                         Pricing
                       </a>
                     </li>
-                  
+
                     <li>
                       <a
                         href="#"
@@ -1087,7 +1100,6 @@
                         Blog
                       </a>
                     </li>
-                  
                   </ul>
                 </div>
 
@@ -1099,37 +1111,31 @@
                     Be the first to experience the future of reading.
                   </p>
                   <div className="flex gap-2">
-          
                     <input
                       type="email"
                       name="email"
                       value={email}
-                      onChange={(e)=>setemail(e.target.value)}
+                      onChange={(e) => setemail(e.target.value)}
                       placeholder="Enter email"
                       className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-wolio-mint/50 w-full placeholder:text-gray-600"
                     />
-                    <button onClick={handler} className="bg-wolio-mint hover:bg-white text-wolio-950 px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
+                    <button
+                      onClick={handler}
+                      className="bg-wolio-mint hover:bg-white text-wolio-950 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+                    >
                       Join
                     </button>
-                 
                   </div>
                 </div>
               </div>
 
-              <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between  gap-4">
+              <div className="border-t border-white/5 pt-8 items-center justify-center  flex flex-col ">
                 <p className="text-gray-600 text-xs">
                   © {new Date().getFullYear()} Wolio Inc. All rights reserved.
                 </p>
-                <div className="flex gap-6">
-              
-                  <a
-                    href="https://www.linkedin.com/company/wolio/people/"
-                    className="text-gray-600 hover:text-wolio-mint transition-colors"
-                  >
-                    <Linkedin size={18} />
-                  </a>
-              
-                </div>
+                <p className="text-xs text-gray-600">
+                  Designed and Maintained by The Squirrel Technologies
+                </p>
               </div>
             </div>
           </footer>
@@ -1165,14 +1171,16 @@
                       consumed. Your personal AI editor is waiting.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                      <a href="#">
-                      <button className="px-8 py-4 bg-wolio-mint text-wolio-950 rounded-full font-bold text-lg hover:bg-white transition-all shadow-[0_0_30px_rgba(152,245,216,0.2)] hover:shadow-[0_0_40px_rgba(152,245,216,0.4)] hover:-translate-y-1">
-                        Get Started Free
-                      </button>
+                      <a href="https://www.linkedin.com/company/the-squirrel-tech/">
+                        <button className="px-8 py-4 bg-wolio-mint text-wolio-950 rounded-full font-bold text-lg hover:bg-white transition-all shadow-[0_0_30px_rgba(152,245,216,0.2)] hover:shadow-[0_0_40px_rgba(152,245,216,0.4)] hover:-translate-y-1">
+                          Get Started Free
+                        </button>
                       </a>
+                      <a href="#">
                       <button className="px-8 py-4 bg-transparent border border-white/20 text-white rounded-full font-semibold text-lg hover:bg-white/5 transition-all">
                         View Demo
                       </button>
+                      </a>
                     </div>
                   </div>
                 </div>
