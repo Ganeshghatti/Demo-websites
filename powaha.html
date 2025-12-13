@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Powaha | Redefining Digital Potential</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              powaha: {
+                red: '#E60023',
+                dark: '#0F172A',
+                gray: '#64748B',
+                light: '#F8FAFC',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #999;
+      }
+    </style>
+    <!-- 
+      FIX: Using ?external=react,react-dom ensures framer-motion and lucide-react 
+      use the same React instance defined in the import map, preventing "Hooks can only be called inside..." errors.
+    -->
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "framer-motion": "https://esm.sh/framer-motion@11.0.8?external=react,react-dom",
+    "lucide-react": "https://esm.sh/lucide-react@0.344.0?external=react,react-dom",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module" data-presets="react,typescript">
+      import React, { useState, useEffect, useRef } from 'react';
+      import { createRoot } from 'react-dom/client';
+      import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+      import { 
+        Menu, X, ArrowRight, CheckCircle, Smartphone, Globe, Zap, 
+        Layout, Cloud, Lightbulb, ShieldCheck, CheckSquare, 
+        Mail, MapPin, Send, Linkedin, Twitter, Github
+      } from 'lucide-react';
+
+
+
+      // --- Components ---
+
+      // Logo Component
+      const Logo = ({ className = "h-8" }) => {
+        return (
+          <div className={`flex items-center gap-2 ${className}`}>
+            <svg 
+              viewBox="0 0 100 100" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-full w-auto"
+              role="img"
+              aria-label="Powaha Logo"
+            >
+              <path 
+                d="M20 25 L20 90 L35 85 L35 45 C35 45 40 40 60 40 C80 40 85 55 70 55 L50 55 C40 55 35 45 45 35 L75 10 C90 10 100 25 90 50 C80 75 60 70 60 70" 
+                stroke="#E60023" 
+                strokeWidth="18" 
+                strokeLinecap="butt"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span className="font-bold text-xl tracking-tight text-gray-900">POWAHA</span>
+          </div>
+        );
+      };
+
+      // Navbar Component
+      const navItems = [
+        { label: 'Expertise', href: '#expertise' },
+        { label: 'Solutions', href: '#solutions' },
+        { label: 'Company', href: '#about' },
+        { label: 'Careers', href: '#careers' },
+      ];
+
+      const Navbar = () => {
+        const [isScrolled, setIsScrolled] = useState(false);
+        const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+        useEffect(() => {
+          const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+          };
+          window.addEventListener('scroll', handleScroll);
+          return () => window.removeEventListener('scroll', handleScroll);
+        }, []);
+
+        return (
+          <header 
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
+              isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'
+            }`}
+          >
+            <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+              <Logo className="h-8 md:h-10 text-powaha-red" />
+
+              <nav className="hidden md:flex items-center gap-8">
+                {navItems.map((item) => (
+                  <a 
+                    key={item.label} 
+                    href={item.href}
+                    className="text-sm font-medium text-gray-600 hover:text-powaha-red transition-colors duration-200"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+                <a 
+                  href="#contact" 
+                  className="px-5 py-2.5 bg-powaha-red text-white text-sm font-semibold rounded-full hover:bg-red-700 transition-colors duration-300"
+                >
+                  Get in Touch
+                </a>
+              </nav>
+
+              <button 
+                className="md:hidden text-gray-800"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+
+            <AnimatePresence>
+              {isMobileMenuOpen && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="md:hidden bg-white border-b border-gray-100 overflow-hidden"
+                >
+                  <nav className="flex flex-col p-6 gap-4">
+                    {navItems.map((item) => (
+                      <a 
+                        key={item.label} 
+                        href={item.href}
+                        className="text-lg font-medium text-gray-800"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                    <a 
+                      href="#contact" 
+                      className="text-powaha-red font-semibold"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Get in Touch &rarr;
+                    </a>
+                  </nav>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </header>
+        );
+      };
+
+      // Hero Component
+      const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: {
+            staggerChildren: 0.1,
+            delayChildren: 0.2
+          }
+        }
+      };
+
+      const textVariants = {
+        hidden: { opacity: 0, y: 30, scale: 0.9 },
+        visible: { 
+          opacity: 1, 
+          y: 0, 
+          scale: 1,
+          transition: { 
+            type: "spring",
+            damping: 10,
+            stiffness: 100,
+            mass: 0.8
+          }
+        }
+      };
+
+      const bounceTextVariants = {
+        hidden: { opacity: 0, scale: 0.5, y: 50 },
+        visible: { 
+          opacity: 1, 
+          scale: 1, 
+          y: 0,
+          transition: { 
+            type: "spring",
+            damping: 8,
+            stiffness: 150 
+          }
+        }
+      };
+
+      const floatingAnimation = {
+        y: [-15, 15],
+        rotate: [-1, 1],
+        transition: {
+          duration: 5,
+          repeat: Infinity,
+          repeatType: "mirror",
+          ease: "easeInOut"
+        }
+      };
+
+      const floatingAnimationDelayed = {
+        y: [15, -15],
+        rotate: [1, -1],
+        transition: {
+          duration: 6,
+          delay: 1,
+          repeat: Infinity,
+          repeatType: "mirror",
+          ease: "easeInOut"
+        }
+      };
+
+      const Hero = () => {
+        return (
+          <section className="relative min-h-screen flex items-center pt-28 pb-20 overflow-hidden bg-white">
+            <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-bl from-red-50 via-white to-white -z-10 skew-x-12 translate-x-32 opacity-60" />
+            <div className="absolute top-20 left-10 w-64 h-64 bg-blue-50 rounded-full blur-[80px] -z-10 opacity-60" />
+            <div className="absolute bottom-20 right-10 w-96 h-96 bg-red-100/40 rounded-full blur-[100px] -z-10" />
+
+            <div className="max-w-7xl mx-auto px-6 w-full grid lg:grid-cols-2 gap-16 items-center">
+              
+              <motion.div 
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-8 relative z-10"
+              >
+                <motion.div variants={textVariants}>
+                  <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white border border-red-100 text-powaha-red text-xs font-bold tracking-widest uppercase rounded-full shadow-sm hover:shadow-md transition-shadow">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-powaha-red"></span>
+                    </span>
+                    Result Oriented Consulting
+                  </span>
+                </motion.div>
+
+                <motion.h1 className="text-5xl md:text-7xl font-bold text-powaha-dark leading-[1.1] tracking-tight">
+                  <motion.div variants={textVariants}>User-Centric</motion.div>
+                  <motion.div variants={textVariants} className="flex flex-wrap gap-x-4">
+                    <span>Solutions for</span>
+                  </motion.div>
+                  <motion.div variants={bounceTextVariants} className="relative inline-block mt-2">
+                    <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-powaha-red to-orange-600 drop-shadow-sm">
+                       Next Generation
+                    </span>
+                    <motion.span 
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ delay: 0.8, duration: 0.8, ease: "circOut" }}
+                      className="absolute bottom-2 left-0 w-full h-4 bg-red-100/50 -z-0 origin-left -skew-x-12"
+                    />
+                  </motion.div>
+                </motion.h1>
+
+                <motion.p variants={textVariants} className="text-lg md:text-xl text-gray-600 max-w-lg leading-relaxed font-medium">
+                  Powaha Infotech builds world-class Native and Hybrid solutions for mobile and scalable cloud platforms. We bridge the gap between user needs and technical excellence.
+                </motion.p>
+
+                <motion.div variants={textVariants} className="flex flex-wrap gap-4 pt-4">
+                  <a 
+                    href="#expertise" 
+                    className="group flex items-center gap-2 px-8 py-4 bg-powaha-dark text-white rounded-full font-semibold hover:bg-gray-800 transition-all shadow-xl shadow-gray-200 hover:shadow-2xl hover:-translate-y-1"
+                  >
+                    Explore Solutions
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+                  <a 
+                    href="#contact" 
+                    className="flex items-center gap-2 px-8 py-4 bg-white text-gray-800 border border-gray-200 rounded-full font-semibold hover:border-powaha-red hover:text-powaha-red transition-all"
+                  >
+                    Contact Us
+                  </a>
+                </motion.div>
+
+                <motion.div variants={textVariants} className="pt-8 flex flex-wrap items-center gap-6 text-sm font-semibold text-gray-500">
+                   <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                     <CheckCircle size={16} className="text-powaha-red" />
+                     <span>Quality-Driven</span>
+                   </div>
+                   <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                     <CheckCircle size={16} className="text-powaha-red" />
+                     <span>Design-Focused</span>
+                   </div>
+                </motion.div>
+              </motion.div>
+
+              <motion.div 
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+                className="relative hidden lg:block h-[600px] w-full perspective-1000"
+              >
+                 <motion.div 
+                   animate={{ rotate: 360 }}
+                   transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border border-gray-100 rounded-full border-dashed opacity-50" 
+                 />
+                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-tr from-red-50 to-transparent rounded-full opacity-50 blur-3xl" />
+
+                 <motion.div 
+                   animate={floatingAnimation}
+                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[640px] bg-gray-900 rounded-[3rem] border-8 border-gray-900 shadow-2xl overflow-hidden z-10"
+                 >
+                    <div className="relative w-full h-full bg-white flex flex-col">
+                       <div className="h-32 bg-powaha-red w-full rounded-b-[2.5rem] relative overflow-hidden">
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10 blur-xl"></div>
+                       </div>
+                       <div className="px-6 -mt-12 space-y-4">
+                          <div className="bg-white p-4 rounded-2xl shadow-lg flex items-center gap-4">
+                             <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center text-blue-500">
+                                <Globe size={20} />
+                             </div>
+                             <div>
+                                <div className="w-24 h-2 bg-gray-200 rounded-full mb-2"></div>
+                                <div className="w-16 h-2 bg-gray-100 rounded-full"></div>
+                             </div>
+                          </div>
+                          <div className="bg-white p-4 rounded-2xl shadow-lg flex items-center gap-4">
+                             <div className="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center text-green-500">
+                                <Smartphone size={20} />
+                             </div>
+                             <div>
+                                <div className="w-20 h-2 bg-gray-200 rounded-full mb-2"></div>
+                                <div className="w-12 h-2 bg-gray-100 rounded-full"></div>
+                             </div>
+                          </div>
+                          <div className="h-40 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 flex items-center justify-center">
+                              <span className="text-gray-400 text-xs font-mono">Scalable Architecture</span>
+                          </div>
+                       </div>
+                    </div>
+                 </motion.div>
+
+                 <motion.div 
+                   animate={floatingAnimationDelayed}
+                   className="absolute top-24 right-10 bg-white/80 backdrop-blur-md p-5 rounded-2xl shadow-xl border border-white/50 w-56 z-20"
+                 >
+                   <div className="flex items-center gap-3 mb-3">
+                     <div className="p-2 bg-powaha-red/10 rounded-lg text-powaha-red">
+                       <Zap size={20} fill="currentColor" />
+                     </div>
+                     <span className="text-sm font-bold text-gray-800">Hybrid Tech</span>
+                   </div>
+                   <div className="space-y-2">
+                      <div className="flex justify-between text-xs text-gray-500">
+                         <span>iOS</span>
+                         <span className="text-green-500">99%</span>
+                      </div>
+                      <div className="w-full bg-gray-100 rounded-full h-1.5">
+                         <div className="bg-green-500 h-1.5 rounded-full w-[99%]"></div>
+                      </div>
+                      <div className="flex justify-between text-xs text-gray-500">
+                         <span>Android</span>
+                         <span className="text-blue-500">98%</span>
+                      </div>
+                      <div className="w-full bg-gray-100 rounded-full h-1.5">
+                         <div className="bg-blue-500 h-1.5 rounded-full w-[98%]"></div>
+                      </div>
+                   </div>
+                 </motion.div>
+
+                 <motion.div 
+                   animate={{
+                      y: [10, -10],
+                      transition: { duration: 7, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }
+                   }}
+                   className="absolute bottom-40 left-0 bg-powaha-dark text-white p-6 rounded-2xl shadow-2xl border border-gray-700 w-48 z-20"
+                   whileHover={{ scale: 1.05 }}
+                 >
+                   <div className="text-4xl font-bold text-white mb-1">3+</div>
+                   <div className="text-sm text-gray-400 font-medium">Years of Industry Experience</div>
+                 </motion.div>
+
+              </motion.div>
+            </div>
+          </section>
+        );
+      };
+
+      // Services Component
+      const services = [
+        {
+          title: "Mobile Solutions",
+          description: "World-class Native and Hybrid applications for iOS and Android tablets and phones.",
+          icon: Smartphone
+        },
+        {
+          title: "Web Development",
+          description: "User-centric and design-focused web solutions tailored for startups and enterprises.",
+          icon: Layout
+        },
+        {
+          title: "Cloud Platforms",
+          description: "Scalable cloud architecture designed to grow with your business needs.",
+          icon: Cloud
+        },
+        {
+          title: "UX Consulting",
+          description: "Result-oriented consulting to enhance user experience and engagement.",
+          icon: Lightbulb
+        },
+        {
+          title: "Quality Assurance",
+          description: "A quality-driven model ensuring bug-free delivery at every step of the process.",
+          icon: CheckSquare
+        },
+        {
+          title: "Enterprise Security",
+          description: "Robust security protocols for end-to-end web and mobile solutions.",
+          icon: ShieldCheck
+        }
+      ];
+
+      const Services = () => {
+        return (
+          <section id="solutions" className="py-32 bg-gray-50/50">
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+                <motion.div 
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  className="max-w-2xl"
+                >
+                  <span className="text-powaha-red font-bold tracking-wider uppercase text-sm mb-2 block">Our Expertise</span>
+                  <h2 className="text-4xl md:text-5xl font-bold text-powaha-dark mb-6 leading-tight">
+                    Design-Focused <br />
+                    <span className="text-gray-400">Development.</span>
+                  </h2>
+                  <p className="text-gray-600 text-lg max-w-xl">
+                    From consulting to quality delivery, we provide end-to-end solutions for the mobile application ecosystem and web platforms.
+                  </p>
+                </motion.div>
+                
+                <motion.a 
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  href="#contact" 
+                  className="group flex items-center gap-2 text-powaha-dark font-semibold hover:text-powaha-red transition-colors"
+                >
+                  Start a Project
+                  <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+                </motion.a>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {services.map((service, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1, duration: 0.5 }}
+                    whileHover={{ y: -8 }}
+                    className="bg-white p-8 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 border border-gray-100 hover:border-red-100 group relative overflow-hidden"
+                  >
+                    <div className="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center text-gray-700 mb-8 group-hover:bg-powaha-red group-hover:text-white transition-all duration-300 shadow-sm">
+                      <service.icon size={28} strokeWidth={1.5} />
+                    </div>
+                    
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-powaha-red transition-colors">
+                      {service.title}
+                    </h3>
+                    <p className="text-gray-500 leading-relaxed text-sm">
+                      {service.description}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // About Component
+      const About = () => {
+        const containerRef = useRef(null);
+        
+        const { scrollYProgress } = useScroll({
+          target: containerRef,
+          offset: ["start end", "end start"]
+        });
+        
+        const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+
+        return (
+          <section id="about" className="py-32 bg-white overflow-hidden relative">
+            <div className="absolute top-20 left-10 text-[20rem] font-bold text-gray-50 opacity-40 select-none -z-10 leading-none">
+              01
+            </div>
+
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="grid lg:grid-cols-2 gap-20 items-center">
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                  className="relative"
+                >
+                  <div 
+                    ref={containerRef} 
+                    className="relative z-10 rounded-2xl overflow-hidden shadow-2xl aspect-[4/5] group cursor-pointer"
+                  >
+                      <motion.img 
+                          src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=800" 
+                          alt="Powaha Team Meeting" 
+                          style={{ y }}
+                          whileHover={{ scale: 1.1 }}
+                          transition={{ duration: 0.6, ease: "easeOut" }}
+                          className="w-full h-[120%] object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                      />
+                      
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500 z-20 pointer-events-none" />
+                  </div>
+                  
+                  <div className="absolute -top-10 -left-10 w-40 h-40 bg-gray-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
+                  <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-red-50 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
+                  <div className="absolute -bottom-6 -right-6 w-full h-full border-2 border-gray-100 rounded-2xl -z-10"></div>
+                </motion.div>
+
+                <div className="space-y-10">
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                  >
+                    <h2 className="text-3xl md:text-5xl font-bold text-powaha-dark leading-tight">
+                      Passion meets <span className="text-powaha-red underline decoration-4 decoration-red-100 underline-offset-4">Precision</span>.
+                    </h2>
+                  </motion.div>
+                  
+                  <motion.div 
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.2 }}
+                      className="space-y-6 text-gray-600 text-lg leading-relaxed"
+                  >
+                    <p>
+                      Powaha Infotech Pvt Ltd is a result-oriented consulting, user-centric, and design-focused development company. We are an experienced and enthusiastic team dedicated to UX, consulting, and quality delivery in the software development ecosystem.
+                    </p>
+                    <p>
+                      With <strong>3+ years of industry experience</strong> and a solid business domain background, we provide end-to-end web solutions checked for quality at every step. Our team includes seasoned veterans with over 5 years in the IT sector, alongside passionate interns growing into tomorrow's leaders.
+                    </p>
+                  </motion.div>
+
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.4 }}
+                    className="grid grid-cols-2 gap-8 pt-8 border-t border-gray-100"
+                  >
+                    <div>
+                      <h4 className="text-4xl font-bold text-powaha-dark mb-1">3+</h4>
+                      <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Years Experience</p>
+                    </div>
+                    <div>
+                      <h4 className="text-4xl font-bold text-powaha-dark mb-1">100%</h4>
+                      <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Quality Driven</p>
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // Contact Component
+      const Contact = () => {
+        return (
+          <section id="contact" className="py-32 bg-powaha-dark text-white relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-red-600/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
+                 <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/3"></div>
+              </div>
+
+            <div className="max-w-7xl mx-auto px-6 relative z-10">
+              <div className="grid lg:grid-cols-2 gap-16">
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  className="space-y-8"
+                >
+                  <div>
+                    <span className="text-powaha-red font-bold tracking-wider uppercase text-sm mb-4 block">Get Started</span>
+                    <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">Let's Build Something <br/> Extraordinary.</h2>
+                    <p className="text-gray-400 text-lg max-w-md">
+                      Ready to accelerate your digital journey? Contact our team for a free consultation and architectural review.
+                    </p>
+                  </div>
+
+                  <div className="space-y-6 pt-8">
+                    <div className="flex items-start gap-4">
+                      <div className="p-3 bg-white/5 rounded-lg text-powaha-red">
+                        <Mail size={24} />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-lg">Email Us</h4>
+                        <p className="text-gray-400">hello@powaha.com</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                       <div className="p-3 bg-white/5 rounded-lg text-powaha-red">
+                        <MapPin size={24} />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-lg">Visit Us</h4>
+                        <p className="text-gray-400">123 Innovation Drive, Tech Valley, CA</p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.form 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 }}
+                  className="bg-white/5 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-white/10 shadow-2xl"
+                >
+                  <div className="grid md:grid-cols-2 gap-6 mb-6">
+                    <div className="space-y-2">
+                      <label htmlFor="name" className="text-sm font-medium text-gray-300">Name</label>
+                      <input type="text" id="name" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-powaha-red focus:border-transparent transition-all" placeholder="John Doe" />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="text-sm font-medium text-gray-300">Email</label>
+                      <input type="email" id="email" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-powaha-red focus:border-transparent transition-all" placeholder="john@company.com" />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2 mb-6">
+                    <label htmlFor="subject" className="text-sm font-medium text-gray-300">Subject</label>
+                    <select id="subject" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-powaha-red focus:border-transparent transition-all [&>option]:text-black">
+                      <option value="" disabled selected>Select a topic</option>
+                      <option value="project">Start a Project</option>
+                      <option value="consulting">Consultation</option>
+                      <option value="careers">Careers</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-2 mb-8">
+                    <label htmlFor="message" className="text-sm font-medium text-gray-300">Message</label>
+                    <textarea id="message" rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-powaha-red focus:border-transparent transition-all" placeholder="Tell us about your project..."></textarea>
+                  </div>
+                  
+                  <button type="button" className="group w-full bg-powaha-red hover:bg-red-700 text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-lg shadow-red-900/30 flex items-center justify-center gap-2 hover:gap-3">
+                    Send Message
+                    <Send size={18} className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </motion.form>
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // Footer Component
+      const Footer = () => {
+        return (
+          <footer className="bg-white pt-16 pb-8 border-t border-gray-100">
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="grid md:grid-cols-4 gap-12 mb-12">
+                <div className="col-span-1 md:col-span-2">
+                  <Logo className="h-8 mb-6" />
+                  <p className="text-gray-500 max-w-sm mb-6">
+                    Powaha Infotech Pvt Ltd - Building world-class Native and Hybrid solutions for phones, tablets, and scalable cloud platforms.
+                  </p>
+                  <div className="flex gap-4">
+                    <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-powaha-red hover:text-white transition-colors">
+                      <Linkedin size={20} />
+                    </a>
+                    <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-powaha-red hover:text-white transition-colors">
+                      <Twitter size={20} />
+                    </a>
+                    <a href="#" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-powaha-red hover:text-white transition-colors">
+                      <Github size={20} />
+                    </a>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-4">Services</h4>
+                  <ul className="space-y-3 text-sm text-gray-600">
+                    <li><a href="#" className="hover:text-powaha-red transition-colors">Mobile Solutions</a></li>
+                    <li><a href="#" className="hover:text-powaha-red transition-colors">Web Development</a></li>
+                    <li><a href="#" className="hover:text-powaha-red transition-colors">Cloud Platforms</a></li>
+                    <li><a href="#" className="hover:text-powaha-red transition-colors">UX Consulting</a></li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-4">Company</h4>
+                  <ul className="space-y-3 text-sm text-gray-600">
+                    <li><a href="#about" className="hover:text-powaha-red transition-colors">About Us</a></li>
+                    <li><a href="#" className="hover:text-powaha-red transition-colors">Careers</a></li>
+                    <li><a href="#" className="hover:text-powaha-red transition-colors">Blog</a></li>
+                    <li><a href="#contact" className="hover:text-powaha-red transition-colors">Contact</a></li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                <p>&copy; {new Date().getFullYear()} Powaha Infotech Pvt Ltd. All rights reserved.</p>
+                <div className="flex gap-6 mt-4 md:mt-0">
+                  <a href="#" className="hover:text-gray-900">Privacy Policy</a>
+                  <a href="#" className="hover:text-gray-900">Terms of Service</a>
+                </div>
+              </div>
+            </div>
+          </footer>
+        );
+      };
+
+      // App Component
+      function App() {
+        return (
+          <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-red-100 selection:text-red-900">
+            <Navbar />
+            <main>
+              <Hero />
+              <Services />
+              <About />
+              <Contact />
+            </main>
+            <Footer />
+          </div>
+        );
+      }
+
+      // Root Render
+      const rootElement = document.getElementById('root');
+      if (rootElement) {
+        const root = createRoot(rootElement);
+        root.render(
+          <React.StrictMode>
+            <App />
+          </React.StrictMode>
+        );
+      }
+    </script>
+  </body>
+</html>
