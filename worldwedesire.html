@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>World We Desire - Heaven on Earth Realities</title>
+    <link rel="icon" type="image/png" href="assets/worldwedesire.png" />
+    <link rel="apple-touch-icon" href="assets/worldwedesire.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                cream: '#F5F2EB',
+                teal: '#1A5F5F',
+                darkTeal: '#0D3333',
+                lightGreen: '#88D4B0',
+                gold: '#D4AF37',
+                charcoal: '#1A202C'
+              }
+            },
+            fontFamily: {
+              serif: ['"Cormorant Garamond"', 'serif'],
+              sans: ['"Montserrat"', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #F5F2EB;
+        color: #1A202C;
+      }
+      .bg-noise {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 50;
+        background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.04%22/%3E%3C/svg%3E');
+      }
+      
+      /* Animation keyframes */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-100px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(1.2);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0) translateX(-50%); }
+        50% { transform: translateY(10px) translateX(-50%); }
+      }
+      
+      .animate-fade-in-down { animation: fadeInDown 0.6s ease-out forwards; }
+      .animate-fade-in-up { animation: fadeInUp 1s ease-out forwards; }
+      .animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
+      .animate-scale-in { animation: scaleIn 1.4s ease-out forwards; }
+      .animate-slide-in-left { animation: slideInLeft 0.8s ease-out forwards; }
+      .animate-bounce-slow { animation: bounce 2s infinite; }
+      
+      .delay-100 { animation-delay: 0.1s; }
+      .delay-200 { animation-delay: 0.2s; }
+      .delay-300 { animation-delay: 0.3s; }
+      .delay-400 { animation-delay: 0.4s; }
+      .delay-500 { animation-delay: 0.5s; }
+      .delay-600 { animation-delay: 0.6s; }
+      
+      /* Scroll animations */
+      .scroll-animate {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+      }
+      
+      .scroll-animate.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      
+      /* Button hover effects */
+      .btn-primary {
+        transition: all 0.3s ease;
+      }
+      .btn-primary:hover {
+        transform: scale(1.02);
+        box-shadow: 0 10px 25px rgba(26, 95, 95, 0.3);
+      }
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
+      
+      /* Nav link animation */
+      .nav-link span {
+        display: inline-block;
+        transition: transform 0.3s ease;
+      }
+      .nav-link:hover span:first-child {
+        transform: translateY(-100%);
+      }
+      .nav-link:hover span:last-child {
+        transform: translateY(0);
+      }
+      
+      /* Feature card hover */
+      .feature-card:hover .feature-icon {
+        border-color: #1A5F5F;
+      }
+      .feature-card:hover .feature-title {
+        color: #1A5F5F;
+      }
+      
+      /* Testimonial hover */
+      .testimonial-card:hover .quote-icon {
+        opacity: 1;
+      }
+      .testimonial-card:hover .testimonial-text {
+        opacity: 1;
+      }
+      
+      /* Image grayscale hover */
+      .img-grayscale {
+        filter: grayscale(100%);
+        transition: filter 0.7s ease-in-out;
+      }
+      .img-grayscale:hover {
+        filter: grayscale(0%);
+      }
+      
+      /* Form label animation */
+      .form-group input:focus ~ label,
+      .form-group input:not(:placeholder-shown) ~ label,
+      .form-group textarea:focus ~ label,
+      .form-group textarea:not(:placeholder-shown) ~ label {
+        top: -0.5rem;
+        font-size: 10px;
+        color: #1A5F5F;
+      }
+      
+      /* Mobile menu */
+      .mobile-menu {
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+      .mobile-menu.hidden {
+        opacity: 0;
+        visibility: hidden;
+      }
+      .mobile-menu.visible {
+        opacity: 1;
+        visibility: visible;
+      }
+      
+      /* Parallax effect */
+      .parallax-slow {
+        will-change: transform;
+      }
+    </style>
+</head>
+<body class="min-h-screen bg-brand-cream selection:bg-brand-teal selection:text-white">
+    <!-- Noise overlay -->
+    <div class="bg-noise"></div>
+    
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-[60] transition-all duration-500 border-b bg-transparent border-transparent py-10 animate-fade-in-down">
+        <div class="container mx-auto px-6 md:px-12 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-3 group">
+                <img 
+                    src="assets/worldwedesire.png" 
+                    alt="World We Desire Logo" 
+                    class="h-12 w-auto md:h-16 lg:h-20 object-contain transition-transform duration-500 group-hover:scale-105"
+                />
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-10">
+                <a href="#philosophy" class="nav-link relative font-sans text-xs font-medium text-brand-charcoal hover:text-brand-teal transition-colors tracking-widest uppercase overflow-hidden h-4">
+                    <span class="block">Philosophy</span>
+                    <span class="absolute left-0 top-0 translate-y-full text-brand-teal">Philosophy</span>
+                </a>
+                <a href="#workshops" class="nav-link relative font-sans text-xs font-medium text-brand-charcoal hover:text-brand-teal transition-colors tracking-widest uppercase overflow-hidden h-4">
+                    <span class="block">Workshops</span>
+                    <span class="absolute left-0 top-0 translate-y-full text-brand-teal">Workshops</span>
+                </a>
+                <a href="#futures" class="nav-link relative font-sans text-xs font-medium text-brand-charcoal hover:text-brand-teal transition-colors tracking-widest uppercase overflow-hidden h-4">
+                    <span class="block">Futures</span>
+                    <span class="absolute left-0 top-0 translate-y-full text-brand-teal">Futures</span>
+                </a>
+                <a href="#contact" class="nav-link relative font-sans text-xs font-medium text-brand-charcoal hover:text-brand-teal transition-colors tracking-widest uppercase overflow-hidden h-4">
+                    <span class="block">Connect</span>
+                    <span class="absolute left-0 top-0 translate-y-full text-brand-teal">Connect</span>
+                </a>
+                <a href="#contact" class="btn-primary px-6 py-2 text-xs rounded-full font-sans font-medium bg-brand-darkTeal text-white hover:bg-brand-teal tracking-widest uppercase">Join Us</a>
+            </div>
+
+            <!-- Mobile Toggle -->
+            <button id="mobile-toggle" class="md:hidden text-brand-darkTeal">
+                <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+                <svg id="close-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="mobile-menu hidden fixed inset-0 z-50 bg-brand-darkTeal flex items-center justify-center">
+        <div class="flex flex-col items-center gap-8">
+            <a href="#philosophy" class="mobile-nav-link font-serif text-4xl text-brand-cream hover:text-brand-lightGreen transition-colors">Philosophy</a>
+            <a href="#workshops" class="mobile-nav-link font-serif text-4xl text-brand-cream hover:text-brand-lightGreen transition-colors">Workshops</a>
+            <a href="#futures" class="mobile-nav-link font-serif text-4xl text-brand-cream hover:text-brand-lightGreen transition-colors">Futures</a>
+            <a href="#contact" class="mobile-nav-link font-serif text-4xl text-brand-cream hover:text-brand-lightGreen transition-colors">Connect</a>
+        </div>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="relative min-h-[100vh] md:min-h-[110vh] flex items-center overflow-hidden pt-36 md:pt-32 pb-12">
+            <!-- Decorative Lines -->
+            <div class="absolute inset-0 pointer-events-none opacity-20 hidden md:block">
+                <div class="absolute left-1/4 top-0 bottom-0 w-px bg-brand-darkTeal"></div>
+                <div class="absolute right-1/4 top-0 bottom-0 w-px bg-brand-darkTeal"></div>
+            </div>
+
+            <div class="container mx-auto px-6 md:px-12 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 items-center">
+                    
+                    <!-- Main Typography -->
+                    <div class="lg:col-span-7 relative z-20 order-1 lg:order-1">
+                        <div class="animate-fade-in-up" style="opacity: 0;">
+                            <div class="flex items-center gap-4 mb-6">
+                                <span class="h-px w-8 md:w-12 bg-brand-teal"></span>
+                                <span class="font-sans text-brand-teal tracking-[0.2em] md:tracking-[0.3em] text-[10px] md:text-xs font-semibold uppercase">
+                                    Consulting & Visionary Services
+                                </span>
+                            </div>
+                            
+                            <h1 class="font-serif text-5xl md:text-7xl lg:text-[6.5rem] text-brand-darkTeal leading-[0.95] md:leading-[0.9] tracking-tight mb-8">
+                                Dreaming of <br/>
+                                <span class="italic font-light text-brand-teal ml-4 md:ml-8 block">Heaven on Earth</span> 
+                                Realities.
+                            </h1>
+                            
+                            <p class="font-sans text-brand-charcoal/70 text-base md:text-lg max-w-lg leading-relaxed font-light ml-2">
+                                We enable the collective dreaming of new worlds. Specialized in Personal Futures and hands-on workshops around Emerging Technology.
+                            </p>
+
+                            <div class="mt-10 ml-2 flex flex-wrap gap-4 md:gap-6">
+                                <a href="#workshops" class="btn-primary px-8 py-3 rounded-full font-sans font-medium bg-brand-darkTeal text-white hover:bg-brand-teal shadow-lg text-sm tracking-widest uppercase">Explore Workshops</a>
+                                <a href="#philosophy" class="px-0 py-3 font-sans font-medium bg-transparent text-brand-teal hover:text-brand-darkTeal underline-offset-4 hover:underline text-sm tracking-widest uppercase">Our Philosophy</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Element -->
+                    <div class="lg:col-span-5 relative order-2 lg:order-2 mt-12 lg:mt-0">
+                        <div class="parallax-slow relative w-full aspect-[3/4] md:aspect-[3/4] mt-6 md:mt-8">
+                            <div class="animate-scale-in absolute inset-0 overflow-hidden rounded-sm" style="opacity: 0;">
+                                <img 
+                                    src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                                    alt="Visionary gazing into the future"
+                                    class="w-full h-full object-cover object-top"
+                                />
+                                <div class="absolute inset-0 bg-brand-darkTeal/20 mix-blend-multiply"></div>
+                            </div>
+
+                    
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Scroll Indicator -->
+            <div class="animate-bounce-slow absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 text-brand-teal/50 hidden md:block">
+                <span class="font-sans text-[10px] tracking-[0.3em] uppercase block rotate-90 origin-left translate-x-3">Scroll</span>
+                <div class="h-16 w-px bg-brand-teal/30 mt-8 mx-auto"></div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="philosophy" class="py-32 bg-white relative overflow-hidden">
+            <div class="container mx-auto px-6 md:px-12">
+                <div class="flex flex-col lg:flex-row gap-20">
+                    
+                    <!-- Sticky Header Section -->
+                    <div class="lg:w-1/3">
+                        <div class="lg:sticky lg:top-32">
+                            <div class="scroll-animate">
+                                <h2 class="font-serif text-5xl md:text-6xl text-brand-darkTeal leading-[1.1] mb-8">
+                                    Crafting the <br/>
+                                    <span class="italic text-brand-teal ml-8">Unimagined.</span>
+                                </h2>
+                                <div class="w-16 h-1 bg-brand-lightGreen mb-8"></div>
+                                <p class="font-sans text-brand-charcoal/70 leading-relaxed font-light mb-8">
+                                    At <strong class="text-brand-darkTeal font-medium">World We Desire</strong>, we are a boutique consulting firm dedicated to the art of possible. We don't just predict the future; we help you hand-craft it through intimate guidance and immersive technological exploration.
+                                </p>
+                                
+                                <a href="#workshops" class="inline-flex items-center gap-2 text-brand-teal font-sans text-xs font-bold uppercase tracking-widest hover:gap-4 transition-all">
+                                    View Our Services <span class="text-lg">→</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature List -->
+                    <div class="lg:w-2/3 grid md:grid-cols-2 gap-x-12 gap-y-16">
+                        <!-- Feature 1 -->
+                        <div class="scroll-animate feature-card group">
+                            <div class="feature-icon mb-6 inline-block p-4 border border-brand-teal/10 rounded-full transition-colors duration-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-brand-teal">
+                                    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+                                    <path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>
+                                </svg>
+                            </div>
+                            <h3 class="feature-title font-serif text-3xl text-brand-darkTeal mb-4 transition-colors duration-300">
+                                Collective Dreaming
+                            </h3>
+                            <p class="font-sans text-brand-charcoal/60 leading-relaxed font-light">
+                                Facilitating spaces where groups can visualize and design 'Heaven on Earth' realities, moving beyond the constraints of the present.
+                            </p>
+                        </div>
+
+                        <!-- Feature 2 -->
+                        <div class="scroll-animate delay-100 feature-card group">
+                            <div class="feature-icon mb-6 inline-block p-4 border border-brand-teal/10 rounded-full transition-colors duration-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-brand-teal">
+                                    <circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/>
+                                </svg>
+                            </div>
+                            <h3 class="feature-title font-serif text-3xl text-brand-darkTeal mb-4 transition-colors duration-300">
+                                Personal Futures
+                            </h3>
+                            <p class="font-sans text-brand-charcoal/60 leading-relaxed font-light">
+                                Deep dive consulting to map out your individual trajectory. We help you align your personal path with the future you desire.
+                            </p>
+                        </div>
+
+                        <!-- Feature 3 -->
+                        <div class="scroll-animate delay-200 feature-card group">
+                            <div class="feature-icon mb-6 inline-block p-4 border border-brand-teal/10 rounded-full transition-colors duration-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-brand-teal">
+                                    <rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/>
+                                </svg>
+                            </div>
+                            <h3 class="feature-title font-serif text-3xl text-brand-darkTeal mb-4 transition-colors duration-300">
+                                Emerging Tech
+                            </h3>
+                            <p class="font-sans text-brand-charcoal/60 leading-relaxed font-light">
+                                Hands-on workshops that demystify the tools of tomorrow. Understand AI, Web3, and beyond to leverage them for good.
+                            </p>
+                        </div>
+
+                        <!-- Feature 4 -->
+                        <div class="scroll-animate delay-300 feature-card group">
+                            <div class="feature-icon mb-6 inline-block p-4 border border-brand-teal/10 rounded-full transition-colors duration-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-brand-teal">
+                                    <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+                                </svg>
+                            </div>
+                            <h3 class="feature-title font-serif text-3xl text-brand-darkTeal mb-4 transition-colors duration-300">
+                                Actionable Reality
+                            </h3>
+                            <p class="font-sans text-brand-charcoal/60 leading-relaxed font-light">
+                                Bridging the gap between the ethereal and the tangible. We turn high-level visions into concrete, executed strategies.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Impact Section -->
+        <section id="workshops" class="py-32 bg-brand-cream relative overflow-hidden">
+            <div class="container mx-auto px-6 md:px-12">
+                
+                <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+                    <div class="max-w-xl scroll-animate">
+                        <span class="text-brand-teal font-sans uppercase tracking-[0.2em] text-xs font-bold block mb-4">
+                            Our Work
+                        </span>
+                        <h2 class="font-serif text-5xl md:text-6xl text-brand-darkTeal leading-tight">
+                            Realities <span class="italic font-light">Designed</span>
+                        </h2>
+                    </div>
+                    <div class="max-w-xs text-right scroll-animate delay-100">
+                        <p class="font-sans text-brand-charcoal/60 font-light text-sm">
+                            Bridging the gap between personal aspiration and technological capability.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Artistic Grid -->
+                <div class="relative h-[800px] md:h-[600px] w-full">
+                    
+                    <!-- Main Large Image -->
+                    <div class="scroll-animate absolute top-0 left-0 w-full md:w-2/3 h-[400px] md:h-[500px] overflow-hidden z-10">
+                        <img 
+                            src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                            alt="Workshop Collaboration" 
+                            class="w-full h-full object-cover img-grayscale"
+                        />
+                    </div>
+
+                    <!-- Overlapping Secondary Image -->
+                    <div class="parallax-slow absolute bottom-0 right-0 md:right-12 w-3/4 md:w-1/3 h-[300px] md:h-[400px] overflow-hidden z-20 border-8 border-brand-cream shadow-2xl">
+                        <img 
+                            src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                            alt="Technology Detail" 
+                            class="w-full h-full object-cover"
+                        />
+                        <div class="absolute inset-0 bg-brand-darkTeal/20"></div>
+                    </div>
+
+                    <!-- Detail Card -->
+                    <div class="scroll-animate delay-500 absolute bottom-20 left-4 md:left-24 z-30 bg-brand-darkTeal text-brand-cream p-8 max-w-xs">
+                        <div class="text-4xl font-serif mb-2">100+</div>
+                        <div class="text-xs font-sans uppercase tracking-widest opacity-60">Futures Mapped</div>
+                        <p class="mt-4 text-sm font-light opacity-80 border-t border-white/10 pt-4">
+                            Empowering individuals and teams to claim agency over their tomorrow through technology.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- CTA Strip -->
+                <div class="mt-32 border-t border-b border-brand-darkTeal/10 py-12 flex flex-col md:flex-row items-center justify-between gap-8">
+                    <h3 class="font-serif text-3xl text-brand-darkTeal">Ready to dream together?</h3>
+                    <a href="#contact" class="group flex items-center gap-3 font-sans text-xs font-bold uppercase tracking-widest text-brand-teal hover:text-brand-darkTeal transition-colors">
+                        Book a Workshop
+                        <span class="w-8 h-px bg-brand-teal group-hover:w-12 transition-all"></span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="futures" class="py-32 bg-brand-darkTeal text-brand-cream relative overflow-hidden">
+            <div class="container mx-auto px-6 md:px-12 relative z-10">
+                <div class="mb-20 border-b border-white/10 pb-8 flex justify-between items-end">
+                    <h2 class="font-serif text-4xl md:text-5xl scroll-animate">Perspectives</h2>
+                    <div class="hidden md:block text-xs font-sans uppercase tracking-widest opacity-50">Community Voices</div>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-12">
+                    <!-- Testimonial 1 -->
+                    <div class="scroll-animate testimonial-card relative group">
+                        <div class="quote-icon mb-8 opacity-20 group-hover:opacity-100 transition-opacity duration-500 text-brand-lightGreen">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21c0 1 0 1 1 1z"/>
+                                <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>
+                            </svg>
+                        </div>
+                        <p class="testimonial-text font-serif text-2xl leading-relaxed opacity-80 mb-8 group-hover:opacity-100 transition-opacity duration-300">
+                            "The workshop opened my eyes to how emerging tech can be a tool for empathy, not just efficiency. A truly visionary experience."
+                        </p>
+                        <div>
+                            <div class="font-sans font-bold text-sm tracking-wide text-brand-lightGreen">Elena R.</div>
+                            <div class="font-sans text-xs opacity-50 mt-1 uppercase tracking-wider">Workshop Participant</div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 2 -->
+                    <div class="scroll-animate delay-200 testimonial-card relative group">
+                        <div class="quote-icon mb-8 opacity-20 group-hover:opacity-100 transition-opacity duration-500 text-brand-lightGreen">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21c0 1 0 1 1 1z"/>
+                                <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>
+                            </svg>
+                        </div>
+                        <p class="testimonial-text font-serif text-2xl leading-relaxed opacity-80 mb-8 group-hover:opacity-100 transition-opacity duration-300">
+                            "World We Desire helped me map a personal future that feels both ambitious and deeply grounded. I finally see the path forward."
+                        </p>
+                        <div>
+                            <div class="font-sans font-bold text-sm tracking-wide text-brand-lightGreen">David Chen</div>
+                            <div class="font-sans text-xs opacity-50 mt-1 uppercase tracking-wider">Consulting Client</div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 3 -->
+                    <div class="scroll-animate delay-400 testimonial-card relative group">
+                        <div class="quote-icon mb-8 opacity-20 group-hover:opacity-100 transition-opacity duration-500 text-brand-lightGreen">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21c0 1 0 1 1 1z"/>
+                                <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>
+                            </svg>
+                        </div>
+                        <p class="testimonial-text font-serif text-2xl leading-relaxed opacity-80 mb-8 group-hover:opacity-100 transition-opacity duration-300">
+                            "Collective dreaming is powerful. We walked away with a shared vision of 'Heaven on Earth' that we are now actively building."
+                        </p>
+                        <div>
+                            <div class="font-sans font-bold text-sm tracking-wide text-brand-lightGreen">Sarah J.</div>
+                            <div class="font-sans text-xs opacity-50 mt-1 uppercase tracking-wider">Startup Founder</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-32 bg-white">
+            <div class="container mx-auto px-6 md:px-12 max-w-5xl">
+                <div class="grid md:grid-cols-2 gap-16">
+                    <div class="scroll-animate">
+                        <span class="text-brand-teal font-sans uppercase tracking-[0.2em] text-xs font-bold block mb-6">
+                            Connect With Us
+                        </span>
+                        <h2 class="font-serif text-5xl md:text-6xl text-brand-darkTeal leading-none mb-8">
+                            Design Your <br/> Future.
+                        </h2>
+                        <p class="font-sans text-brand-charcoal/60 font-light leading-relaxed max-w-sm mb-12">
+                            Whether you are interested in a personal futures consultation or hosting a workshop on emerging technology, we are here to guide you.
+                        </p>
+                        
+                        <div class="space-y-4 font-serif text-xl text-brand-darkTeal">
+                            <p>hello@worldwedesire.org</p>
+                            <p>Business Consulting & Services</p>
+                        </div>
+                    </div>
+
+                    <form class="scroll-animate delay-200 space-y-12 mt-8">
+                        <div class="form-group relative group">
+                            <input 
+                                type="text" 
+                                required
+                                class="peer w-full py-4 bg-transparent border-b border-brand-charcoal/20 focus:border-brand-teal outline-none transition-all duration-300 text-brand-darkTeal font-serif text-lg"
+                                placeholder=" "
+                                id="name"
+                            />
+                            <label for="name" class="absolute left-0 top-4 text-brand-charcoal/40 font-sans text-xs uppercase tracking-widest transition-all duration-300 pointer-events-none peer-focus:-top-2 peer-focus:text-[10px] peer-focus:text-brand-teal peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:text-[10px]">
+                                Your Name
+                            </label>
+                        </div>
+
+                        <div class="form-group relative group">
+                            <input 
+                                type="email" 
+                                required
+                                class="peer w-full py-4 bg-transparent border-b border-brand-charcoal/20 focus:border-brand-teal outline-none transition-all duration-300 text-brand-darkTeal font-serif text-lg"
+                                placeholder=" "
+                                id="email"
+                            />
+                            <label for="email" class="absolute left-0 top-4 text-brand-charcoal/40 font-sans text-xs uppercase tracking-widest transition-all duration-300 pointer-events-none peer-focus:-top-2 peer-focus:text-[10px] peer-focus:text-brand-teal peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:text-[10px]">
+                                Email Address
+                            </label>
+                        </div>
+                        
+                        <div class="form-group relative group">
+                            <textarea 
+                                rows="3"
+                                required
+                                class="peer w-full py-4 bg-transparent border-b border-brand-charcoal/20 focus:border-brand-teal outline-none transition-all duration-300 text-brand-darkTeal font-serif text-lg resize-none"
+                                placeholder=" "
+                                id="message"
+                            ></textarea>
+                            <label for="message" class="absolute left-0 top-4 text-brand-charcoal/40 font-sans text-xs uppercase tracking-widest transition-all duration-300 pointer-events-none peer-focus:-top-2 peer-focus:text-[10px] peer-focus:text-brand-teal peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:text-[10px]">
+                                Tell us about your vision
+                            </label>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="submit" class="btn-primary w-full md:w-auto py-4 px-12 rounded-full font-sans font-medium bg-brand-darkTeal text-white hover:bg-brand-teal shadow-lg text-sm tracking-widest uppercase">Start the Journey</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-brand-darkTeal text-brand-cream pt-20 pb-10">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-16 border-b border-white/10 pb-16">
+                <div class="md:col-span-2">
+                    <a href="#" class="inline-block mb-6">
+                        <img 
+                            src="assets/worldwedesire.png" 
+                            alt="World We Desire Logo" 
+                            class="h-16 md:h-20 w-auto object-contain brightness-0 invert opacity-90 hover:opacity-100 transition-opacity"
+                        />
+                    </a>
+                    <p class="font-sans font-light text-white/60 max-w-sm leading-relaxed">
+                        Enabling collective dreaming of "Heaven on Earth" realities. A boutique consultancy for personal futures and emerging technology workshops.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-sans text-xs uppercase tracking-widest font-bold mb-6 text-brand-lightGreen">Explore</h4>
+                    <ul class="space-y-4 font-sans text-sm text-white/70">
+                        <li><a href="#philosophy" class="hover:text-white transition-colors">Philosophy</a></li>
+                        <li><a href="#workshops" class="hover:text-white transition-colors">Workshops</a></li>
+                        <li><a href="#futures" class="hover:text-white transition-colors">Perspectives</a></li>
+                        <li><a href="#contact" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-sans text-xs uppercase tracking-widest font-bold mb-6 text-brand-lightGreen">Contact</h4>
+                    <ul class="space-y-4 font-sans text-sm text-white/70">
+                        <li><a href="mailto:hello@worldwedesire.org" class="hover:text-white transition-colors">hello@worldwedesire.org</a></li>
+                        <li>Business Consulting & Services</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="font-sans text-xs text-white/40">© 2025 World We Desire. All rights reserved.</p>
+                
+                <div class="flex gap-6">
+                    <a href="https://www.linkedin.com/company/world-we-desire/" target="_blank" rel="noopener noreferrer" class="text-white/60 hover:text-brand-lightGreen transition-colors" title="World We Desire on LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                            <rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ===== Navigation Scroll Effect =====
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.remove('bg-transparent', 'border-transparent', 'py-10');
+                navbar.classList.add('bg-brand-cream/80', 'backdrop-blur-xl', 'border-brand-darkTeal/5', 'py-4');
+            } else {
+                navbar.classList.add('bg-transparent', 'border-transparent', 'py-10');
+                navbar.classList.remove('bg-brand-cream/80', 'backdrop-blur-xl', 'border-brand-darkTeal/5', 'py-4');
+            }
+        });
+
+        // ===== Mobile Menu Toggle =====
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const closeIcon = document.getElementById('close-icon');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+        mobileToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('visible');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('visible');
+                menuIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            });
+        });
+
+        // ===== Scroll Animations =====
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-animate').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ===== Parallax Effect =====
+        const parallaxElements = document.querySelectorAll('.parallax-slow');
+        
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            parallaxElements.forEach(el => {
+                const speed = 0.15;
+                el.style.transform = `translateY(${scrollY * speed}px)`;
+            });
+        });
+
+        // ===== Smooth Scroll for Anchor Links =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ===== Form Submission Handler =====
+        const contactForm = document.querySelector('form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Thank you for your message! We will get back to you soon.');
+                contactForm.reset();
+            });
+        }
+
+        // ===== Initialize animations on page load =====
+        document.addEventListener('DOMContentLoaded', () => {
+            // Trigger initial animations
+            setTimeout(() => {
+                document.querySelectorAll('.animate-fade-in-up, .animate-scale-in, .animate-slide-in-left').forEach(el => {
+                    el.style.opacity = '1';
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>
