@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBytes | Intelligent Micro-Learning</title>
+    <meta name="description" content="Master complex subjects in 5-minute sprints. The intelligent way to prepare for boards and competitive exams directly on WhatsApp.">
+    
+    <!-- Fonts: Inter (UI) & Outfit (Display) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- Custom Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Inter"', 'sans-serif'],
+                        display: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f2fbff',
+                            100: '#e6f7ff',
+                            200: '#bfebff',
+                            300: '#99dfff',
+                            400: '#4dc7ff',
+                            500: '#35b3ff', // Primary Blue
+                            600: '#2999db',
+                            700: '#1e7fb8',
+                            800: '#146694',
+                            900: '#0a4c70',
+                            950: '#06304a',
+                        },
+                        accent: {
+                            50: '#fffdf5',
+                            100: '#fff9db',
+                            200: '#ffefaa',
+                            300: '#ffe57a',
+                            400: '#ffe066',
+                            500: '#ffdc5f', // Secondary Yellow
+                            600: '#dbb535',
+                            700: '#b89320',
+                            800: '#947210',
+                            900: '#705305',
+                        },
+                        whatsapp: {
+                            500: '#22c55e',
+                            600: '#16a34a',
+                        },
+                        slate: {
+                            850: '#1e293b',
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-mesh': 'radial-gradient(at 0% 0%, rgba(53, 179, 255, 0.1) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(255, 220, 95, 0.15) 0px, transparent 50%)',
+                        'gradient-brand': 'linear-gradient(135deg, #35b3ff 0%, #2999db 100%)',
+                    },
+                    boxShadow: {
+                        'subtle': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                        'float': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                        'glow': '0 0 20px rgba(53, 179, 255, 0.3)',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'marquee': 'marquee 30s linear infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        marquee: {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(-100%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Favicon -->
+    <link rel="icon" href="https://swiftskillshare.tech/lovable-uploads/c2564fb5-9680-4619-9839-82a612556a5f.png" />
+
+    <style>
+        body {
+            background-color: #FFFFFF;
+            color: #0F172A;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #99dfff;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #35b3ff;
+        }
+
+        /* Clean Chat Bubbles */
+        .chat-bubble {
+            position: relative;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.05));
+        }
+        
+        .chat-bubble-left {
+            border-bottom-left-radius: 2px;
+        }
+        
+        .chat-bubble-right {
+            border-bottom-right-radius: 2px;
+            background: linear-gradient(135deg, #e6f7ff 0%, #bfebff 100%);
+        }
+
+        /* Gradient Text Utility */
+        .text-gradient {
+            background: linear-gradient(to right, #35b3ff, #1e7fb8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Smooth Section Transitions */
+        section {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="selection:bg-accent-200 selection:text-brand-900">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300 bg-white/90 backdrop-blur-xl border-b border-slate-100" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="#start" class="flex items-center gap-2 group">
+                    <img src="https://swiftskillshare.tech/lovable-uploads/c2564fb5-9680-4619-9839-82a612556a5f.png" alt="SkillBytes logo" class="w-32 h-24 object-contain ">
+                    
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#methodology" class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Methodology</a>
+                    <a href="#courses" class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Curriculum</a>
+                    <a href="#reviews" class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Reviews</a>
+                    <a href="#contact" class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Contact</a>
+                </div>
+
+                <!-- CTA -->
+                <div class="hidden md:flex items-center gap-4">
+                    <a href="#start" class="text-sm font-semibold text-slate-900 hover:text-brand-600">Log in</a>
+                    <a href="#start" class="flex items-center gap-2 bg-brand-500 text-white px-5 py-2.5 rounded-full font-medium text-sm hover:bg-brand-600 transition-all shadow-lg hover:shadow-brand-500/20 transform hover:-translate-y-0.5">
+                        Get Started
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-slate-900 p-2" id="mobile-menu-btn" aria-label="Open Menu">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="fixed inset-0 bg-white z-[60] transform translate-x-full transition-transform duration-300 flex flex-col pt-24 px-6 md:hidden" id="mobile-menu">
+        <button class="absolute top-6 right-6 text-slate-500 hover:text-slate-900 p-2" id="close-menu-btn" aria-label="Close Menu">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+        <div class="flex flex-col gap-6 text-center">
+            <a href="#methodology" class="text-xl font-medium text-slate-900 mobile-link">Methodology</a>
+            <a href="#courses" class="text-xl font-medium text-slate-900 mobile-link">Curriculum</a>
+            <a href="#reviews" class="text-xl font-medium text-slate-900 mobile-link">Reviews</a>
+            <a href="#contact" class="text-xl font-medium text-slate-900 mobile-link">Contact</a>
+            <hr class="border-slate-100 my-2">
+            <a href="#start" class="text-lg font-medium text-slate-600 mobile-link">Log In</a>
+            <a href="#start" class="w-full py-4 bg-brand-500 text-white rounded-xl font-semibold shadow-lg mobile-link">Get Started</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="start" class="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden bg-gradient-mesh">
+        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+            
+            <!-- Left Content -->
+            <div class="text-center lg:text-left z-10">
+                
+                
+                <h1 class="font-display text-5xl md:text-7xl font-bold leading-tight text-slate-900 mb-6 hero-anim opacity-0 translate-y-4">
+                    Score Higher.<br>
+                    <span class="text-gradient">Study Smarter.</span>
+                </h1>
+                
+                <p class="text-slate-500 text-lg md:text-xl leading-relaxed mb-10 max-w-lg mx-auto lg:mx-0 hero-anim opacity-0 translate-y-4">
+                    Transform your WhatsApp into a personalized learning engine. Daily micro-lessons, interactive quizzes, and AI-driven progress tracking.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start hero-anim opacity-0 translate-y-4">
+                    <button class="w-full sm:w-auto px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-full transition-all shadow-xl shadow-brand-500/20 hover:shadow-brand-500/30 flex items-center justify-center gap-2">
+                        <i data-lucide="message-square" class="w-5 h-5"></i>
+                        Start Learning
+                    </button>
+                    <button class="w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 font-semibold rounded-full border border-slate-200 transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2">
+                        <i data-lucide="play-circle" class="w-5 h-5 text-slate-400"></i>
+                        View Platform Demo
+                    </button>
+                </div>
+                
+                <div class="mt-12 flex items-center justify-center lg:justify-start gap-6 hero-anim opacity-0 translate-y-4">
+                    <div class="flex -space-x-3">
+                        <img class="w-10 h-10 rounded-full border-2 border-white bg-slate-100" src="https://api.dicebear.com/7.x/notionists/svg?seed=Alex" alt="Student">
+                        <img class="w-10 h-10 rounded-full border-2 border-white bg-slate-100" src="https://api.dicebear.com/7.x/notionists/svg?seed=Sara" alt="Student">
+                        <img class="w-10 h-10 rounded-full border-2 border-white bg-slate-100" src="https://api.dicebear.com/7.x/notionists/svg?seed=Mike" alt="Student">
+                        <div class="w-10 h-10 rounded-full border-2 border-white bg-accent-100 flex items-center justify-center text-xs font-bold text-brand-900">+2k</div>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1 text-accent-500 mb-0.5">
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        </div>
+                        <p class="text-sm text-slate-500 font-medium">Trusted by 2,000+ Students</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Visual (Sleek Interface) -->
+            <div class="relative flex justify-center lg:justify-end hero-visual opacity-0 scale-95">
+                <div class="relative w-[340px] h-[680px] bg-slate-900 rounded-[3rem] p-3 shadow-2xl ring-1 ring-slate-900/5">
+                    <div class="w-full h-full bg-white rounded-[2.5rem] overflow-hidden relative flex flex-col">
+                        
+                        <!-- Dynamic Island / Status Bar -->
+                        <div class="absolute top-0 left-0 w-full h-12 flex justify-center items-end pb-2 z-20 bg-white/90 backdrop-blur-sm">
+                            <div class="w-28 h-7 bg-slate-900 rounded-full"></div>
+                        </div>
+
+                        <!-- App Header (WhatsApp style) -->
+                        <div class="pt-14 pb-4 px-4 bg-whatsapp-600 text-white z-10 flex items-center justify-between rounded-t-[2.5rem]">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white overflow-hidden">
+                                    <img src="https://swiftskillshare.tech/lovable-uploads/c2564fb5-9680-4619-9839-82a612556a5f.png" alt="Tutor" class="w-8 h-8 object-cover rounded-full">
+                                </div>
+                                <div class="leading-tight">
+                                    <h3 class="font-bold text-sm">SkillBytes Tutor</h3>
+                                    <p class="text-[11px] text-white/90">Online • Startup Basics — Finding Real Problems</p>
+                                </div>
+                            </div>
+                            <i data-lucide="more-vertical" class="w-5 h-5 text-white/90"></i>
+                        </div>
+
+                        <!-- Chat Area (Solar System Q&A flow) -->
+                        <div class="flex-1 bg-slate-50 p-4 overflow-y-auto flex flex-col gap-4 max-h-[420px]">
+                            <div class="text-center">
+                                <span class="bg-slate-200 text-slate-500 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Today</span>
+                            </div>
+
+                            <!-- User asks about Solar System -->
+                            <div class="chat-bubble self-end bg-whatsapp-600 text-white p-3 rounded-2xl shadow-sm max-w-[75%]">
+                                <p class="text-sm">Can you explain what the Solar System is?</p>
+                                <div class="flex items-center justify-end gap-2 mt-1 text-[10px] text-white/90">
+                                    <span>10:00 AM</span>
+                                    <i data-lucide="check-check" class="w-3 h-3"></i>
+                                </div>
+                            </div>
+
+                            <!-- SkillBytes explanation -->
+                            <div class="chat-bubble self-start bg-white p-3 rounded-2xl shadow-sm max-w-[85%]">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">SB</div>
+                                    <div>
+                                        <p class="text-sm text-slate-800 leading-relaxed">The Solar System is the collection of the Sun and all objects bound to it by gravity — including planets, dwarf planets, moons, asteroids, comets, and interplanetary gas and dust. The Sun is the central star; planets orbit the Sun, and many planets have moons orbiting them.</p>
+                                        <span class="text-[10px] text-slate-400 block text-right mt-2">10:01 AM</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SkillBytes asks a quick question -->
+                            <div class="chat-bubble self-start bg-white p-3 rounded-2xl shadow-sm max-w-[80%]">
+                                <p class="text-sm text-slate-800">Quick question: Which is the largest planet in our Solar System?</p>
+                                <span class="text-[10px] text-slate-400 block text-right mt-2">10:02 AM</span>
+                            </div>
+
+                            <!-- User answers -->
+                            <div class="chat-bubble self-end bg-whatsapp-600 text-white p-3 rounded-2xl shadow-sm max-w-[60%]">
+                                <p class="text-sm">Jupiter.</p>
+                                <div class="flex items-center justify-end gap-2 mt-1 text-[10px] text-white/90">
+                                    <span>10:03 AM</span>
+                                    <i data-lucide="check-check" class="w-3 h-3"></i>
+                                </div>
+                            </div>
+
+                            <!-- SkillBytes praises correct answer -->
+                            <div class="chat-bubble self-start bg-white p-3 rounded-2xl shadow-sm max-w-[85%]">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">SB</div>
+                                    <div>
+                                        <p class="text-sm text-slate-800 leading-relaxed">Excellent — that's correct! Jupiter is the largest planet in our Solar System. It has a mass more than twice that of all the other planets combined. Want a quick fact about Jupiter's Great Red Spot?</p>
+                                        <span class="text-[10px] text-slate-400 block text-right mt-2">10:04 AM</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- User asks for quick fact -->
+                            <div class="chat-bubble self-end bg-whatsapp-600 text-white p-3 rounded-2xl shadow-sm max-w-[70%]">
+                                <p class="text-sm">Yes — what's the Great Red Spot?</p>
+                                <div class="flex items-center justify-end gap-2 mt-1 text-[10px] text-white/90">
+                                    <span>10:05 AM</span>
+                                    <i data-lucide="check-check" class="w-3 h-3"></i>
+                                </div>
+                            </div>
+
+                            <!-- SkillBytes shares quick fact -->
+                            <div class="chat-bubble self-start bg-white p-3 rounded-2xl shadow-sm max-w-[85%]">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">SB</div>
+                                    <div>
+                                        <p class="text-sm text-slate-800 leading-relaxed">The Great Red Spot is a giant storm on Jupiter that's been observed for at least 300 years. It's larger than Earth and rotates counter-clockwise. Cool, right?</p>
+                                        <span class="text-[10px] text-slate-400 block text-right mt-2">10:06 AM</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Input Area (WhatsApp style) -->
+                        <div class="p-3 bg-white border-t border-slate-100 flex items-center gap-3 rounded-b-[2.5rem]">
+                            <button class="p-2 text-slate-500 rounded-full bg-slate-100">
+                                <i data-lucide="paperclip" class="w-5 h-5"></i>
+                            </button>
+                            <input type="text" placeholder="Type a message..." class="flex-1 min-w-0 px-4 py-3 rounded-full bg-slate-50 border border-slate-100 text-sm text-slate-700 focus:outline-none">
+                            <button class="p-3 bg-whatsapp-600 rounded-full text-white shadow-md">
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trusted By Marquee -->
+    <div class="py-8 bg-white border-y border-slate-100 overflow-hidden relative">
+        <div class="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent z-10"></div>
+        <div class="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent z-10"></div>
+        
+        <div class="flex whitespace-nowrap animate-marquee items-center">
+            <!-- Set 1 -->
+            <div class="flex items-center gap-16 mx-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="shield-check" class="w-5 h-5 text-brand-500"></i> CBSE</span>
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="globe-2" class="w-5 h-5 text-brand-500"></i> ICSE</span>
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="book-open" class="w-5 h-5 text-brand-500"></i> State Boards</span>
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="award" class="w-5 h-5 text-brand-500"></i> Olympiads</span>
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="zap" class="w-5 h-5 text-brand-500"></i> JEE Foundation</span>
+            </div>
+             <!-- Set 2 (Duplicate) -->
+             <div class="flex items-center gap-16 mx-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="shield-check" class="w-5 h-5 text-brand-500"></i> CBSE</span>
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="globe-2" class="w-5 h-5 text-brand-500"></i> ICSE</span>
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="book-open" class="w-5 h-5 text-brand-500"></i> State Boards</span>
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="award" class="w-5 h-5 text-brand-500"></i> Olympiads</span>
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="zap" class="w-5 h-5 text-brand-500"></i> JEE Foundation</span>
+            </div>
+             <!-- Set 3 (Duplicate) -->
+             <div class="flex items-center gap-16 mx-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="shield-check" class="w-5 h-5 text-brand-500"></i> CBSE</span>
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="globe-2" class="w-5 h-5 text-brand-500"></i> ICSE</span>
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="book-open" class="w-5 h-5 text-brand-500"></i> State Boards</span>
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="award" class="w-5 h-5 text-brand-500"></i> Olympiads</span>
+                <span class="text-lg font-bold font-display text-slate-900 flex items-center gap-2"><i data-lucide="zap" class="w-5 h-5 text-brand-500"></i> JEE Foundation</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Section -->
+    <section class="py-24 bg-brand-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-display font-bold text-slate-900 mb-4">The Learning Gap</h2>
+                <p class="text-slate-500 text-lg max-w-2xl mx-auto">Why traditional methods are failing modern students.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 lg:gap-12 items-stretch">
+                <!-- Traditional -->
+                <div class="bg-white p-10 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group hover:border-red-100 transition-all">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-bl-full -mr-8 -mt-8 z-0"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-3 mb-8">
+                            <div class="p-2 bg-slate-100 rounded-lg text-slate-500"><i data-lucide="x" class="w-6 h-6"></i></div>
+                            <h3 class="text-xl font-bold text-slate-900">Traditional Methods</h3>
+                        </div>
+                        <ul class="space-y-6">
+                            <li class="flex gap-4 items-start">
+                                <i data-lucide="book" class="w-5 h-5 text-slate-400 mt-1 shrink-0"></i>
+                                <div>
+                                    <p class="font-semibold text-slate-800">Dense Material</p>
+                                    <p class="text-sm text-slate-500 mt-1">Textbooks are overwhelming and difficult to digest.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-4 items-start">
+                                <i data-lucide="clock" class="w-5 h-5 text-slate-400 mt-1 shrink-0"></i>
+                                <div>
+                                    <p class="font-semibold text-slate-800">Time Constraints</p>
+                                    <p class="text-sm text-slate-500 mt-1">Rigid schedules clash with modern student lifestyles.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-4 items-start">
+                                <i data-lucide="user-x" class="w-5 h-5 text-slate-400 mt-1 shrink-0"></i>
+                                <div>
+                                    <p class="font-semibold text-slate-800">Lack of Personalization</p>
+                                    <p class="text-sm text-slate-500 mt-1">One-size-fits-all approach leaves many behind.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- SkillBytes -->
+                <div class="bg-slate-900 p-10 rounded-3xl border border-slate-800 shadow-xl relative overflow-hidden group">
+                    <div class="absolute bottom-0 left-0 w-full h-full bg-gradient-to-tr from-brand-900 to-transparent z-0"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-3 mb-8">
+                            <div class="p-2 bg-brand-500 rounded-lg text-white"><i data-lucide="check" class="w-6 h-6"></i></div>
+                            <h3 class="text-xl font-bold text-white">The SkillBytes Advantage</h3>
+                        </div>
+                        <ul class="space-y-6">
+                            <li class="flex gap-4 items-start">
+                                <div class="p-1 bg-brand-500/10 rounded text-brand-400 mt-0.5"><i data-lucide="zap" class="w-4 h-4"></i></div>
+                                <div>
+                                    <p class="font-semibold text-white">Micro-Learning</p>
+                                    <p class="text-sm text-slate-400 mt-1">5-minute, high-impact lessons delivered instantly.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-4 items-start">
+                                <div class="p-1 bg-brand-500/10 rounded text-brand-400 mt-0.5"><i data-lucide="smartphone" class="w-4 h-4"></i></div>
+                                <div>
+                                    <p class="font-semibold text-white">Platform Native</p>
+                                    <p class="text-sm text-slate-400 mt-1">Learn on WhatsApp. No new apps, no friction.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-4 items-start">
+                                <div class="p-1 bg-brand-500/10 rounded text-brand-400 mt-0.5"><i data-lucide="crosshair" class="w-4 h-4"></i></div>
+                                <div>
+                                    <p class="font-semibold text-white">Adaptive Pacing</p>
+                                    <p class="text-sm text-slate-400 mt-1">AI adjusts curriculum based on your performance.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bento Grid Features (Methodology) -->
+    <section id="methodology" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl md:text-5xl font-display font-bold text-slate-900 mb-4">Engineered for Retention</h2>
+                <p class="text-slate-500 text-lg">We combine cognitive science with seamless technology.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+                
+                <!-- Card 1 -->
+                <div class="bg-brand-50 rounded-3xl p-8 border border-brand-100 hover:shadow-lg transition-all duration-300 group">
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-brand-500 shadow-sm mb-6 group-hover:scale-110 transition-transform"><i data-lucide="layers" class="w-6 h-6"></i></div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Cognitive Chunking</h3>
+                    <p class="text-slate-500 leading-relaxed">Complex topics broken down into digestible, atomic units of information.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-brand-50 rounded-3xl p-8 border border-brand-100 hover:shadow-lg transition-all duration-300 group">
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-brand-500 shadow-sm mb-6 group-hover:scale-110 transition-transform"><i data-lucide="gamepad-2" class="w-6 h-6"></i></div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Gamified Assessment</h3>
+                    <p class="text-slate-500 leading-relaxed">Instant feedback loops with XP, badges, and leaderboards to drive engagement.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-brand-50 rounded-3xl p-8 border border-brand-100 hover:shadow-lg transition-all duration-300 group">
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-accent-500 shadow-sm mb-6 group-hover:scale-110 transition-transform"><i data-lucide="flame" class="w-6 h-6"></i></div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Habit Formation</h3>
+                    <p class="text-slate-500 leading-relaxed">Streak mechanics leverage psychology to build consistent daily study habits.</p>
+                </div>
+
+                <!-- Card 4 (Wide) -->
+                <div class="md:col-span-3 bg-slate-900 rounded-3xl p-10 flex flex-col md:flex-row items-center gap-10 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-brand-900 to-transparent"></div>
+                    <div class="relative z-10 flex-1">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-brand-500/10 text-brand-400 text-xs font-bold uppercase tracking-wide mb-6">
+                            Squad Learning
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">You + Your Friends</h3>
+                        <p class="text-slate-300 text-lg leading-relaxed max-w-xl">
+                            Thousands of students just like you are crushing their boards with SkillBytes. Join the squad! 
+                        </p>
+                    </div>
+                    <div class="relative z-10 w-full md:w-auto flex -space-x-4 justify-center md:justify-start">
+                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=1" class="w-16 h-16 rounded-full border-4 border-slate-900 bg-white shadow-lg">
+                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=2" class="w-16 h-16 rounded-full border-4 border-slate-900 bg-white shadow-lg">
+                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=3" class="w-16 h-16 rounded-full border-4 border-slate-900 bg-white shadow-lg">
+                        <div class="w-16 h-16 rounded-full border-4 border-slate-900 bg-brand-600 flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                            TOP 1%
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Visual Process Steps -->
+    <section class="py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-3xl md:text-5xl font-display font-bold text-center text-slate-900 mb-20">How It Works</h2>
+            
+            <div class="relative">
+                <!-- Connecting Line (Desktop) -->
+                <div class="hidden md:block absolute top-12 left-0 w-full h-0.5 bg-brand-100 z-0"></div>
+
+                <div class="grid md:grid-cols-4 gap-8 relative z-10">
+                    <!-- Step 1 -->
+                    <div class="text-center group">
+                        <div class="w-24 h-24 bg-white rounded-full border-4 border-slate-50 flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:border-brand-100 group-hover:shadow-glow transition-all duration-300">
+                            <i data-lucide="layout-grid" class="w-8 h-8 text-slate-400 group-hover:text-brand-500 transition-colors"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-900 mb-2">1. Select Subject</h3>
+                        <p class="text-sm text-slate-500 px-4">Choose your track from our extensive library of board-aligned content.</p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="text-center group">
+                        <div class="w-24 h-24 bg-white rounded-full border-4 border-slate-50 flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:border-brand-100 group-hover:shadow-glow transition-all duration-300">
+                            <i data-lucide="smartphone" class="w-8 h-8 text-slate-400 group-hover:text-brand-500 transition-colors"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-900 mb-2">2. Connect</h3>
+                        <p class="text-sm text-slate-500 px-4">Receive your first interactive lesson immediately on WhatsApp.</p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="text-center group">
+                        <div class="w-24 h-24 bg-white rounded-full border-4 border-slate-50 flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:border-brand-100 group-hover:shadow-glow transition-all duration-300">
+                            <i data-lucide="zap" class="w-8 h-8 text-slate-400 group-hover:text-brand-500 transition-colors"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-900 mb-2">3. Learn Rapidly</h3>
+                        <p class="text-sm text-slate-500 px-4">Complete 5-minute sprints with instant quizzes and feedback.</p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="text-center group">
+                        <div class="w-24 h-24 bg-white rounded-full border-4 border-slate-50 flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:border-brand-100 group-hover:shadow-glow transition-all duration-300">
+                            <i data-lucide="trending-up" class="w-8 h-8 text-slate-400 group-hover:text-brand-500 transition-colors"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-900 mb-2">4. Track Growth</h3>
+                        <p class="text-sm text-slate-500 px-4">Monitor your performance analytics and maintain your streak.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Course Catalog -->
+    <section id="courses" class="py-24 bg-brand-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-3xl md:text-5xl font-display font-bold text-center text-slate-900 mb-16">Available Curriculum</h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Course Card -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-brand-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="p-3 bg-brand-50 rounded-xl text-brand-600"><i data-lucide="calculator" class="w-6 h-6"></i></div>
+                        <span class="text-xs font-bold text-slate-400 border border-slate-200 px-2 py-1 rounded">CBSE 10</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-brand-600 transition-colors">Mathematics</h3>
+                    <p class="text-slate-500 text-sm mb-6 line-clamp-2">Algebra, Geometry, Trigonometry, and Statistics made simple.</p>
+                    <a href="#courses" class="inline-flex items-center text-sm font-semibold text-brand-600 hover:text-brand-700">Explore Course <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></a>
+                </div>
+
+                <!-- Course Card -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-brand-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="p-3 bg-accent-50 rounded-xl text-accent-700"><i data-lucide="flask-conical" class="w-6 h-6"></i></div>
+                        <span class="text-xs font-bold text-slate-400 border border-slate-200 px-2 py-1 rounded">CBSE 10</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-accent-600 transition-colors">Science</h3>
+                    <p class="text-slate-500 text-sm mb-6 line-clamp-2">Physics, Chemistry, and Biology visualised for better retention.</p>
+                    <a href="#courses" class="inline-flex items-center text-sm font-semibold text-accent-700 hover:text-accent-800">Explore Course <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></a>
+                </div>
+
+                <!-- Coming Soon -->
+                <div class="bg-slate-100 p-8 rounded-2xl border border-slate-200 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-white/50 backdrop-blur-[1px] flex items-center justify-center z-10">
+                        <span class="bg-slate-900 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">Coming Soon</span>
+                    </div>
+                    <div class="flex justify-between items-start mb-6 opacity-50">
+                        <div class="p-3 bg-slate-200 rounded-xl text-slate-600"><i data-lucide="book-open" class="w-6 h-6"></i></div>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2 opacity-50">Class 11 & 12</h3>
+                    <p class="text-slate-500 text-sm mb-6 opacity-50">Advanced curriculum for senior secondary.</p>
+                </div>
+
+                <!-- Coming Soon -->
+                <div class="bg-slate-100 p-8 rounded-2xl border border-slate-200 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-white/50 backdrop-blur-[1px] flex items-center justify-center z-10">
+                        <span class="bg-slate-900 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">Coming Soon</span>
+                    </div>
+                    <div class="flex justify-between items-start mb-6 opacity-50">
+                        <div class="p-3 bg-slate-200 rounded-xl text-slate-600"><i data-lucide="globe" class="w-6 h-6"></i></div>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2 opacity-50">ICSE & State</h3>
+                    <p class="text-slate-500 text-sm mb-6 opacity-50">Comprehensive coverage for other boards.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Professional Testimonials -->
+    <section id="reviews" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-center text-3xl md:text-5xl font-display font-bold text-slate-900 mb-16">Endorsed by Experts</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <!-- Testimonial 1 -->
+                <div class="bg-white p-10 rounded-3xl shadow-card border border-brand-100 relative">
+                    <i data-lucide="quote" class="w-10 h-10 text-brand-100 absolute top-8 right-8 fill-current"></i>
+                    <p class="text-slate-700 text-lg leading-relaxed mb-8 italic">
+                        "SkillBytes represents a paradigm shift in supplemental education. By leveraging the ubiquity of WhatsApp, they've removed the friction that typically hinders self-study."
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 font-bold">BS</div>
+                        <div>
+                            <p class="font-bold text-slate-900">B.K. Singh</p>
+                            <p class="text-sm text-slate-500">Educator & Author, 20+ Years Experience</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="bg-white p-10 rounded-3xl shadow-card border border-brand-100 relative">
+                    <i data-lucide="quote" class="w-10 h-10 text-brand-100 absolute top-8 right-8 fill-current"></i>
+                    <p class="text-slate-700 text-lg leading-relaxed mb-8 italic">
+                        "The micro-learning format is incredibly effective. It's concise, precise, and fits perfectly into my study schedule without being overwhelming."
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center text-brand-600 font-bold">RV</div>
+                        <div>
+                            <p class="font-bold text-slate-900">Reena Vaz</p>
+                            <p class="text-sm text-slate-500">Class 10 Student, CBSE Topper</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 px-6 bg-white">
+        <div class="max-w-5xl mx-auto relative rounded-[3rem] bg-brand-900 overflow-hidden shadow-2xl">
+            <!-- Abstract Shapes -->
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-800/50 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3"></div>
+            <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent-500/30 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/3"></div>
+            
+            <div class="relative z-10 p-12 md:p-24 text-center">
+                <h2 class="text-4xl md:text-6xl font-display font-bold mb-6 text-white tracking-tight">Ready to excel?</h2>
+                <p class="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto mb-12">Join thousands of students leveraging intelligent micro-learning. Start your journey today.</p>
+                
+                <form class="max-w-md mx-auto flex flex-col gap-4">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i data-lucide="smartphone" class="h-5 w-5 text-slate-400"></i>
+                        </div>
+                        <input type="tel" placeholder="Enter your WhatsApp Number" class="w-full pl-12 pr-6 py-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder-slate-300 focus:ring-2 focus:ring-brand-500 focus:bg-white/20 transition-all font-medium backdrop-blur-sm">
+                    </div>
+                    <button type="button" class="w-full py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-brand-500/20 transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        Get Started Free <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                </form>
+                <p class="text-xs text-slate-400 mt-6">By continuing, you agree to our Terms of Service & Privacy Policy.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-white border-t border-slate-200 pt-16 pb-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-2">
+                    <a href="#start" class="flex items-center gap-2 mb-6">
+                        <img src="https://swiftskillshare.tech/lovable-uploads/c2564fb5-9680-4619-9839-82a612556a5f.png" alt="SkillBytes logo" class="w-8 h-8 object-contain rounded-sm">
+                        <span class="font-display font-bold text-xl tracking-tight text-slate-900">Skill<span class="text-brand-500">Bytes</span></span>
+                    </a>
+                    <p class="text-slate-500 text-sm max-w-sm leading-relaxed mb-6">
+                        Democratizing high-quality education through accessible technology. We believe in learning that fits your life.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-slate-900 mb-6">Navigation</h4>
+                    <ul class="space-y-4 text-sm text-slate-500">
+                        <li><a href="#methodology" class="hover:text-brand-600 transition-colors">Methodology</a></li>
+                        <li><a href="#courses" class="hover:text-brand-600 transition-colors">Curriculum</a></li>
+                        <li><a href="#reviews" class="hover:text-brand-600 transition-colors">Reviews</a></li>
+                        <li><a href="#contact" class="hover:text-brand-600 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-slate-400">&copy; 2025 SkillBytes Technologies Inc. All rights reserved.</p>
+                <div class="flex items-center gap-2 text-xs text-slate-400">
+                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                    <span>All Systems Operational</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Register GSAP Plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Mobile Menu Logic
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const closeBtn = document.getElementById('close-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const links = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            menu.classList.toggle('translate-x-full');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        closeBtn.addEventListener('click', toggleMenu);
+        links.forEach(link => link.addEventListener('click', toggleMenu));
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-subtle');
+            } else {
+                navbar.classList.remove('shadow-subtle');
+            }
+        });
+
+        // --- Animations ---
+
+        // Hero Content Stagger
+        const heroTimeline = gsap.timeline();
+        
+        heroTimeline
+            .to('.hero-anim', { opacity: 1, y: 0, stagger: 0.15, duration: 1, ease: "power3.out", delay: 0.2 })
+            .to('.hero-visual', { opacity: 1, scale: 1, duration: 1.2, ease: "power3.out" }, "-=0.8");
+
+        // Chat Message Animation (Infinite Loop mimic)
+        const chats = document.querySelectorAll('.chat-anim');
+        // Ensure initial state
+        gsap.set(chats, { opacity: 0, y: 20 });
+
+        // Simple sequence
+        const chatTimeline = gsap.timeline({ repeat: -1, repeatDelay: 3 });
+        
+        chats.forEach((chat, index) => {
+            chatTimeline.to(chat, {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                ease: "back.out(1.7)",
+            }, "+=1"); 
+        });
+
+    </script>
+</body>
+</html>
