@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chanakya.fyi - Operators & Investors</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'brand-bg': '#F7F5F0',
+            'brand-dark': '#1A1A1A',
+            'brand-accent': '#7c3aed',
+            'brand-muted': '#888888',
+          },
+          fontFamily: {
+            'sans': ['Inter', 'sans-serif'],
+            'serif': ['Playfair Display', 'serif'],
+            'mono': ['ui-monospace', 'SFMono-Regular', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::selection {
+      background-color: #C45C26;
+      color: white;
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes expandWidth {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    
+    .animate-fade-in-up {
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    .animate-fade-in {
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+    
+    .animate-slide-down {
+      animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    .animate-expand-width {
+      animation: expandWidth 1s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+      animation-delay: 0.8s;
+    }
+    
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-500 { animation-delay: 0.5s; }
+    .delay-600 { animation-delay: 0.6s; }
+    .delay-800 { animation-delay: 0.8s; }
+    .delay-1000 { animation-delay: 1s; }
+    
+    .opacity-0-init { opacity: 0; }
+    
+    /* Intersection Observer animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Mobile menu animation */
+    .mobile-menu {
+      clip-path: circle(0% at 100% 0);
+      transition: clip-path 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    }
+    
+    .mobile-menu.open {
+      clip-path: circle(150% at 100% 0);
+    }
+  </style>
+</head>
+<body class="bg-brand-bg min-h-screen font-sans">
+  
+  <!-- Navbar -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 flex justify-center pt-6 px-6 pointer-events-none animate-slide-down">
+    <div id="nav-inner" class="pointer-events-auto flex items-center justify-between px-6 py-3 transition-all duration-500 ease-out w-full bg-transparent border-transparent">
+      <!-- Logo -->
+      <a href="#" class="relative z-50 flex items-center gap-3">
+        <img 
+          src="https://media.licdn.com/dms/image/v2/D4D0BAQEPppu7O2MdXA/company-logo_200_200/company-logo_200_200/0/1715855824531/chanakya_vc_logo?e=1767225600&v=beta&t=4hAhQJYYzZDkH4h_oY8X-r261POh06BN2Hph-OB7Ng0" 
+          alt="Chanakya.fyi" 
+          class="w-8 h-8 rounded-full shadow-sm"
+        />
+        <div class="font-serif font-bold text-2xl tracking-tight flex items-baseline leading-none">
+          <span>chanakya</span>
+          <span class="text-brand-accent ml-0.5 text-3xl leading-none">.</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="#portfolio" class="text-xs font-medium uppercase tracking-widest text-brand-dark/60 hover:text-brand-accent transition-colors duration-300">Portfolio</a>
+        <a href="#team" class="text-xs font-medium uppercase tracking-widest text-brand-dark/60 hover:text-brand-accent transition-colors duration-300">Team</a>
+        <a href="https://www.notion.so/Stealth-Jobs-1d6fcbba6d2480608c6ce74c7a150791" target="_blank" class="text-xs font-medium uppercase tracking-widest text-brand-dark/60 hover:text-brand-accent transition-colors duration-300">Jobs</a>
+      </div>
+
+      <!-- CTA / Mobile Toggle -->
+      <div class="flex items-center gap-4">
+        <a href="#contact" id="nav-cta" class="hidden md:inline-flex items-center justify-center h-8 px-5 bg-brand-dark text-white text-xs font-medium uppercase tracking-widest rounded-full hover:bg-brand-accent transition-all duration-300 opacity-0">
+          Coffee?
+        </a>
+        <button id="mobile-toggle" class="md:hidden relative z-50 p-1">
+          <svg id="menu-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+          <svg id="close-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="mobile-menu fixed inset-0 bg-brand-bg z-40 flex flex-col items-center justify-center space-y-8 opacity-0 pointer-events-none">
+    <a href="#portfolio" class="mobile-link text-4xl font-serif italic text-brand-dark hover:text-brand-accent transition-colors">Portfolio</a>
+    <a href="#team" class="mobile-link text-4xl font-serif italic text-brand-dark hover:text-brand-accent transition-colors">Team</a>
+    <a href="https://www.notion.so/Stealth-Jobs-1d6fcbba6d2480608c6ce74c7a150791" target="_blank" class="mobile-link text-4xl font-serif italic text-brand-dark hover:text-brand-accent transition-colors">Jobs</a>
+    <a href="#contact" class="mobile-link mt-8 px-8 py-3 border border-brand-dark text-brand-dark text-sm uppercase tracking-widest rounded-full hover:bg-brand-dark hover:text-white transition-colors">
+      Let's meet
+    </a>
+  </div>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="min-h-screen flex flex-col relative overflow-hidden bg-brand-bg pt-28 md:pt-0">
+      <!-- Abstract Background Elements -->
+      <div class="absolute top-0 right-0 w-[50vw] h-[50vh] bg-gradient-to-b from-brand-accent/5 to-transparent blur-3xl opacity-50"></div>
+      
+      <!-- Grid Background -->
+      <div class="absolute inset-0 z-0" style="background-image: linear-gradient(to right, #00000005 1px, transparent 1px), linear-gradient(to bottom, #00000005 1px, transparent 1px); background-size: 4rem 4rem;"></div>
+
+      <div class="container mx-auto px-6 md:px-12 flex-grow flex flex-col justify-center relative z-10 pb-12 md:pb-0">
+        
+        <!-- Mobile Metadata -->
+        <div class="flex md:hidden justify-between w-full mb-8 text-[10px] font-mono text-brand-muted uppercase tracking-widest border-b border-brand-dark/5 pb-4">
+          <span>DEL • BLR • BOM</span>
+          <span>Super Angels</span>
+        </div>
+
+        <div class="max-w-7xl w-full mx-auto">
+          <h1 class="text-[13vw] md:text-[10vw] leading-[0.85] font-bold tracking-tighter text-brand-dark mb-8 md:mb-10">
+            <div class="overflow-hidden">
+              <span class="font-serif italic font-normal text-brand-dark/90 block transform origin-bottom-left hover:skew-x-2 transition-transform duration-700 animate-fade-in-up opacity-0-init">Operators</span>
+            </div>
+            
+            <div class="overflow-hidden flex items-center gap-4 md:gap-8">
+              <span class="whitespace-nowrap animate-fade-in-up opacity-0-init delay-100">& Investors</span>
+              <div class="h-2 md:h-4 bg-brand-accent max-w-[80px] md:max-w-[240px] hidden sm:block rounded-sm animate-expand-width" style="width: 0;"></div>
+            </div>
+          </h1>
+
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 md:gap-12 mt-6 md:mt-16">
+            <p class="text-xl md:text-3xl font-light leading-snug text-brand-dark/80 max-w-2xl animate-fade-in-up opacity-0-init delay-600">
+              We back <span class="font-serif italic text-brand-accent font-normal">exceptional founders</span> raising their first round. Led by operators who have built global teams.
+            </p>
+            
+            <div class="flex flex-col items-start md:items-end gap-6 text-left md:text-right w-full md:w-auto">
+              <div class="font-mono text-[11px] text-brand-muted flex md:flex-col gap-3 md:gap-1 uppercase tracking-widest animate-fade-in opacity-0-init delay-1000">
+                <span>Investment Firm</span>
+                <span class="md:hidden text-brand-accent">•</span>
+                <span>Early Stage</span>
+                <span class="md:hidden text-brand-accent">•</span>
+                <span>Accessible</span>
+              </div>
+
+              <a href="#portfolio" class="group flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-brand-dark mt-2 animate-fade-in opacity-0-init delay-800">
+                <span class="group-hover:-translate-x-1 transition-transform">See Portfolio</span>
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-brand-dark flex items-center justify-center group-hover:bg-brand-dark group-hover:text-white transition-colors duration-300">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                  </svg>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-24 bg-white relative z-20">
+      <div class="container mx-auto px-6 md:px-12">
+        
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-black pb-6">
+          <h2 class="text-4xl md:text-5xl font-bold tracking-tight reveal">Portfolio</h2>
+          <div class="hidden md:block font-mono text-xs text-brand-muted uppercase">// Backing the bold</div>
+        </div>
+
+        <!-- Announced Section -->
+        <div class="mb-16">
+          <h3 class="font-mono text-xs uppercase tracking-widest text-brand-muted mb-8">Announced</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l border-brand-dark/10">
+            
+            <!-- AstraFin -->
+            <a href="https://astrafin.org/" target="_blank" rel="noopener noreferrer" class="reveal group relative p-8 md:p-10 border-r border-b border-brand-dark/10 hover:bg-brand-bg transition-all duration-300 cursor-alias flex flex-col justify-between min-h-[240px] hover:-translate-y-1 hover:shadow-xl hover:z-10">
+              <div class="absolute top-0 left-0 w-1 h-0 bg-brand-accent group-hover:h-full transition-all duration-500 ease-out"></div>
+              <div class="flex justify-between items-start mb-4">
+                <span class="text-brand-dark/40 group-hover:text-brand-accent transition-colors duration-300">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                </span>
+                <span class="font-mono text-[10px] text-brand-muted opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">VISIT</span>
+              </div>
+              <div>
+                <h3 class="text-2xl font-serif font-medium mb-2 group-hover:translate-x-2 transition-transform duration-300">AstraFin</h3>
+                <p class="text-sm text-gray-600 leading-relaxed font-light">Global Financial Infrastructure.</p>
+              </div>
+            </a>
+
+            <!-- RocketPay -->
+            <a href="https://www.rocketpay.co.in/" target="_blank" rel="noopener noreferrer" class="reveal group relative p-8 md:p-10 border-r border-b border-brand-dark/10 hover:bg-brand-bg transition-all duration-300 cursor-alias flex flex-col justify-between min-h-[240px] hover:-translate-y-1 hover:shadow-xl hover:z-10" style="animation-delay: 0.1s;">
+              <div class="absolute top-0 left-0 w-1 h-0 bg-brand-accent group-hover:h-full transition-all duration-500 ease-out"></div>
+              <div class="flex justify-between items-start mb-4">
+                <span class="text-brand-dark/40 group-hover:text-brand-accent transition-colors duration-300">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>
+                </span>
+                <span class="font-mono text-[10px] text-brand-muted opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">VISIT</span>
+              </div>
+              <div>
+                <h3 class="text-2xl font-serif font-medium mb-2 group-hover:translate-x-2 transition-transform duration-300">RocketPay</h3>
+                <p class="text-sm text-gray-600 leading-relaxed font-light">Seamless Payments.</p>
+              </div>
+            </a>
+
+            <!-- PlutosOne -->
+            <a href="https://www.plutos.one/about" target="_blank" rel="noopener noreferrer" class="reveal group relative p-8 md:p-10 border-r border-b border-brand-dark/10 hover:bg-brand-bg transition-all duration-300 cursor-alias flex flex-col justify-between min-h-[240px] hover:-translate-y-1 hover:shadow-xl hover:z-10" style="animation-delay: 0.2s;">
+              <div class="absolute top-0 left-0 w-1 h-0 bg-brand-accent group-hover:h-full transition-all duration-500 ease-out"></div>
+              <div class="flex justify-between items-start mb-4">
+                <span class="text-brand-dark/40 group-hover:text-brand-accent transition-colors duration-300">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </span>
+                <span class="font-mono text-[10px] text-brand-muted opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">VISIT</span>
+              </div>
+              <div>
+                <h3 class="text-2xl font-serif font-medium mb-2 group-hover:translate-x-2 transition-transform duration-300">PlutosOne</h3>
+                <p class="text-sm text-gray-600 leading-relaxed font-light">Banking & Merchant Solutions.</p>
+              </div>
+            </a>
+
+            <!-- Bodhi -->
+            <a href="https://www.bodhi.app/" target="_blank" rel="noopener noreferrer" class="reveal group relative p-8 md:p-10 border-r border-b border-brand-dark/10 hover:bg-brand-bg transition-all duration-300 cursor-alias flex flex-col justify-between min-h-[240px] hover:-translate-y-1 hover:shadow-xl hover:z-10" style="animation-delay: 0.3s;">
+              <div class="absolute top-0 left-0 w-1 h-0 bg-brand-accent group-hover:h-full transition-all duration-500 ease-out"></div>
+              <div class="flex justify-between items-start mb-4">
+                <span class="text-brand-dark/40 group-hover:text-brand-accent transition-colors duration-300">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                </span>
+                <span class="font-mono text-[10px] text-brand-muted opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">VISIT</span>
+              </div>
+              <div>
+                <h3 class="text-2xl font-serif font-medium mb-2 group-hover:translate-x-2 transition-transform duration-300">Bodhi</h3>
+                <p class="text-sm text-gray-600 leading-relaxed font-light">AI & Knowledge.</p>
+              </div>
+            </a>
+
+            <!-- ReDesyn -->
+            <a href="https://www.redesyn.com/" target="_blank" rel="noopener noreferrer" class="reveal group relative p-8 md:p-10 border-r border-b border-brand-dark/10 hover:bg-brand-bg transition-all duration-300 cursor-alias flex flex-col justify-between min-h-[240px] hover:-translate-y-1 hover:shadow-xl hover:z-10" style="animation-delay: 0.4s;">
+              <div class="absolute top-0 left-0 w-1 h-0 bg-brand-accent group-hover:h-full transition-all duration-500 ease-out"></div>
+              <div class="flex justify-between items-start mb-4">
+                <span class="text-brand-dark/40 group-hover:text-brand-accent transition-colors duration-300">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                </span>
+                <span class="font-mono text-[10px] text-brand-muted opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">VISIT</span>
+              </div>
+              <div>
+                <h3 class="text-2xl font-serif font-medium mb-2 group-hover:translate-x-2 transition-transform duration-300">ReDesyn</h3>
+                <p class="text-sm text-gray-600 leading-relaxed font-light">Creator Economy.</p>
+              </div>
+            </a>
+
+          </div>
+        </div>
+
+        <!-- Stealth Section -->
+        <div>
+          <h3 class="font-mono text-xs uppercase tracking-widest text-brand-muted mb-8">In Stealth</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-t border-l border-brand-dark/10">
+            
+            <div class="reveal group relative p-6 border-r border-b border-brand-dark/10 bg-gray-50/50 hover:bg-white transition-colors duration-300">
+              <div class="flex items-center gap-3 mb-3">
+                <span class="text-brand-dark/30 group-hover:text-brand-accent transition-colors duration-300">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"></rect><path d="m12 2 4 4m-4-4-4 4m4-4v6"></path><path d="M2 12h6m8 0h6"></path></svg>
+                </span>
+                <h3 class="text-lg font-bold tracking-tight text-brand-dark/60 group-hover:text-brand-dark transition-colors">Gaming AI</h3>
+              </div>
+              <p class="text-xs text-gray-400 font-mono uppercase group-hover:text-gray-600 transition-colors">Next-gen NPC interactions</p>
+            </div>
+
+            <div class="reveal group relative p-6 border-r border-b border-brand-dark/10 bg-gray-50/50 hover:bg-white transition-colors duration-300" style="animation-delay: 0.1s;">
+              <div class="flex items-center gap-3 mb-3">
+                <span class="text-brand-dark/30 group-hover:text-brand-accent transition-colors duration-300">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C1.4 11.3 1 12.1 1 13v3c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
+                </span>
+                <h3 class="text-lg font-bold tracking-tight text-brand-dark/60 group-hover:text-brand-dark transition-colors">Fintech</h3>
+              </div>
+              <p class="text-xs text-gray-400 font-mono uppercase group-hover:text-gray-600 transition-colors">Clean Mobility Solutions</p>
+            </div>
+
+            <div class="reveal group relative p-6 border-r border-b border-brand-dark/10 bg-gray-50/50 hover:bg-white transition-colors duration-300" style="animation-delay: 0.2s;">
+              <div class="flex items-center gap-3 mb-3">
+                <span class="text-brand-dark/30 group-hover:text-brand-accent transition-colors duration-300">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </span>
+                <h3 class="text-lg font-bold tracking-tight text-brand-dark/60 group-hover:text-brand-dark transition-colors">Fintech</h3>
+              </div>
+              <p class="text-xs text-gray-400 font-mono uppercase group-hover:text-gray-600 transition-colors">Undisclosed Vertical</p>
+            </div>
+
+            <div class="reveal group relative p-6 border-r border-b border-brand-dark/10 bg-gray-50/50 hover:bg-white transition-colors duration-300" style="animation-delay: 0.3s;">
+              <div class="flex items-center gap-3 mb-3">
+                <span class="text-brand-dark/30 group-hover:text-brand-accent transition-colors duration-300">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                </span>
+                <h3 class="text-lg font-bold tracking-tight text-brand-dark/60 group-hover:text-brand-dark transition-colors">Consumer AI</h3>
+              </div>
+              <p class="text-xs text-gray-400 font-mono uppercase group-hover:text-gray-600 transition-colors">Personal Agents</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="py-32 px-6 md:px-12 bg-brand-dark text-brand-bg relative overflow-hidden">
+      
+      <!-- Background Accent -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-brand-accent/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+      <div class="container mx-auto relative z-10 max-w-4xl">
+        
+        <div class="mb-24 text-center">
+          <div class="reveal flex items-center gap-4 mb-8 justify-center">
+            <div class="w-12 h-[1px] bg-brand-accent"></div>
+            <span class="font-mono text-xs uppercase tracking-widest text-brand-muted">The Partners</span>
+            <div class="w-12 h-[1px] bg-brand-accent"></div>
+          </div>
+          <h2 class="text-4xl md:text-6xl font-serif leading-tight">
+            We are <span class="italic text-brand-accent">Operators</span> first.
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-20 md:gap-12">
+          
+          <!-- Puneet Malik -->
+          <div class="reveal group flex flex-col items-center text-center h-full">
+            <!-- Image Card -->
+            <div class="relative w-48 h-64 flex-shrink-0 overflow-hidden bg-gray-900 border border-white/10 rounded-sm mb-8 transform group-hover:-translate-y-2 transition-transform duration-500 shadow-2xl shadow-black/50">
+              <img 
+                src="https://chanakyafyi.notion.site/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fd86ff803-2f30-45e3-998f-283667347300%2F7ccbfd39-b13f-436b-b7b1-ee44fc79628e%2F58cca82f-ed1f-4798-bfbf-db849952bcd8.png?table=block&id=4d1c547f-d53c-4133-822e-38210f2f7a2b&spaceId=d86ff803-2f30-45e3-998f-283667347300&width=660&userId=&cache=v2" 
+                alt="Puneet Malik" 
+                class="object-cover w-full h-full opacity-90 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-40"></div>
+              
+              <!-- Social Links Overlay -->
+              <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+                <a href="https://www.linkedin.com/in/puneet-malik-0972739" target="_blank" class="p-1.5 bg-white/20 backdrop-blur-md rounded-full hover:bg-white hover:text-black transition-colors">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+                <a href="https://puneetmalik.substack.com/" target="_blank" class="p-1.5 bg-white/20 backdrop-blur-md rounded-full hover:bg-white hover:text-black transition-colors">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="flex flex-col flex-grow">
+              <h3 class="text-3xl font-serif mb-4">Puneet Malik</h3>
+              <p class="text-brand-bg/70 font-light leading-relaxed text-sm mb-8 max-w-xs mx-auto flex-grow">
+                Worked with companies like Nissan, Aston Martin & CitiFinancial; across Europe, the MENA region. Global experience in Automotive & Financial Services.
+              </p>
+
+              <!-- Personal Metadata -->
+              <div class="w-full flex flex-col gap-3 border-t border-white/10 pt-6 mt-auto">
+                <div class="flex items-center justify-center gap-2 text-sm text-brand-bg/60">
+                  <svg class="w-3.5 h-3.5 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"></path><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path><line x1="6" x2="6" y1="2" y2="4"></line><line x1="10" x2="10" y1="2" y2="4"></line><line x1="14" x2="14" y1="2" y2="4"></line></svg>
+                  <span class="font-mono text-[10px] uppercase tracking-wide">Hot Americano</span>
+                </div>
+                <div class="flex items-center justify-center gap-2 text-sm text-brand-bg/60">
+                  <svg class="w-3.5 h-3.5 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                  <span class="font-mono text-[10px] uppercase tracking-wide">Rock</span>
+                </div>
+                <div class="flex items-center justify-center gap-2 text-sm text-brand-bg/60">
+                  <svg class="w-3.5 h-3.5 text-brand-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+                  <span class="font-mono text-[10px] uppercase tracking-wide">Cinephile, petrolhead, F1 junkie</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gautam Kapur -->
+          <div class="reveal group flex flex-col items-center text-center h-full" style="animation-delay: 0.2s;">
+            <!-- Image Card -->
+            <div class="relative w-48 h-64 flex-shrink-0 overflow-hidden bg-gray-900 border border-white/10 rounded-sm mb-8 transform group-hover:-translate-y-2 transition-transform duration-500 shadow-2xl shadow-black/50">
+              <img 
+                src="https://chanakyafyi.notion.site/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fd86ff803-2f30-45e3-998f-283667347300%2F1d2fbcf9-2157-4a90-9538-564bb1a5f4bc%2F8f34ac61-bf10-4ca8-bec8-c414e8bbad9c.png?table=block&id=6a110945-932c-4222-a55f-5343a36d4e7b&spaceId=d86ff803-2f30-45e3-998f-283667347300&width=660&userId=&cache=v2" 
+                alt="Gautam Kapur" 
+                class="object-cover w-full h-full opacity-90 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-40"></div>
+              
+              <!-- Social Links Overlay -->
+              <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+                <a href="https://www.linkedin.com/in/gautam-kapur-chanakya/" target="_blank" class="p-1.5 bg-white/20 backdrop-blur-md rounded-full hover:bg-white hover:text-black transition-colors">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+                <a href="https://x.com/gautam821" target="_blank" class="p-1.5 bg-white/20 backdrop-blur-md rounded-full hover:bg-white hover:text-black transition-colors">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="flex flex-col flex-grow">
+              <h3 class="text-3xl font-serif mb-4">Gautam Kapur</h3>
+              <p class="text-brand-bg/70 font-light leading-relaxed text-sm mb-8 max-w-xs mx-auto flex-grow">
+                15+ years in tech across UK, Europe, and India. Scaled a company to $55M ARR. Investing in founders still in stealth, usually over coffee.
+              </p>
+
+              <!-- Personal Metadata -->
+              <div class="w-full flex flex-col gap-3 border-t border-white/10 pt-6 mt-auto">
+                <div class="flex items-center justify-center gap-2 text-sm text-brand-bg/60">
+                  <svg class="w-3.5 h-3.5 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"></path><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path><line x1="6" x2="6" y1="2" y2="4"></line><line x1="10" x2="10" y1="2" y2="4"></line><line x1="14" x2="14" y1="2" y2="4"></line></svg>
+                  <span class="font-mono text-[10px] uppercase tracking-wide">Iced Espresso</span>
+                </div>
+                <div class="flex items-center justify-center gap-2 text-sm text-brand-bg/60">
+                  <svg class="w-3.5 h-3.5 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                  <span class="font-mono text-[10px] uppercase tracking-wide">Electronica, Jazz, 80s</span>
+                </div>
+                <div class="flex items-center justify-center gap-2 text-sm text-brand-bg/60">
+                  <svg class="w-3.5 h-3.5 text-brand-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+                  <span class="font-mono text-[10px] uppercase tracking-wide">Culture vulture, photographer</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer id="contact" class="bg-brand-bg pt-24 px-6 md:px-12 border-t border-brand-dark/5">
+    <div class="container mx-auto flex flex-col min-h-[80vh] justify-between">
+      
+      <!-- Main CTA -->
+      <div class="flex-grow flex flex-col justify-center">
+        <p class="font-mono text-xs text-brand-muted mb-8 uppercase tracking-widest flex items-center gap-2">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"></path><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path><line x1="6" x2="6" y1="2" y2="4"></line><line x1="10" x2="10" y1="2" y2="4"></line><line x1="14" x2="14" y1="2" y2="4"></line></svg>
+          Always game for a coffee
+        </p>
+        <a href="mailto:hello@chanakya.fyi?subject=Hi!%20Coffee?" class="group block">
+          <h2 class="text-[12vw] leading-[0.8] font-bold tracking-tighter text-brand-dark group-hover:text-brand-accent transition-colors duration-500">
+            Get in touch.
+          </h2>
+          <div class="h-1 w-0 group-hover:w-full bg-brand-accent transition-all duration-700 ease-out mt-4"></div>
+        </a>
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="pb-12 grid grid-cols-1 md:grid-cols-4 gap-12 border-t border-brand-dark/10 pt-12">
+        
+        <div class="col-span-1 md:col-span-2">
+          <!-- Logo -->
+          <div class="flex items-center gap-3">
+            <img 
+              src="https://media.licdn.com/dms/image/v2/D4D0BAQEPppu7O2MdXA/company-logo_200_200/company-logo_200_200/0/1715855824531/chanakya_vc_logo?e=1767225600&v=beta&t=4hAhQJYYzZDkH4h_oY8X-r261POh06BN2Hph-OB7Ng0" 
+              alt="Chanakya.fyi" 
+              class="w-8 h-8 rounded-full shadow-sm"
+            />
+            <div class="font-serif font-bold text-2xl tracking-tight flex items-baseline leading-none">
+              <span>chanakya</span>
+              <span class="text-brand-accent ml-0.5 text-3xl leading-none">.</span>
+            </div>
+          </div>
+          <p class="mt-6 text-sm text-brand-muted max-w-xs">
+            Super Angels. Super Accessible. Super Quick.
+            <br />
+            DEL • BLR • BOM
+          </p>
+        </div>
+
+        <div class="col-span-1">
+          <h4 class="font-serif italic text-lg mb-6">Explore</h4>
+          <ul class="space-y-3 text-sm font-medium text-brand-dark/70">
+            <li><a href="#" class="hover:text-brand-accent transition-colors">Home</a></li>
+            <li><a href="#portfolio" class="hover:text-brand-accent transition-colors">Portfolio</a></li>
+            <li><a href="#team" class="hover:text-brand-accent transition-colors">Team</a></li>
+            <li>
+              <a href="https://www.notion.so/Stealth-Jobs-1d6fcbba6d2480608c6ce74c7a150791" target="_blank" class="hover:text-brand-accent transition-colors flex items-center gap-2">
+                Stealth Jobs 
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-span-1">
+          <h4 class="font-serif italic text-lg mb-6">Social</h4>
+          <div class="flex gap-4">
+            <a href="https://www.linkedin.com/company/chanakyafyi/" target="_blank" class="w-10 h-10 border border-brand-dark/20 rounded-full flex items-center justify-center hover:bg-brand-dark hover:text-white transition-all duration-300">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </a>
+            <a href="mailto:hello@chanakya.fyi" class="w-10 h-10 border border-brand-dark/20 rounded-full flex items-center justify-center hover:bg-brand-dark hover:text-white transition-all duration-300">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"></path><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path><line x1="6" x2="6" y1="2" y2="4"></line><line x1="10" x2="10" y1="2" y2="4"></line><line x1="14" x2="14" y1="2" y2="4"></line></svg>
+            </a>
+          </div>
+          <p class="mt-8 font-mono text-xs text-brand-muted uppercase">
+            © 2025 Chanakya.fyi
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    const navInner = document.getElementById('nav-inner');
+    const navCta = document.getElementById('nav-cta');
+    
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        navInner.classList.remove('w-full', 'bg-transparent', 'border-transparent');
+        navInner.classList.add('md:w-[600px]', 'bg-white/80', 'backdrop-blur-xl', 'border', 'border-white/20', 'shadow-lg', 'rounded-full');
+        navCta.classList.remove('opacity-0');
+        navCta.classList.add('opacity-100');
+      } else {
+        navInner.classList.add('w-full', 'bg-transparent', 'border-transparent');
+        navInner.classList.remove('md:w-[600px]', 'bg-white/80', 'backdrop-blur-xl', 'border', 'border-white/20', 'shadow-lg', 'rounded-full');
+        navCta.classList.add('opacity-0');
+        navCta.classList.remove('opacity-100');
+      }
+    });
+
+    // Mobile menu toggle
+    const mobileToggle = document.getElementById('mobile-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+    const closeIcon = document.getElementById('close-icon');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    mobileToggle.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.contains('open');
+      
+      if (isOpen) {
+        mobileMenu.classList.remove('open');
+        mobileMenu.classList.add('pointer-events-none');
+        mobileMenu.style.opacity = '0';
+        menuIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+      } else {
+        mobileMenu.classList.add('open');
+        mobileMenu.classList.remove('pointer-events-none');
+        mobileMenu.style.opacity = '1';
+        menuIcon.classList.add('hidden');
+        closeIcon.classList.remove('hidden');
+      }
+    });
+
+    // Close mobile menu on link click
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        mobileMenu.classList.add('pointer-events-none');
+        mobileMenu.style.opacity = '0';
+        menuIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+      });
+    });
+
+    // Intersection Observer for reveal animations
+    const revealElements = document.querySelectorAll('.reveal');
+    
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
