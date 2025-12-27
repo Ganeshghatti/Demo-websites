@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connext | Lead Gen Reimagined</title>
+    <link rel="icon" type="image/png" href="./assets/connextcommunity_logo.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --brand-orange: #ea580c;
+        --brand-orange-light: #ffedd5;
+      }
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+      }
+      .bg-grid-pattern {
+        background-image: radial-gradient(circle, #e2e8f0 1px, transparent 1px);
+        background-size: 30px 30px;
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+      }
+      .selection-orange::selection {
+        background-color: var(--brand-orange-light);
+        color: var(--brand-orange);
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      /* Ensure root is visible */
+      #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19.0.0",
+        "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+        "htm": "https://esm.sh/htm@3.1.1",
+        "lucide-react": "https://esm.sh/lucide-react@0.475.0",
+        "@google/genai": "https://esm.sh/@google/genai@1.3.2"
+      }
+    }
+    </script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 selection-orange">
+    <div id="root">
+      <div class="flex items-center justify-center min-h-screen">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
+      </div>
+    </div>
+
+    <script type="module">
+      import React, { useState, useEffect } from 'react';
+      import { createRoot } from 'react-dom/client';
+      import htm from 'htm';
+      import { 
+        ArrowRight, Sparkles, TrendingUp, Shield, Users, Rocket, Target, 
+        Share2, Zap, Briefcase, Globe, Menu, X, Linkedin, Quote, MapPin, 
+        Mail, Brain, Loader2, CheckCircle2, Send
+      } from 'lucide-react';
+      // import { GoogleGenAI, Type } from "@google/genai";
+
+      const html = htm.bind(React.createElement);
+
+      // --- Services ---
+      // AI feature temporarily disabled
+      const getLeadGenStrategy = async (businessType, goal) => {
+        // Placeholder - AI feature is disabled
+        return null;
+      };
+
+      const logo = "./assets/connext/connextcommunity_logo.png"
+
+      // --- UI Components ---
+
+      const Navbar = () => {
+        const [scrolled, setScrolled] = useState(false);
+        const [menuOpen, setMenuOpen] = useState(false);
+
+        useEffect(() => {
+          const handleScroll = () => setScrolled(window.scrollY > 20);
+          window.addEventListener('scroll', handleScroll);
+          return () => window.removeEventListener('scroll', handleScroll);
+        }, []);
+
+        return html`
+          <nav className=${`fixed w-full z-50 transition-all duration-500 ${scrolled ? 'bg-white/80 backdrop-blur-xl shadow-lg py-3' : 'bg-transparent py-6'}`}>
+            <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center">
+              <div className="flex items-center space-x-3 group cursor-pointer" onClick=${() => window.scrollTo({top: 0, behavior: 'smooth'})}>
+                <img src=${logo} alt="Connext Logo" className="w-10 h-10 object-contain rounded-lg" />
+                <span className="text-2xl font-extrabold text-slate-900 tracking-tighter">Connext</span>
+              </div>
+
+              <div className="hidden md:flex items-center space-x-10">
+                ${['Features', 'Founder', 'AI Tool', 'Contact'].map(link => html`
+                  <a key=${link} href=${`#${link.toLowerCase().replace(' ', '-')}`} className="text-sm font-bold text-slate-600 hover:text-orange-600 transition-colors uppercase tracking-widest">
+                    ${link}
+                  </a>
+                `)}
+                <button className="bg-slate-900 text-white px-7 py-2.5 rounded-full font-bold text-sm hover:bg-orange-600 transition-all shadow-xl shadow-slate-900/10">
+                  Join Connext
+                </button>
+              </div>
+
+              <button className="md:hidden text-slate-900" onClick=${() => setMenuOpen(!menuOpen)}>
+                <${menuOpen ? X : Menu} size=${28} />
+              </button>
+            </div>
+            
+            ${menuOpen && html`
+              <div className="absolute top-full left-0 w-full bg-white shadow-2xl p-6 md:hidden flex flex-col space-y-4 border-t border-slate-100">
+                ${['Features', 'Founder', 'AI Tool', 'Contact'].map(link => html`
+                  <a key=${link} href=${`#${link.toLowerCase().replace(' ', '-')}`} className="text-lg font-bold text-slate-700" onClick=${() => setMenuOpen(false)}>
+                    ${link}
+                  </a>
+                `)}
+                <button className="w-full bg-orange-600 text-white py-4 rounded-xl font-bold">Get Started</button>
+              </div>
+            `}
+          </nav>
+        `;
+      };
+
+      const Hero = () => html`
+        <section className="relative pt-44 pb-32 overflow-hidden bg-slate-50 bg-grid-pattern">
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-orange-50/50 to-transparent pointer-events-none"></div>
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 text-center lg:text-left">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="space-y-8 animate-fade-in-up">
+                <div className="inline-flex items-center bg-orange-100 text-orange-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">
+                  <${Sparkles} size=${14} className="mr-2" /> Bangalore's #1 Networking Platform
+                </div>
+                <h1 className="text-6xl lg:text-8xl font-extrabold text-slate-900 leading-[0.95] tracking-tight">
+                  Lead Gen, <span className="text-orange-600">Reimagined.</span>
+                </h1>
+                <p className="text-xl text-slate-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
+                  We bridge the gap between small businesses and high-intent leads through professional networking, referral magic, and modern technology.
+                </p>
+                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 justify-center lg:justify-start">
+                  <button className="bg-orange-600 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-orange-700 transition-all shadow-2xl shadow-orange-600/30 flex items-center justify-center">
+                    Start Growing Today <${ArrowRight} size=${20} className="ml-2" />
+                  </button>
+                  <button className="bg-white text-slate-900 border border-slate-200 px-10 py-5 rounded-2xl font-bold text-lg hover:bg-slate-50 transition-all shadow-sm">
+                    Watch Demo
+                  </button>
+                </div>
+                <div className="flex items-center justify-center lg:justify-start space-x-6 text-slate-400">
+                  <div className="flex -space-x-3">
+                    ${[1, 2, 3, 4].map(i => html`<img key=${i} src=${`https://i.pravatar.cc/100?u=${i+10}`} className="w-10 h-10 rounded-full border-4 border-slate-50" />`)}
+                  </div>
+                  <span className="text-sm font-bold uppercase tracking-wider">Trusted by 500+ Local SMEs</span>
+                </div>
+              </div>
+              <div className="relative">
+                <div className="absolute -inset-4 bg-orange-600/10 blur-[100px] rounded-full animate-pulse"></div>
+                <div className="relative glass-card p-4 rounded-[3rem] shadow-2xl border-white/50 rotate-2 hover:rotate-0 transition-transform duration-700">
+                  <img src="https://plus.unsplash.com/premium_photo-1754797991358-68d1ec37ddc3?q=80&w=1460&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" className="rounded-[2.5rem] w-full object-cover shadow-inner" />
+                  <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-3xl shadow-2xl border border-slate-100 hidden md:block animate-float">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center"><${TrendingUp} /></div>
+                      <div>
+                        <div className="text-2xl font-bold text-slate-900">Elite</div>
+                        <div className="text-xs font-bold text-slate-400 uppercase">Network Access</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+
+      const Features = () => {
+        const list = [
+          { icon: Users, title: "SME Community", desc: "Access a curated ecosystem of business owners in Bangalore ready to collaborate." },
+          { icon: Target, title: "Qualified Leads", desc: "No more cold calls. Get introductions to warm prospects who actually need you." },
+          { icon: Share2, title: "Referral Engine", desc: "Our proprietary system turns every connection into a potential sales channel." },
+          { icon: Zap, title: "Growth Tools", desc: "Digital assets and workshops designed to sharpen your business development skills." },
+          { icon: Shield, title: "Verified Partners", desc: "Every member is vetted to ensure professional integrity and quality service." },
+          { icon: Briefcase, title: "M&A Portal", desc: "Exclusive access to trade, merger, and acquisition opportunities within the network." }
+        ];
+        return html`
+          <section id="features" className="py-32 bg-white">
+            <div className="max-w-7xl mx-auto px-6 lg:px-12 text-center">
+              <div className="mb-20">
+                <h2 className="text-orange-600 font-extrabold uppercase tracking-widest text-sm mb-4">The Connext Advantage</h2>
+                <h3 className="text-5xl font-extrabold text-slate-900 tracking-tight">Built by SMEs, For SMEs.</h3>
+              </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12 text-left">
+                ${list.map((f, i) => html`
+                  <div key=${i} className="group p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-2xl hover:shadow-orange-600/10 transition-all duration-500">
+                    <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:bg-orange-600 group-hover:text-white transition-all duration-500">
+                      <${f.icon} size=${32} />
+                    </div>
+                    <h4 className="text-2xl font-extrabold text-slate-900 mb-4 tracking-tight">${f.title}</h4>
+                    <p className="text-slate-500 leading-relaxed font-medium">${f.desc}</p>
+                  </div>
+                `)}
+              </div>
+            </div>
+          </section>
+        `;
+      };
+
+      const Founder = () => html`
+        <section id="founder" className="py-32 bg-slate-50 relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            <div className="grid lg:grid-cols-12 gap-16 items-center">
+              <div className="lg:col-span-5 relative group">
+                <div className="absolute -inset-4 bg-orange-600 rounded-full blur-[120px] opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                <div className="relative rounded-[3rem] overflow-hidden shadow-2xl border-[12px] border-white">
+                  <img src="./assets/connext/pranav_kumar_connext.jpg" alt="Pranav" className="w-full transition-transform duration-700 group-hover:scale-105" />
+                </div>
+              </div>
+              <div className="lg:col-span-7 space-y-8">
+                <div>
+                  <div className="inline-block bg-orange-600 text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6">Founder Story</div>
+                  <h2 className="text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">Pranav Kumar Reddy</h2>
+                  <p className="text-2xl text-orange-600 font-bold mt-2">Building Technology Solutions for Business Owners</p>
+                </div>
+                <div className="relative">
+                  <${Quote} size=${64} className="absolute -top-8 -left-4 text-orange-100 -z-10" />
+                  <p className="text-xl text-slate-600 italic leading-relaxed font-medium">
+                    "An Entrepreneur by Choice. My passion is to facilitate individuals and organizations grow to the next level in their performance and results. Always on the lookout for opportunities to pursue my interests and to create wealth for myself and people I work with."
+                  </p>
+                </div>
+                <div>
+                  <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-200 pb-2">Core Specialties</h4>
+                  <div className="flex flex-wrap gap-3">
+                    ${["Business Development", "Sales", "Strategic Marketing", "Mentoring", "Training", "Project Management", "Networking", "Competency Building"].map(s => html`
+                      <span key=${s} className="px-5 py-2.5 bg-white rounded-xl border border-slate-200 text-slate-700 font-bold text-sm shadow-sm hover:border-orange-600 hover:text-orange-600 transition-all cursor-default">${s}</span>
+                    `)}
+                  </div>
+                </div>
+                <a href="https://www.linkedin.com/in/pranav-kumar-reddy-51b66512/" target="_blank" className="inline-flex items-center text-blue-600 font-black uppercase tracking-tighter hover:text-blue-800 transition-colors">
+                  <${Linkedin} size=${24} className="mr-2" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+
+      const LeadAssistant = () => {
+        const [biz, setBiz] = useState('');
+        const [goal, setGoal] = useState('');
+        const [loading, setLoading] = useState(false);
+        const [strategy, setStrategy] = useState(null);
+
+        const handle = async (e) => {
+          e.preventDefault();
+          setLoading(true);
+          // AI feature temporarily disabled
+          setTimeout(() => {
+            setStrategy({ 
+              headline: "AI Feature Temporarily Unavailable",
+              steps: ["The AI assistant is currently being configured.", "Please check back soon for personalized strategies."],
+              keyBenefit: "In the meantime, feel free to contact us directly for a consultation."
+            });
+            setLoading(false);
+          }, 1000);
+        };
+
+        return html`
+          <section id="ai-tool" className="py-32 bg-white relative overflow-hidden">
+            <div className="max-w-4xl mx-auto px-6">
+              <div className="text-center mb-16">
+                <h2 className="text-orange-600 font-extrabold uppercase tracking-widest text-sm mb-4">AI Growth Assistant</h2>
+                <h3 className="text-4xl font-extrabold text-slate-900 tracking-tight">Your Custom Strategy in Seconds.</h3>
+              </div>
+              
+              <div className="relative glass-card p-10 md:p-16 rounded-[3rem] shadow-2xl border-slate-100">
+                <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none"><${Brain} size=${120} /></div>
+                
+                ${!strategy ? html`
+                  <form onSubmit=${handle} className="space-y-10 relative z-10">
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div className="space-y-3">
+                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Your Business Type</label>
+                        <input type="text" placeholder="e.g. Creative Agency" className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-orange-100 focus:border-orange-600 outline-none transition-all text-lg font-medium" value=${biz} onChange=${e => setBiz(e.target.value)} required />
+                      </div>
+                      <div className="space-y-3">
+                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Primary Growth Goal</label>
+                        <input type="text" placeholder="e.g. 5 B2B clients/month" className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-orange-100 focus:border-orange-600 outline-none transition-all text-lg font-medium" value=${goal} onChange=${e => setGoal(e.target.value)} required />
+                      </div>
+                    </div>
+                    <button type="submit" disabled=${loading} className="w-full bg-orange-600 text-white py-6 rounded-2xl font-black text-xl flex items-center justify-center gap-3 hover:bg-orange-700 transition-all disabled:opacity-50 shadow-2xl shadow-slate-900/20">
+                      ${loading ? html`<${Loader2} className="animate-spin" size=${28} />` : html`<${Zap} size=${28} className="text-white-400" />`}
+                      ${loading ? 'Consulting Connext AI...' : 'Generate Roadmap'}
+                    </button>
+                  </form>
+                ` : html`
+                  <div className="space-y-8">
+                    <div className="bg-orange-600 p-10 rounded-[2rem] text-white shadow-xl">
+                      <h4 className="text-3xl font-black tracking-tight mb-4">${strategy.headline}</h4>
+                      <p className="text-orange-100 text-lg font-medium flex items-center gap-2">
+                        <${CheckCircle2} size=${20} /> ${strategy.keyBenefit}
+                      </p>
+                    </div>
+                    <div className="space-y-4">
+                      ${strategy.steps.map((s, i) => html`
+                        <div key=${i} className="flex gap-6 items-start bg-slate-50 p-6 rounded-2xl border border-slate-100 group hover:border-orange-300 transition-colors">
+                          <span className="w-10 h-10 flex-shrink-0 bg-white shadow-sm rounded-full flex items-center justify-center font-black text-orange-600 border border-slate-200 group-hover:bg-orange-600 group-hover:text-white transition-all">${i+1}</span>
+                          <p className="text-slate-700 font-bold leading-relaxed pt-1.5">${s}</p>
+                        </div>
+                      `)}
+                    </div>
+                    <button onClick=${() => setStrategy(null)} className="text-slate-400 font-black uppercase text-xs tracking-widest block mx-auto hover:text-orange-600 transition-colors">Refine Strategy</button>
+                  </div>
+                `}
+              </div>
+            </div>
+          </section>
+        `;
+      };
+
+      const Contact = () => html`
+        <section id="contact" className="py-32 bg-slate-900 text-white">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            <div className="grid lg:grid-cols-2 gap-20 items-center">
+              <div className="space-y-12">
+                <div className="space-y-6">
+                  <h2 className="text-orange-500 font-black uppercase tracking-widest text-sm">Join the Community</h2>
+                  <h3 className="text-5xl font-extrabold tracking-tight leading-tight">Ready to Scale with <span className="text-orange-500">Connext?</span></h3>
+                  <p className="text-xl text-slate-400 font-medium">Book a consultation or join our next networking event in Bangalore.</p>
+                </div>
+                <div className="space-y-8">
+                  <div className="flex items-center space-x-6">
+                    <div className="w-16 h-16 bg-white/10 rounded-3xl flex items-center justify-center text-orange-500"><${MapPin} size=${32} /></div>
+                    <div>
+                      <h4 className="font-black text-lg">Our Hub</h4>
+                      <p className="text-slate-500 font-medium">#86, Shubhodaya, 3rd Floor, Railway Parallel Rd, Bangalore - 560020</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-6">
+                    <div className="w-16 h-16 bg-white/10 rounded-3xl flex items-center justify-center text-orange-500"><${Mail} size=${32} /></div>
+                    <div>
+                      <h4 className="font-black text-lg">Inquiries</h4>
+                      <p className="text-slate-500 font-medium">hello@connext.community</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <form className="bg-white/5 p-12 rounded-[3rem] border border-white/10 space-y-8" onSubmit=${e => e.preventDefault()}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Full Name</label>
+                    <input type="text" placeholder="John Doe" className="w-full bg-transparent border-b-2 border-slate-700 py-3 focus:border-orange-500 outline-none transition-colors text-lg" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Business Email</label>
+                    <input type="email" placeholder="john@company.com" className="w-full bg-transparent border-b-2 border-slate-700 py-3 focus:border-orange-500 outline-none transition-colors text-lg" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">How can we help you grow?</label>
+                  <textarea rows=${4} className="w-full bg-transparent border-b-2 border-slate-700 py-3 focus:border-orange-500 outline-none transition-colors text-lg resize-none"></textarea>
+                </div>
+                <button className="w-full bg-orange-600 text-white py-6 rounded-2xl font-black text-xl hover:bg-orange-700 transition-all shadow-2xl shadow-orange-600/20">Send Inquiry</button>
+              </form>
+            </div>
+          </div>
+        </section>
+      `;
+
+      const Footer = () => html`
+        <footer className="bg-slate-900 border-t border-slate-800 py-12 text-center">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-slate-500 font-bold uppercase tracking-widest text-xs">
+              <div className="flex items-center space-x-2 text-white">
+                 <div className="w-2 h-2 rounded-full bg-orange-600"></div>
+                 <span className="text-lg tracking-tighter">Connext</span>
+              </div>
+              <div className="flex space-x-8">
+                <a href="#features" className="hover:text-white transition-colors">Features</a>
+                <a href="#founder" className="hover:text-white transition-colors">Founder</a>
+                <a href="#ai-tool" className="hover:text-white transition-colors">AI Tool</a>
+                <a href="#contact" className="hover:text-white transition-colors">Contact</a>
+              </div>
+              <div className="flex space-x-6">
+                <a href="https://www.linkedin.com/company/connextcommunity" target="_blank" className="hover:text-white"><${Linkedin} size=${18} /></a>
+                <a href="https://connext.community/" target="_blank" className="hover:text-white"><${Globe} size=${18} /></a>
+              </div>
+            </div>
+            <div className="mt-12 text-slate-600 text-[10px] uppercase tracking-widest">
+              © ${new Date().getFullYear()} Connext. Built for Bangalore SMEs.
+            </div>
+          </div>
+        </footer>
+      `;
+
+      const App = () => html`
+        <div className="min-h-screen flex flex-col">
+          <${Navbar} />
+          <main>
+            <${Hero} />
+            <${Features} />
+            <${Founder} />
+            <${LeadAssistant} />
+            <${Contact} />
+          </main>
+          <${Footer} />
+        </div>
+      `;
+
+      try {
+        const root = createRoot(document.getElementById('root'));
+        root.render(html`<${App} />`);
+        console.log("Connext App Mounted Successfully");
+      } catch (e) {
+        console.error("Mounting error:", e);
+      }
+    </script>
+  </body>
+</html>

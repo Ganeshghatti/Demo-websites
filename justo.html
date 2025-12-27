@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JustO - Modern Retail Technology</title>
+    
+    <!-- Favicon - Points to the Brand Logo Asset -->
+    <link rel="icon" type="image/png" href="./assets/justo/JustO_logo.jpg">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Babel for JSX support in single file -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-pattern {
+            background-color: #ffffff;
+            background-image: radial-gradient(#e2e8f0 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 overflow-x-hidden">
+    <div id="root"></div>
+
+    <!-- Scripts at the bottom for better performance -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <script type="text/babel" data-presets="react">
+        const { useState, useEffect } = React;
+
+        // --- GLOBAL CONFIGURATION ---
+        const COMPANY_NAME = "JustO";
+        
+        /** 
+         * LOGO CONFIGURATION 
+         * Replace this URL with your actual logo file path (e.g., /images/logo.png)
+         */
+        const LOGO_URL = "./assets/justo/JustO_logo.jpg"; 
+        
+        // Image URLs
+        const CEO_IMAGE = "./assets/justo/binod_pawar_justo.jpg";
+        
+        // High-quality modern retail-tech / e-commerce visual
+        const APP_SCREENSHOT_URL = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1600&h=900"; 
+
+        // --- REUSABLE LOGO COMPONENT ---
+        const Logo = ({ variant = 'dark', className = "" }) => {
+            const isDark = variant === 'dark';
+            return (
+                <div className={`flex items-center space-x-3 ${className}`}>
+                    <img 
+                        src={LOGO_URL} 
+                        alt={`${COMPANY_NAME} Logo`} 
+                        className="h-10 w-auto object-contain transition-all duration-300"
+                        style={{ 
+                            // If it's a dark logo, this filter makes it white for the footer
+                            filter: !isDark ? 'brightness(0) invert(1)' : 'none' 
+                        }}
+                    />
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [scrolled, setScrolled] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 20);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const features = [
+                {
+                    title: "Better Pricing",
+                    desc: "Direct access to brand-level pricing ensuring higher retail margins.",
+                    icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                },
+                {
+                    title: "Faster Delivery",
+                    desc: "Optimized logistics network to keep your shelves always stocked.",
+                    icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                },
+                {
+                    title: "Wide Catalog",
+                    desc: "Explore thousands of SKUs across multiple categories in one app.",
+                    icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                },
+                {
+                    title: "Hassle Free",
+                    desc: "Simplified ordering and returns with 24/7 dedicated retail support.",
+                    icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                }
+            ];
+
+            return (
+                <div className="min-h-screen">
+                    {/* Header */}
+                    <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'glass-nav py-3 shadow-md' : 'bg-transparent py-6'}`}>
+                        <div className="container mx-auto px-6 flex justify-between items-center">
+                            <a href="#"><Logo variant="dark" /></a>
+                            <div className="hidden md:flex items-center space-x-10 text-sm font-semibold text-slate-600">
+                                <a href="#about" className="hover:text-slate-900 transition-colors">About</a>
+                                <a href="#features" className="hover:text-slate-900 transition-colors">Solutions</a>
+                                <a href="#founder" className="hover:text-slate-900 transition-colors">Founder</a>
+                                <button className="bg-slate-900 text-white px-7 py-2.5 rounded-full hover:bg-slate-800 transition-all shadow-lg hover:scale-105 active:scale-95">
+                                    Join Network
+                                </button>
+                            </div>
+                            <div className="md:hidden">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M12 12h8M4 18h16" /></svg>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* Hero Section */}
+                    <section className="relative pt-36 pb-20 md:pt-52 md:pb-32 hero-pattern">
+                        <div className="container mx-auto px-6 relative z-10 text-center">
+                            <div className="inline-block px-4 py-1.5 mb-8 bg-slate-100 rounded-full border border-slate-200 shadow-sm">
+                                <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Bengaluru Born • Since 2021</span>
+                            </div>
+                            <h1 className="text-5xl md:text-8xl font-black leading-tight tracking-tight mb-8 gradient-text">
+                                Better Pricing. <br />
+                                Faster Delivery.
+                            </h1>
+                            <p className="text-lg md:text-xl text-slate-500 mb-12 max-w-2xl mx-auto leading-relaxed">
+                                {COMPANY_NAME} is a digital-first technology platform enabling retailers to access wholesale products with direct pricing and optimized logistics.
+                            </p>
+                            <div className="flex flex-col sm:flex-row justify-center items-center gap-5">
+                                <button className="w-full sm:w-auto bg-slate-900 text-white px-10 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-black transition-all shadow-2xl hover:-translate-y-1">
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                    </svg>
+                                    Get the App
+                                </button>
+                                <a href="#about" className="w-full sm:w-auto px-10 py-4 rounded-2xl font-bold border border-slate-200 bg-white hover:bg-slate-50 transition-all">
+                                    Learn More
+                                </a>
+                            </div>
+                        </div>
+
+                        {/* PRODUCT VISUAL STYLE */}
+                        <div className="container mx-auto px-6 mt-16 flex justify-center">
+                            <div className="relative w-full max-w-6xl">
+                                <div className="bg-slate-900 aspect-video rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl relative group border-8 border-white">
+                                    <div className="absolute inset-0 bg-gradient-to-tr from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+                                        {/* Background pattern grid */}
+                                        <div className="absolute inset-0 grid grid-cols-2 md:grid-cols-4 gap-8 opacity-10 transform -rotate-6 scale-125 pointer-events-none">
+                                            {[...Array(12)].map((_, i) => (
+                                                <div key={i} className="h-96 w-64 bg-white rounded-3xl"></div>
+                                            ))}
+                                        </div>
+                                        {/* Full Image Container */}
+                                        <div className="relative z-10 w-full h-full p-4 md:p-8 flex flex-col items-center justify-center">
+                                            <div className="w-full h-full relative group">
+                                                <div className="absolute -inset-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl blur opacity-20 transition-opacity group-hover:opacity-40"></div>
+                                                <img 
+                                                    src={APP_SCREENSHOT_URL} 
+                                                    alt="JustO Retail Dashboard" 
+                                                    className="relative rounded-2xl shadow-2xl border-2 border-slate-700 w-full h-full object-cover"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Features Section */}
+                    <section id="features" className="py-28 bg-white">
+                        <div className="container mx-auto px-6">
+                            <div className="max-w-3xl mb-20">
+                                <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">The {COMPANY_NAME} Advantage.</h2>
+                                <p className="text-slate-500 text-lg">We've built a platform that addresses the core inefficiencies of the traditional retail supply chain.</p>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                                {features.map((f, i) => (
+                                    <div key={i} className="feature-card p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 transition-all group">
+                                        <div className="w-14 h-14 bg-slate-900 text-white rounded-2xl flex items-center justify-center mb-8 shadow-xl group-hover:bg-indigo-600 transition-colors">
+                                            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">{f.icon}</svg>
+                                        </div>
+                                        <h3 className="text-2xl font-bold mb-4">{f.title}</h3>
+                                        <p className="text-slate-500 leading-relaxed text-sm">{f.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Founder Section */}
+                    <section id="founder" className="py-28 bg-slate-50">
+                        <div className="container mx-auto px-6">
+                            <div className="bg-white rounded-[4rem] p-10 md:p-20 flex flex-col lg:flex-row items-center gap-16 shadow-2xl border border-slate-100">
+                                <div className="w-full lg:w-1/3 text-center">
+                                    <div className="relative inline-block group">
+                                        <div className="absolute -inset-4 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-full blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                                        <img src={CEO_IMAGE} alt="Binod Pawar" className="relative rounded-full w-72 h-72 object-cover border-8 border-white shadow-2xl" />
+                                    </div>
+                                    <div className="mt-10">
+                                        <h3 className="text-3xl font-black text-slate-900">Binod Pawar</h3>
+                                        <p className="text-slate-500 font-bold uppercase tracking-[0.2em] text-xs mt-2">Founder & CEO</p>
+                                        <a href="https://www.linkedin.com/in/binod-pawar-010b98143/" target="_blank" className="mt-6 inline-flex p-3 bg-slate-100 rounded-full hover:bg-slate-900 hover:text-white transition-all">
+                                            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div className="w-full lg:w-2/3">
+                                    <div className="bg-slate-50 p-8 md:p-14 rounded-[3rem] border border-slate-200 relative">
+                                        <svg className="absolute top-10 right-10 w-20 h-20 text-slate-200" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H16.017C14.9124 8 14.017 7.10457 14.017 6V5C14.017 3.89543 14.9124 3 16.017 3H21.017C22.1216 3 23.017 3.89543 23.017 5V15C23.017 18.3137 20.3307 21 17.017 21H14.017ZM1.017 21L1.017 18C1.017 16.8954 1.91243 16 3.017 16H6.017C6.56928 16 7.017 15.5523 7.017 15V9C7.017 8.44772 6.56928 8 6.017 8H3.017C1.91243 8 1.017 7.10457 1.017 6V5C1.017 3.89543 1.91243 3 3.017 3H8.017C9.12157 3 10.017 3.89543 10.017 5V15C10.017 18.3137 7.33071 21 4.017 21H1.017Z"/></svg>
+                                        <h4 className="text-2xl font-black mb-10 text-slate-900 tracking-tight">Executive Vision</h4>
+                                        <div className="space-y-8 text-slate-600 leading-relaxed text-base md:text-xl">
+                                            <p className="italic font-medium">
+                                                "A strategic planner who has a proven track record to exceed targets through hard work, dedication and a commitment to the task at hand."
+                                            </p>
+                                            <p>
+                                                Binod is dedicated to building strong relationships both internally and externally, ensuring that both customer and business needs are met at every step.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* About Section */}
+                    <section id="about" className="py-28 bg-white overflow-hidden">
+                        <div className="container mx-auto px-6">
+                            <div className="flex flex-col lg:flex-row gap-20 items-center">
+                                <div className="w-full lg:w-1/2">
+                                    <h2 className="text-4xl md:text-6xl font-black mb-12 leading-tight tracking-tight">Our Journey. <br /><span className="text-slate-400">Our Mission.</span></h2>
+                                    <div className="space-y-10">
+                                        {[
+                                            { t: "Established June 2021", d: "Founded in the heart of Bengaluru, the technology hub of India, to bridge the retail gap." },
+                                            { t: "Scalable Infrastructure", d: "Enabling retailers to compete with modern e-commerce through cutting-edge digital supply tools." },
+                                            { t: "Trust-Based Model", d: "Focusing on positive relationships with customers, suppliers, and colleagues alike." }
+                                        ].map((item, idx) => (
+                                            <div key={idx} className="flex gap-6 group">
+                                                <div className="flex-shrink-0 w-12 h-12 bg-slate-900 text-white rounded-full flex items-center justify-center font-black text-xl shadow-lg group-hover:scale-110 transition-transform">{idx + 1}</div>
+                                                <div>
+                                                    <h5 className="text-xl font-bold mb-3">{item.t}</h5>
+                                                    <p className="text-slate-500 leading-relaxed text-sm md:text-base">{item.d}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="w-full lg:w-1/2 relative">
+                                    <div className="absolute -top-10 -right-10 w-64 h-64 bg-slate-100 rounded-full blur-3xl opacity-60"></div>
+                                    <div className="relative bg-slate-900 rounded-[3.5rem] p-12 md:p-16 border border-slate-800 shadow-2xl overflow-hidden">
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl"></div>
+                                        <div className="relative z-10">
+                                            <h3 className="text-3xl font-black text-white mb-8">Building India's <br />Retail Future.</h3>
+                                            <p className="text-slate-400 leading-relaxed mb-12">
+                                                We are a technology platform enabling retailers to access a wide range of products with better pricing and faster delivery via our mobile application.
+                                            </p>
+                                            <div className="grid grid-cols-2 gap-10 border-t border-slate-800 pt-10">
+                                                <div>
+                                                    <p className="text-5xl font-black text-white mb-2">2021</p>
+                                                    <p className="text-slate-500 text-xs uppercase tracking-widest font-bold">Inception Year</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-5xl font-black text-white mb-2">HQ</p>
+                                                    <p className="text-slate-500 text-xs uppercase tracking-widest font-bold">Bengaluru, KA</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Footer */}
+                    <footer className="bg-slate-900 text-slate-300 pt-28 pb-14 border-t border-slate-800">
+                        <div className="container mx-auto px-6">
+                            <div className="flex flex-col lg:flex-row justify-between items-start gap-20 mb-20">
+                                <div className="max-w-md w-full">
+                                    <Logo variant="dark" className="mb-10" />
+                                    <p className="text-lg leading-relaxed text-slate-400 mb-10">
+                                        Empowering retailers across India with technology-driven supply chains, enabling better pricing and zero-hassle delivery.
+                                    </p>
+                                    <div className="flex items-center space-x-6">
+                                        <a href="https://www.linkedin.com/in/binod-pawar-010b98143/" target="_blank" className="bg-slate-800 p-4 rounded-xl hover:bg-slate-700 transition-all border border-slate-700 text-white flex items-center gap-3 font-bold group">
+                                            <svg className="w-6 h-6 text-slate-400 group-hover:text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                                            Connect with Founder
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col sm:flex-row gap-16 lg:gap-32 w-full lg:w-auto">
+                                    <div>
+                                        <h6 className="text-white font-black text-xs uppercase tracking-[0.3em] mb-10">Quick Links</h6>
+                                        <ul className="space-y-5 text-sm font-semibold">
+                                            <li><a href="#about" className="text-slate-500 hover:text-white transition-colors">About Us</a></li>
+                                            <li><a href="#features" className="text-slate-500 hover:text-white transition-colors">Our Solutions</a></li>
+                                            <li><a href="#founder" className="text-slate-500 hover:text-white transition-colors">Leadership</a></li>
+                                            <li><a href="#" className="text-slate-500 hover:text-white transition-colors">Privacy Policy</a></li>
+                                        </ul>
+                                    </div>
+                                    <div className="min-w-[200px]">
+                                        <h6 className="text-white font-black text-xs uppercase tracking-[0.3em] mb-10">Headquarters</h6>
+                                        <ul className="space-y-6 text-sm">
+                                            <li className="flex items-start gap-3">
+                                                <svg className="w-5 h-5 text-slate-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                                <span className="text-slate-500">Bengaluru, Karnataka,<br />India - 560001</span>
+                                            </li>
+                                            <li className="flex items-center gap-3">
+                                                <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 00-2 2z"/></svg>
+                                                <span className="text-slate-500 underline underline-offset-4 decoration-slate-800">contact@justo.com</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="pt-12 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-slate-600 text-center gap-6">
+                                <p>© 2021-2025 JustO E-Commerce Pvt Ltd.</p>
+                                <div className="flex gap-10">
+                                    <span>Built for Scale</span>
+                                    <span>Modern Retail Hub</span>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

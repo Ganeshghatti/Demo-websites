@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PiRo Kitchens - Honest & Fresh</title>
+    
+    <!-- Favicon Placeholder -->
+    <link rel="icon" type="image/png" href="./assets/pirokitchens_logo.png" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        scroll-behavior: smooth;
+      }
+      h1, h2, h3, .serif {
+        font-family: 'Playfair Display', serif;
+      }
+      .animate-fade-in {
+        animation: fadeIn 1s ease-out forwards;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19.0.0",
+        "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+        "lucide-react": "https://esm.sh/lucide-react@0.460.0"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import React, { useState, useEffect, StrictMode } from 'react';
+      import { createRoot } from 'react-dom/client';
+      import { 
+        Menu, X, Coffee, Utensils, ArrowRight, 
+        Phone, MapPin, Linkedin, Instagram, Twitter, Mail 
+      } from 'lucide-react';
+
+      // --- Brand Assets ---
+      // User can replace these URLs with their actual logo files
+      const LOGO_URL = "./assets/pirokitchens_logo.png"; 
+
+      // --- Constants & Data ---
+      const NAV_ITEMS = [
+        { label: 'Home', href: '#' },
+        { label: 'Our Story', href: '#story' },
+        { label: 'Menu', href: '#menu' },
+        { label: 'Coffee', href: '#coffee' },
+        { label: 'Contact', href: '#contact' },
+      ];
+
+      const MENU_HIGHLIGHTS = [
+        {
+          id: '1',
+          name: 'Desi Pesto Pasta',
+          description: 'Classic Al Dente pasta tossed in a vibrant Indian-inspired basil and cashew nut pesto.',
+          price: '₹425',
+          category: 'Fusion',
+          image: 'https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&w=800&q=80'
+        },
+        {
+          id: '2',
+          name: 'Spiced Mocha Brew',
+          description: 'Our signature dark roast with a hint of cardamom and dark chocolate infusion.',
+          price: '₹245',
+          category: 'Coffee',
+          image: 'https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=80'
+        },
+        {
+          id: '3',
+          name: 'Tandoori Croissant Sandwich',
+          description: 'Flaky French butter croissant filled with smokey tandoori pulled chicken and mint mayo.',
+          price: '₹385',
+          category: 'Innovative',
+          image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80'
+        }
+      ];
+
+      // --- Components ---
+
+      const Navbar = () => {
+        const [isScrolled, setIsScrolled] = useState(false);
+        const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+        useEffect(() => {
+          const handleScroll = () => setIsScrolled(window.scrollY > 50);
+          window.addEventListener('scroll', handleScroll);
+          return () => window.removeEventListener('scroll', handleScroll);
+        }, []);
+
+        return React.createElement('nav', {
+          className: `fixed w-full z-[100] transition-all duration-500 ${isScrolled ? 'bg-white/95 backdrop-blur-md shadow-md py-3' : 'bg-transparent py-5'}`
+        }, 
+          React.createElement('div', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8' },
+            React.createElement('div', { className: 'flex justify-between items-center' },
+              React.createElement('div', { className: 'flex items-center space-x-3' },
+                React.createElement('img', { 
+                  src: LOGO_URL, 
+                  alt: "PiRo Kitchens Logo", 
+                  className: "w-10 h-10 object-contain rounded-full bg-white" 
+                }),
+                React.createElement('span', { className: `text-xl font-bold tracking-tight ${isScrolled ? 'text-gray-900' : 'text-white'}` }, 'PIRO KITCHENS')
+              ),
+              React.createElement('div', { className: 'hidden lg:flex space-x-8' },
+                NAV_ITEMS.map(item => React.createElement('a', {
+                  key: item.label,
+                  href: item.href,
+                  className: `text-sm font-semibold transition-colors hover:text-[#ec008c] uppercase tracking-wider ${isScrolled ? 'text-gray-700' : 'text-white'}`
+                }, item.label))
+              ),
+              React.createElement('div', { className: 'lg:hidden' },
+                React.createElement('button', {
+                  onClick: () => setIsMenuOpen(!isMenuOpen),
+                  className: `p-2 rounded-md ${isScrolled ? 'text-gray-900' : 'text-white'}`
+                }, isMenuOpen ? React.createElement(X, { size: 28 }) : React.createElement(Menu, { size: 28 }))
+              )
+            )
+          ),
+          // Mobile Menu
+          React.createElement('div', { 
+            className: `lg:hidden fixed inset-x-0 bg-white transition-all duration-300 ease-in-out border-b border-gray-100 overflow-hidden ${isMenuOpen ? 'max-h-screen py-6 opacity-100' : 'max-h-0 py-0 opacity-0'}` 
+          },
+            React.createElement('div', { className: 'px-6 space-y-4' },
+              NAV_ITEMS.map(item => React.createElement('a', {
+                key: item.label,
+                href: item.href,
+                onClick: () => setIsMenuOpen(false),
+                className: 'block py-3 text-lg font-semibold text-gray-800 hover:text-[#ec008c] border-b border-gray-50'
+              }, item.label))
+            )
+          )
+        );
+      };
+
+      const Hero = () => {
+        return React.createElement(
+          'section',
+          { className: 'relative min-h-screen lg:h-screen w-full flex items-center overflow-hidden' },
+          React.createElement('div', { className: 'absolute inset-0 z-0' },
+            React.createElement('img', {
+              src: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1920&q=80',
+              className: 'w-full h-full object-cover object-center',
+              alt: 'Coffee and Food background'
+            }),
+            React.createElement('div', {
+              className: 'absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-black/80 via-black/50 to-transparent'
+            })
+          ),
+          React.createElement('div', {
+            className: 'relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white pt-28 sm:pt-32 lg:pt-0'
+          },
+            React.createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-2 gap-10 items-center' },
+              // Left: Content
+              React.createElement('div', { className: 'max-w-7xl space-y-8' },
+                // React.createElement('div', {
+                //   className: 'inline-flex items-center px-4 py-2 bg-[#ec008c] text-white rounded-full text-xs font-bold tracking-widest uppercase shadow-lg shadow-[#ec008c]/30'
+                // }, 'Honest & Fresh Since 2024'),
+                React.createElement('h1', {
+                  className: 'text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-tight md:leading-[1.1]'
+                },
+                  'Global Flavours with an ',
+                  React.createElement('span', { className: 'text-[#ec008c] italic block sm:inline' }, 'Indian Soul'),
+                  '.'
+                ),
+                React.createElement('p', {
+                  className: 'text-base sm:text-lg md:text-2xl text-gray-200 font-light max-w-lg leading-relaxed'
+                },
+                  'Multi-cuisine fusion dishes from Continental favorites with a desi twist to innovative creations that surprise and delight.'
+                ),
+                // Mobile/Small: Buttons below content
+                React.createElement('div', { className: 'flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 pt-6 lg:hidden' },
+                  React.createElement('a', {
+                    href: '#menu',
+                    className: 'flex items-center justify-center px-10 py-5 bg-white text-gray-900 rounded-full font-bold hover:bg-[#ec008c] hover:text-white transition-all duration-300 transform hover:-translate-y-1 shadow-xl'
+                  },
+                    React.createElement(Utensils, { className: 'mr-2 h-5 w-5' }), 'Explore Menu'
+                  ),
+                  React.createElement('a', {
+                    href: '#coffee',
+                    className: 'flex items-center justify-center px-10 py-5 bg-white/10 backdrop-blur-md border border-white/30 text-white rounded-full font-bold hover:bg:white/20 transition-all duration-300 transform hover:-translate-y-1'
+                  },
+                    React.createElement(Coffee, { className: 'mr-2 h-5 w-5' }), 'Freshly Brewed'
+                  )
+                )
+              ),
+              // Right: Buttons (Desktop/Large)
+              React.createElement('div', { className: 'hidden lg:flex w-full justify-end' },
+                React.createElement('div', { className: 'flex flex-row space-x-4' },
+                  React.createElement('a', {
+                    href: '#menu',
+                    className: 'flex items-center justify-center px-10 py-5 bg-white text-gray-900 rounded-full font-bold hover:bg-[#ec008c] hover:text-white transition-all duration-300 transform hover:-translate-y-1 shadow-xl'
+                  },
+                    React.createElement(Utensils, { className: 'mr-2 h-5 w-5' }), 'Explore Menu'
+                  ),
+                  React.createElement('a', {
+                    href: '#coffee',
+                    className: 'flex items-center justify-center px-10 py-5 bg-white/10 backdrop-blur-md border border-white/30 text-white rounded-full font-bold hover:bg:white/20 transition-all duration-300 transform hover:-translate-y-1'
+                  },
+                    React.createElement(Coffee, { className: 'mr-2 h-5 w-5' }), 'Freshly Brewed'
+                  )
+                )
+              )
+            )
+          ),
+          React.createElement('div', {
+            className: 'hidden md:flex absolute bottom-10 left-1/2 -translate-x-1/2 flex-col items-center animate-bounce text-white/50'
+          },
+            React.createElement('span', { className: 'text-xs uppercase tracking-widest mb-2 font-bold' }, 'Scroll'),
+            React.createElement('div', { className: 'w-px h-12 bg-gradient-to-b from-white/50 to-transparent' })
+          )
+        );
+      };
+
+      const AboutSection = () => {
+        return React.createElement('section', { id: 'story', className: 'py-20 lg:py-32 bg-white overflow-hidden' },
+          React.createElement('div', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8' },
+            React.createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center' },
+              React.createElement('div', { className: 'relative' },
+                React.createElement('div', { className: 'absolute -top-10 -left-10 w-40 h-40 bg-[#ec008c]/10 rounded-full blur-3xl' }),
+                React.createElement('div', { className: 'relative z-10 bg-gray-100 rounded-[2.5rem] overflow-hidden shadow-2xl' },
+                  React.createElement('img', {
+                    src: 'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=800&q=80',
+                    alt: 'PiRo Kitchen Interior',
+                    className: 'w-full aspect-[4/5] lg:aspect-[3/4] object-cover hover:scale-105 transition-transform duration-700'
+                  })
+                ),
+                React.createElement('div', { className: 'absolute -bottom-8 -right-4 lg:-right-8 bg-[#ec008c] text-white p-6 lg:p-10 rounded-3xl shadow-2xl max-w-xs lg:max-w-sm' },
+                  React.createElement('p', { className: 'text-xs font-bold opacity-80 uppercase tracking-widest mb-2' }, 'Our Philosophy'),
+                  React.createElement('p', { className: 'serif text-xl lg:text-2xl italic leading-relaxed' }, '"Honest ingredients, fresh perspectives, and a soul that\'s vibrantly Indian."')
+                )
+              ),
+              React.createElement('div', { className: 'space-y-10' },
+                React.createElement('div', { className: 'space-y-6' },
+                  React.createElement('h3', { className: 'text-[#ec008c] font-bold tracking-widest uppercase text-sm' }, 'Our Journey'),
+                  React.createElement('h2', { className: 'text-4xl lg:text-6xl font-bold text-gray-900 leading-tight' }, 'Experience the Best of Both Worlds'),
+                  React.createElement('p', { className: 'text-lg lg:text-xl text-gray-600 leading-relaxed font-light' }, 'Founded in 2024 in Bengaluru, PiRo Kitchens was born from a simple obsession: Why choose between authentic Indian soul and sophisticated global techniques?')
+                ),
+                React.createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-2 gap-6' },
+                  React.createElement('div', { className: 'p-8 bg-gray-50 rounded-[2rem] border border-gray-100 hover:border-[#ec008c]/30 transition-colors' },
+                    React.createElement('h4', { className: 'font-bold text-gray-900 mb-3 text-lg' }, 'Desi Twist'),
+                    React.createElement('p', { className: 'text-sm text-gray-500 italic leading-relaxed' }, 'Continental favorites reimagined with local spices and heritage ingredients.')
+                  ),
+                  React.createElement('div', { className: 'p-8 bg-gray-50 rounded-[2rem] border border-gray-100 hover:border-[#ec008c]/30 transition-colors' },
+                    React.createElement('h4', { className: 'font-bold text-gray-900 mb-3 text-lg' }, 'Freshly Brewed'),
+                    React.createElement('p', { className: 'text-sm text-gray-500 italic leading-relaxed' }, 'Our specialty coffee is rich, responsibly sourced, and crafted for perfection.')
+                  )
+                ),
+                React.createElement('p', { className: 'text-gray-600 leading-relaxed text-lg' }, 'Our menu features multi-cuisine fusion dishes — from Continental favourites with a desi twist to innovative creations that surprise and delight. Come for the food. Stay for the coffee.')
+              )
+            )
+          )
+        );
+      };
+
+      const MenuHighlight = () => {
+        return React.createElement('section', { id: 'menu', className: 'py-24 bg-gray-50' },
+          React.createElement('div', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8' },
+            React.createElement('div', { className: 'flex flex-col md:flex-row justify-between items-center md:items-end mb-16 gap-8' },
+              React.createElement('div', { className: 'max-w-2xl space-y-4 text-center md:text-left' },
+                React.createElement('h3', { className: 'text-[#ec008c] font-bold tracking-widest uppercase text-sm' }, 'Menu Highlights'),
+                React.createElement('h2', { className: 'text-4xl lg:text-6xl font-bold text-gray-900' }, 'Crafted to Surprise & Delight')
+              ),
+              React.createElement('button', { className: 'flex items-center text-[#ec008c] font-bold group px-6 py-3 border-2 border-[#ec008c] rounded-full hover:bg-[#ec008c] hover:text-white transition-all' },
+                'View Full Menu', React.createElement(ArrowRight, { className: 'ml-2 group-hover:translate-x-1 transition-transform' })
+              )
+            ),
+            React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch' },
+              MENU_HIGHLIGHTS.map(item => React.createElement('div', {
+                key: item.id,
+                className: 'bg-white rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 group border border-gray-100 flex flex-col h-full'
+              },
+                React.createElement('div', { className: 'aspect-[4/3] overflow-hidden relative' },
+                  React.createElement('img', { src: item.image, alt: item.name, className: 'w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000' }),
+                  React.createElement('div', { className: 'absolute top-6 left-6' },
+                    React.createElement('span', { className: 'px-4 py-2 bg-white/95 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest text-gray-900 shadow-md' }, item.category)
+                  )
+                ),
+                React.createElement('div', { className: 'p-10 flex flex-col flex-grow' },
+                  React.createElement('div', { className: 'flex justify-between items-start mb-4' },
+                    React.createElement('h4', { className: 'text-2xl font-bold text-gray-900 leading-tight group-hover:text-[#ec008c] transition-colors flex-grow pr-4' }, item.name),
+                    React.createElement('span', { className: 'text-[#ec008c] text-xl font-bold whitespace-nowrap' }, item.price)
+                  ),
+                  React.createElement('p', { className: 'text-gray-500 text-base leading-relaxed mb-8 flex-grow font-light' }, item.description),
+                  React.createElement('div', { className: 'mt-auto' },
+                    React.createElement('button', { className: 'w-full py-4 bg-gray-900 text-white rounded-2xl text-sm font-bold hover:bg-[#ec008c] transition-all duration-300 transform active:scale-95 shadow-lg' }, 'Add to Order')
+                  )
+                )
+              ))
+            )
+          )
+        );
+      };
+
+      const CoffeeSection = () => {
+        return React.createElement('section', { id: 'coffee', className: 'py-24 lg:py-32 bg-stone-900 text-white relative overflow-hidden' },
+          React.createElement('div', { className: 'absolute inset-0 opacity-10 bg-[url("https://www.transparenttextures.com/patterns/black-linen.png")]' }),
+          React.createElement('div', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10' },
+            React.createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-2 gap-20 items-center' },
+              React.createElement('div', { className: 'space-y-10 order-2 lg:order-1' },
+                React.createElement('h3', { className: 'text-[#ec008c] font-bold tracking-widest uppercase text-sm' }, 'The Art of Brewing'),
+                React.createElement('h2', { className: 'text-4xl lg:text-7xl font-bold leading-tight' }, 
+                  'We Take Our Coffee ', React.createElement('br'), React.createElement('span', { className: 'italic text-[#ec008c] serif font-normal' }, 'Seriously')
+                ),
+                React.createElement('p', { className: 'text-lg lg:text-xl text-stone-300 leading-relaxed max-w-lg font-light' }, 'Freshly brewed, rich, and crafted to complement every meal. Our beans are sourced from the finest estates in Karnataka.'),
+                React.createElement('ul', { className: 'space-y-8' },
+                  [
+                    { title: 'Artisanal Roasts', desc: 'Sourced directly from Chikmagalur’s heritage estates.' },
+                    { title: 'Expert Baristas', desc: 'Trained to deliver the perfect extraction every single time.' },
+                    { title: 'Signature Blends', desc: 'Custom profiles designed to pair perfectly with our fusion menu.' }
+                  ].map((item, i) => React.createElement('li', { key: i, className: 'flex items-start space-x-6' },
+                    React.createElement('div', { className: 'flex-shrink-0 w-10 h-10 rounded-full border border-[#ec008c] flex items-center justify-center text-[#ec008c] font-bold' }, `0${i+1}`),
+                    React.createElement('div', null,
+                      React.createElement('h5', { className: 'text-xl font-bold text-stone-100 mb-1' }, item.title),
+                      React.createElement('p', { className: 'text-stone-400 leading-relaxed' }, item.desc)
+                    )
+                  ))
+                )
+              ),
+              React.createElement('div', { className: 'order-1 lg:order-2' },
+                React.createElement('div', { className: 'relative' },
+                  React.createElement('div', { className: 'absolute -inset-6 border border-white/10 rounded-[5rem]' }),
+                  React.createElement('img', {
+                    src: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80',
+                    alt: 'Coffee Brewing',
+                    className: 'w-full aspect-square object-cover rounded-[4rem] relative z-10 shadow-2xl'
+                  }),
+                  React.createElement('div', { className: 'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-[#ec008c]/20 backdrop-blur-3xl rounded-full flex items-center justify-center animate-pulse z-20' },
+                    React.createElement('div', { className: 'w-20 h-20 bg-[#ec008c] rounded-full flex items-center justify-center text-white font-bold italic serif text-4xl shadow-2xl' }, 'P')
+                  )
+                )
+              )
+            )
+          )
+        );
+      };
+
+      const ContactFooter = () => {
+        return React.createElement('footer', { id: 'contact', className: 'bg-white border-t border-gray-100' },
+          React.createElement('div', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12' },
+            React.createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-16 mb-20' },
+              React.createElement('div', { className: 'sm:col-span-2 space-y-10' },
+                React.createElement('div', { className: 'flex items-center space-x-4' },
+                  React.createElement('img', { 
+                    src: LOGO_URL, 
+                    alt: "PiRo Kitchens Logo", 
+                    className: "w-14 h-14 object-contain rounded-full shadow-sm bg-gray-50 p-1" 
+                  }),
+                  React.createElement('span', { className: 'text-3xl font-bold tracking-tight text-gray-900 uppercase' }, 'PIRO KITCHENS')
+                ),
+                React.createElement('p', { className: 'text-gray-500 max-w-sm leading-relaxed text-xl italic serif' }, '"Honest and Fresh – serving a bold mix of global flavours with an Indian soul."'),
+                React.createElement('div', { className: 'flex space-x-6' },
+                  [Linkedin].map((Icon, idx) => React.createElement('a', { key: idx, href: 'https://www.linkedin.com/company/pirokitchens/', target: "_blank", className: 'w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#ec008c] hover:bg-gray-100 transition-all shadow-sm' }, React.createElement(Icon, { size: 24 })))
+                )
+              ),
+              React.createElement('div', { className: 'space-y-8' },
+                React.createElement('h4', { className: 'font-bold text-gray-900 uppercase tracking-widest text-xs border-b border-gray-100 pb-2' }, 'Reach Us'),
+                React.createElement('ul', { className: 'space-y-6' },
+                  React.createElement('li', { className: 'flex items-center space-x-4 text-gray-600 group' }, 
+                    React.createElement(Phone, { size: 20, className: 'text-[#ec008c]' }), 
+                    React.createElement('a', { href: 'tel:9873774753', className: 'hover:text-[#ec008c] font-medium transition-colors' }, '9873774753')
+                  ),
+                  React.createElement('li', { className: 'flex items-start space-x-4 text-gray-600' }, 
+                    React.createElement(MapPin, { size: 20, className: 'text-[#ec008c] mt-1' }), 
+                    React.createElement('span', { className: 'font-medium' }, 'Headquarters:', React.createElement('br'), 'Bengaluru, Karnataka')
+                  ),
+                  React.createElement('li', { className: 'flex items-center space-x-4 text-gray-600 group' }, 
+                    React.createElement(Mail, { size: 20, className: 'text-[#ec008c]' }), 
+                    React.createElement('a', { href: 'mailto:hello@pirokitchens.com', className: 'hover:text-[#ec008c] font-medium transition-colors' }, 'hello@pirokitchens.com')
+                  )
+                )
+              ),
+              React.createElement('div', { className: 'space-y-8' },
+                React.createElement('h4', { className: 'font-bold text-gray-900 uppercase tracking-widest text-xs border-b border-gray-100 pb-2' }, 'Newsletter'),
+                React.createElement('p', { className: 'text-sm text-gray-500 leading-relaxed font-medium' }, 'Stay updated on new fusion creations and specialty coffee releases.'),
+                React.createElement('div', { className: 'flex flex-col space-y-3' },
+                  React.createElement('input', { type: 'email', placeholder: 'Email Address', className: 'px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#ec008c]/20 transition-all shadow-inner' }),
+                  React.createElement('button', { className: 'px-6 py-4 bg-[#ec008c] text-white font-bold rounded-2xl text-sm hover:opacity-90 transition-opacity uppercase tracking-widest shadow-lg shadow-[#ec008c]/30' }, 'Subscribe')
+                )
+              )
+            ),
+            React.createElement('div', { className: 'pt-12 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0 text-sm text-gray-400 font-medium' },
+              React.createElement('p', null, '© 2024 PiRo Kitchens. All rights reserved.'),
+              React.createElement('div', { className: 'flex space-x-10' }, 
+                ['Privacy Policy', 'Terms of Service'].map(text => React.createElement('a', { key: text, href: '#', className: 'hover:text-[#ec008c] transition-colors' }, text))
+              )
+            )
+          )
+        );
+      };
+
+      const App = () => {
+        return React.createElement('div', { className: 'min-h-screen bg-white' },
+          React.createElement(Navbar),
+          React.createElement('main', null,
+            React.createElement(Hero),
+            React.createElement(AboutSection),
+            React.createElement(MenuHighlight),
+            
+            // Modern Banner Section
+            React.createElement('section', { className: 'py-24 bg-[#ec008c] relative overflow-hidden' },
+              React.createElement('div', { className: 'absolute inset-0 bg-black/5 mix-blend-overlay' }),
+              React.createElement('div', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-12 text-white relative z-10' },
+                React.createElement('div', { className: 'max-w-xl text-center md:text-left' },
+                  React.createElement('h2', { className: 'text-4xl lg:text-5xl font-bold mb-6 leading-tight' }, 'Hungry for something truly unique?'),
+                  React.createElement('p', { className: 'text-white/90 text-xl font-light leading-relaxed' }, 'Visit us in Bengaluru today and experience a world of flavor unlike any other.')
+                ),
+                React.createElement('a', { href: '#contact', className: 'px-14 py-6 bg-white text-[#ec008c] font-black rounded-full hover:scale-105 transition-all shadow-2xl uppercase tracking-widest text-sm' }, 'Book a Table')
+              )
+            ),
+            
+            React.createElement(CoffeeSection)
+          ),
+          React.createElement(ContactFooter)
+        );
+      };
+
+      const root = createRoot(document.getElementById('root'));
+      root.render(React.createElement(StrictMode, null, React.createElement(App)));
+    </script>
+  </body>
+</html>
