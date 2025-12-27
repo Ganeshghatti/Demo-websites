@@ -45,6 +45,28 @@
         display: flex;
         flex-direction: column;
       }
+      /* Dotted Background Pattern */
+      .bg-dotted {
+        position: relative;
+      }
+      .bg-dotted::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: radial-gradient(circle, #ea580c 1.5px, transparent 1.5px);
+        background-size: 24px 24px;
+        background-position: 0 0;
+        opacity: 0.15;
+        z-index: 0;
+        pointer-events: none;
+      }
+      .bg-dotted > * {
+        position: relative;
+        z-index: 1;
+      }
     </style>
     <script type="importmap">
     {
@@ -138,49 +160,31 @@
       };
 
       const Hero = () => html`
-        <section className="relative pt-44 pb-32 overflow-hidden bg-slate-50 bg-grid-pattern">
-          <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-orange-50/50 to-transparent pointer-events-none"></div>
-          <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 text-center lg:text-left">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div className="space-y-8 animate-fade-in-up">
-                <div className="inline-flex items-center bg-orange-100 text-orange-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">
-                  <${Sparkles} size=${14} className="mr-2" /> Bangalore's #1 Networking Platform
-                </div>
-                <h1 className="text-6xl lg:text-8xl font-extrabold text-slate-900 leading-[0.95] tracking-tight">
-                  Lead Gen, <span className="text-orange-600">Reimagined.</span>
-                </h1>
-                <p className="text-xl text-slate-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
-                  We bridge the gap between small businesses and high-intent leads through professional networking, referral magic, and modern technology.
-                </p>
-                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 justify-center lg:justify-start">
-                  <button className="bg-orange-600 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-orange-700 transition-all shadow-2xl shadow-orange-600/30 flex items-center justify-center">
-                    Start Growing Today <${ArrowRight} size=${20} className="ml-2" />
-                  </button>
-                  <button className="bg-white text-slate-900 border border-slate-200 px-10 py-5 rounded-2xl font-bold text-lg hover:bg-slate-50 transition-all shadow-sm">
-                    Watch Demo
-                  </button>
-                </div>
-                <div className="flex items-center justify-center lg:justify-start space-x-6 text-slate-400">
-                  <div className="flex -space-x-3">
-                    ${[1, 2, 3, 4].map(i => html`<img key=${i} src=${`https://i.pravatar.cc/100?u=${i+10}`} className="w-10 h-10 rounded-full border-4 border-slate-50" />`)}
-                  </div>
-                  <span className="text-sm font-bold uppercase tracking-wider">Trusted by 500+ Local SMEs</span>
-                </div>
+        <section className="relative pt-44 pb-32 overflow-hidden bg-slate-50 bg-dotted">
+          <div className="max-w-4xl mx-auto px-6 lg:px-12 relative z-10 text-center">
+            <div className="space-y-8 animate-fade-in-up">
+              <div className="inline-flex items-center bg-orange-100 text-orange-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">
+                <${Sparkles} size=${14} className="mr-2" /> Bangalore's #1 Networking Platform
               </div>
-              <div className="relative">
-                <div className="absolute -inset-4 bg-orange-600/10 blur-[100px] rounded-full animate-pulse"></div>
-                <div className="relative glass-card p-4 rounded-[3rem] shadow-2xl border-white/50 rotate-2 hover:rotate-0 transition-transform duration-700">
-                  <img src="https://plus.unsplash.com/premium_photo-1754797991358-68d1ec37ddc3?q=80&w=1460&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" className="rounded-[2.5rem] w-full object-cover shadow-inner" />
-                  <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-3xl shadow-2xl border border-slate-100 hidden md:block animate-float">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center"><${TrendingUp} /></div>
-                      <div>
-                        <div className="text-2xl font-bold text-slate-900">Elite</div>
-                        <div className="text-xs font-bold text-slate-400 uppercase">Network Access</div>
-                      </div>
-                    </div>
-                  </div>
+              <h1 className="text-6xl lg:text-8xl font-extrabold text-slate-900 leading-[0.95] tracking-tight">
+                Lead Gen, <span className="text-orange-600">Reimagined.</span>
+              </h1>
+              <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
+                We bridge the gap between small businesses and high-intent leads through professional networking, referral magic, and modern technology.
+              </p>
+              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 justify-center">
+                <button className="bg-orange-600 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-orange-700 transition-all shadow-2xl shadow-orange-600/30 flex items-center justify-center">
+                  Start Growing Today <${ArrowRight} size=${20} className="ml-2" />
+                </button>
+                <button className="bg-white text-slate-900 border border-slate-200 px-10 py-5 rounded-2xl font-bold text-lg hover:bg-slate-50 transition-all shadow-sm">
+                  Watch Demo
+                </button>
+              </div>
+              <div className="flex items-center justify-center space-x-6 text-slate-400">
+                <div className="flex -space-x-3">
+                  ${[1, 2, 3, 4].map(i => html`<img key=${i} src=${`https://i.pravatar.cc/100?u=${i+10}`} className="w-10 h-10 rounded-full border-4 border-slate-50" />`)}
                 </div>
+                <span className="text-sm font-bold uppercase tracking-wider">Trusted by 500+ Local SMEs</span>
               </div>
             </div>
           </div>
