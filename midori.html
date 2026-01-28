@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Midori Supergreens | Bangalore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              midori: {
+                purple: '#371B3F', // Deep purple from banner background
+                green: '#5EBA46',  // Vibrant green from text
+                light: '#E6F4E2',  // Very light green tint for backgrounds
+                blue: '#8BCDE7',   // Light blue accent from image circle
+              }
+            },
+            fontFamily: {
+              sans: ['DM Sans', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #371B3F;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #5EBA46;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.263.1?deps=react@18.2.0",
+    "framer-motion": "https://esm.sh/framer-motion@10.16.4?deps=react@18.2.0,react-dom@18.2.0",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module" data-presets="typescript,react">
+import React, { useState, useEffect } from 'react';
+import { createRoot } from 'react-dom/client';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { 
+  Menu, X, Leaf, ArrowRight, Instagram, Star, Wind, 
+  Droplets, Sun, Sprout, Heart, ShoppingBag, 
+  Quote, Phone, Mail, MapPin, CloudRain, Truck 
+} from 'lucide-react';
+
+
+
+// --- Constants ---
+const NAV_ITEMS= [
+  { label: 'Our Greens', href: '#products' },
+  { label: 'Process', href: '#process' },
+  { label: 'Why Midori', href: '#features' },
+  { label: 'About Farm', href: '#about' },
+];
+
+const PRODUCTS= [
+  {
+    id: '1',
+    name: 'Exotic Kale',
+    description: 'The king of supergreens. Nutrient-dense, crunchy, and perfect for salads.',
+    image: 'assets/midori/549273036_17945848560031797_6340243009397137164_n.jpg',
+    benefits: ['Vit K', 'Antioxidant', 'Detox'],
+    category: 'Leafy',
+    price: '₹120'
+  },
+  {
+    id: '2',
+    name: 'Swiss Chard',
+    description: 'Vibrant stems with tender leaves. A colorful addition to any healthy meal.',
+    image: 'https://images.unsplash.com/photo-1572357176061-7c96fd2af22f?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop',
+    benefits: ['Iron', 'Magnesium', 'Heart'],
+    category: 'Leafy',
+    price: '₹140'
+  },
+  {
+    id: '3',
+    name: 'Fresh Arugula',
+    description: 'Peppery, spicy, and distinctive. Elevates pizza, pasta, and fresh salads.',
+    image: 'https://images.unsplash.com/photo-1720720406887-79b2d0420cb1?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop',
+    benefits: ['Calcium', 'Immune', 'Low Cal'],
+    category: 'Salad',
+    price: '₹90'
+  },
+  {
+    id: '4',
+    name: 'Bok Choy',
+    description: 'Crisp stalks and tender leaves. An essential superfood for Asian cuisine.',
+    image: 'https://plus.unsplash.com/premium_photo-1700990448649-4437c44dde70?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop',
+    benefits: ['Vit C', 'Carotene', 'Anti-inf'],
+    category: 'Exotic',
+    price: '₹110'
+  },
+  {
+    id: '5',
+    name: 'Premium Lettuce',
+    description: 'Butterhead, Romaine, and Iceberg varieties grown with care for maximum crunch.',
+    image: 'https://images.unsplash.com/photo-1745249018264-2d3e1a5ee3a4?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop',
+    benefits: ['Hydrating', 'Sleep', 'Digestive'],
+    category: 'Salad',
+    price: '₹85'
+  },
+  {
+    id: '6',
+    name: 'Fresh Basil',
+    description: 'Aromatic and sweet. The soul of pesto and the perfect finish for any dish.',
+    image: 'https://plus.unsplash.com/premium_photo-1700990448654-65f15dd17659?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop',
+    benefits: ['Stress', 'Antibacterial', 'Flavor'],
+    category: 'Herbs',
+    price: '₹60'
+  },
+];
+
+const TESTIMONIALS= [
+  {
+    id: 1,
+    name: "Priya Menon",
+    role: "Home Chef, Indiranagar",
+    content: "The freshness of Midori greens is unmatched in Bangalore. The Kale actually crunches!"
+  },
+  {
+    id: 2,
+    name: "Rahul Sharma",
+    role: "Fitness Enthusiast",
+    content: "Finally, a reliable source for Swiss Chard and Arugula. My daily smoothies have never been better."
+  },
+  {
+    id: 3,
+    name: "Anjali Gupta",
+    role: "Nutritionist",
+    content: "I recommend Midori to all my clients. Residue-free and nutrient-dense is the way to go."
+  }
+];
+
+// --- Components ---
+
+// Navbar Component
+const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled || isMobileMenuOpen ? 'bg-midori-purple/95 backdrop-blur-md py-4 shadow-lg' : 'bg-transparent py-6'
+      }`}
+    >
+      <div className="container mx-auto px-6 flex items-center justify-between">
+        {/* Logo */}
+        <a href="#" className="flex items-center gap-2 group">
+          <div className="bg-midori-green p-1.5 rounded-full group-hover:rotate-12 transition-transform duration-300">
+            <Leaf className="w-5 h-5 text-white" fill="currentColor" />
+          </div>
+          <div className="text-white font-serif text-2xl tracking-wide">
+            midori <span className="text-midori-green font-sans font-bold text-lg">Supergreens</span>
+          </div>
+        </a>
+
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-8">
+          {NAV_ITEMS.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="text-white/90 hover:text-midori-green text-sm font-medium tracking-wider transition-colors uppercase"
+            >
+              {item.label}
+            </a>
+          ))}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-midori-green text-white px-6 py-2 rounded-full font-medium text-sm hover:bg-white hover:text-midori-purple transition-colors"
+          >
+            Order Now
+          </motion.button>
+        </div>
+
+        {/* Mobile Toggle */}
+        <button
+          className="md:hidden text-white"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X /> : <Menu />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-midori-purple border-t border-white/10"
+          >
+            <div className="flex flex-col p-6 gap-4">
+              {NAV_ITEMS.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-white/90 text-lg font-medium"
+                >
+                  {item.label}
+                </a>
+              ))}
+              <button className="bg-midori-green text-white w-full py-3 rounded-lg font-bold mt-4">
+                Order via WhatsApp
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
+  );
+};
+
+// Hero Component
+const FloatingLeaf = ({ delay, x, y, rotate }) => (
+  <motion.div
+    initial={{ opacity: 0, x, y, rotate }}
+    animate={{ 
+      opacity: [0, 1, 0],
+      y: y - 100,
+      x: x + 50,
+      rotate: rotate + 180
+    }}
+    transition={{
+      duration: 10,
+      delay,
+      repeat: Infinity,
+      ease: "linear"
+    }}
+    className="absolute pointer-events-none text-midori-green/20"
+  >
+    <Leaf size={20} />
+  </motion.div>
+);
+
+const Hero= () => {
+  const { scrollY } = useScroll();
+  const yText = useTransform(scrollY, [0, 500], [0, 100]);
+  const yImage = useTransform(scrollY, [0, 500], [0, -50]);
+
+  return (
+    <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-midori-purple text-white selection:bg-midori-green selection:text-white">
+      {/* Background Ambience */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Animated Orbs */}
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-[20%] -right-[10%] w-[800px] h-[800px] bg-midori-green/10 rounded-full blur-[120px]"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.3, 1],
+            x: [0, -30, 0],
+            opacity: [0.2, 0.4, 0.2],
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute -bottom-[20%] -left-[10%] w-[600px] h-[600px] bg-midori-blue/10 rounded-full blur-[100px]"
+        />
+        
+        {/* Subtle Noise Texture Overlay */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+
+        {/* Floating Leaves */}
+        <FloatingLeaf delay={0} x={100} y={600} rotate={0} />
+        <FloatingLeaf delay={5} x={800} y={500} rotate={45} />
+        <FloatingLeaf delay={2} x={300} y={700} rotate={-20} />
+        <FloatingLeaf delay={7} x={1100} y={400} rotate={90} />
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10 grid md:grid-cols-2 gap-12 lg:gap-24 items-center">
+        
+        {/* Text Content */}
+        <motion.div style={{ y: yText }} className="space-y-10 relative">
+          
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="flex items-center gap-3"
+          >
+            <div className="h-px w-12 bg-midori-green/50" />
+            <span className="text-midori-green font-bold tracking-[0.2em] uppercase text-xs">
+              Bangalore's Finest Hydroponics
+            </span>
+          </motion.div>
+
+          <div className="relative">
+            <motion.h1 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-6xl md:text-7xl lg:text-8xl font-serif font-medium leading-[0.95]"
+            >
+              Pure <span className="italic text-midori-green">Life</span><br />
+              <span className="text-white/90">In Every</span><br />
+              <span className="relative inline-block">
+                Leaf.
+                <motion.svg
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 1.5, delay: 1, ease: "easeInOut" }}
+                  className="absolute -bottom-2 left-0 w-full text-midori-green"
+                  viewBox="0 0 100 10"
+                  fill="none"
+                  preserveAspectRatio="none"
+                >
+                  <motion.path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="4" />
+                </motion.svg>
+              </span>
+            </motion.h1>
+            
+            {/* Decorative decorative star */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute -top-8 -right-8 text-midori-blue/30 hidden lg:block"
+            >
+              <Star size={48} fill="currentColor" />
+            </motion.div>
+          </div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="text-lg md:text-xl text-gray-300 font-light max-w-lg leading-relaxed border-l-2 border-white/10 pl-6"
+          >
+            From our farm in Bangalore straight to your table. Experience the crunch of freshly harvested hydroponic Kale, Swiss Chard, and exotic greens.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="flex flex-col sm:flex-row gap-5"
+          >
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="relative overflow-hidden bg-midori-green text-white px-8 py-4 rounded-full font-bold text-sm tracking-wide flex items-center justify-center gap-3 group shadow-2xl shadow-midori-green/20"
+            >
+              <span className="relative z-10">ORDER FRESH BOX</span>
+              <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
+              <div className="absolute inset-0 bg-white/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300" />
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.1)" }}
+              whileTap={{ scale: 0.98 }}
+              className="px-8 py-4 rounded-full font-medium text-sm tracking-wide flex items-center justify-center gap-2 border border-white/20 text-white transition-colors"
+            >
+              <Instagram className="w-4 h-4" />
+              <span>FOLLOW US</span>
+            </motion.button>
+          </motion.div>
+
+          <div className="flex items-center gap-4 text-xs text-gray-400 font-medium pt-4">
+             <div className="flex -space-x-3">
+               {[1,2,3].map(i => (
+                 <div key={i} className="w-8 h-8 rounded-full border-2 border-midori-purple bg-gray-600 flex items-center justify-center text-white text-[9px] relative z-0">
+                    <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="User" className="w-full h-full rounded-full object-cover" />
+                 </div>
+               ))}
+             </div>
+             <p>Loved by 500+ healthy families in Bangalore</p>
+          </div>
+        </motion.div>
+
+        {/* Visual Content */}
+        <motion.div
+          style={{ y: yImage }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="relative hidden md:block perspective-1000 group"
+        >
+          <div className="relative z-10 w-full max-w-md mx-auto aspect-[3/4] transition-transform duration-500 preserve-3d group-hover:rotate-y-6 group-hover:rotate-x-6">
+            
+            {/* Main Image Container */}
+            <div className="absolute inset-0 rounded-[2rem] overflow-hidden shadow-2xl border border-white/10">
+              <div className="absolute inset-0 bg-midori-purple/20 mix-blend-multiply z-10" />
+              <img 
+                src="https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=984&auto=format&fit=crop" 
+                alt="Fresh Kale and Greens" 
+                className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700"
+              />
+              
+              {/* Gloss effect */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-50 pointer-events-none" />
+            </div>
+
+            {/* Decorative Frame Elements */}
+            <motion.div 
+              animate={{ rotate: [0, 5, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -inset-4 border border-midori-green/30 rounded-[2.5rem] z-0" 
+            />
+            <motion.div 
+               animate={{ rotate: [0, -5, 0] }}
+               transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="absolute -inset-4 border border-midori-blue/20 rounded-[2.5rem] z-0 rotate-3" 
+            />
+
+            {/* Floating Info Card */}
+            <motion.div 
+              initial={{ x: 50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 1.2, duration: 0.8 }}
+              className="absolute top-12 -right-12 z-20 bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-2xl shadow-xl max-w-[180px]"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-midori-green rounded-full text-white">
+                  <Leaf size={16} />
+                </div>
+                <span className="text-xs font-bold text-white tracking-wider">Harvest</span>
+              </div>
+              <p className="text-xs text-gray-200 leading-relaxed">
+                Plucked at 6:00 AM this morning for peak nutrition.
+              </p>
+            </motion.div>
+
+            {/* Floating Wind Element */}
+             <motion.div 
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 1.5, duration: 0.8 }}
+              className="absolute bottom-20 -left-8 z-20 bg-midori-purple/80 backdrop-blur-md border border-white/10 p-3 rounded-xl shadow-xl flex items-center gap-3"
+            >
+               <Wind className="text-midori-blue w-5 h-5" />
+               <div>
+                  <p className="text-xs font-bold text-white">100% Residue Free</p>
+                  <p className="text-[10px] text-gray-400">Lab Tested</p>
+               </div>
+            </motion.div>
+
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, y: [0, 10, 0] }}
+        transition={{ duration: 2, delay: 2, repeat: Infinity }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30"
+      >
+        <span className="text-[10px] uppercase tracking-widest font-medium">Discover</span>
+        <div className="w-px h-8 bg-gradient-to-b from-midori-green to-transparent" />
+      </motion.div>
+    </section>
+  );
+};
+
+// Features Component
+const featuresList = [
+  {
+    icon: <Droplets className="w-6 h-6" />,
+    title: "Hydroponic Perfection",
+    desc: "Grown in nutrient-rich water without soil, using 90% less water than traditional farming."
+  },
+  {
+    icon: <Sun className="w-6 h-6" />,
+    title: "Residue Free",
+    desc: "Zero harmful pesticides. Just pure, clean greens that you can eat straight out of the box."
+  },
+  {
+    icon: <Sprout className="w-6 h-6" />,
+    title: "Local to Bangalore",
+    desc: "Reduced carbon footprint. We harvest in the morning and deliver by evening."
+  },
+  {
+    icon: <Heart className="w-6 h-6" />,
+    title: "Nutrient Dense",
+    desc: "Our controlled environment ensures maximum retention of vitamins and minerals."
+  }
+];
+
+const Features= () => {
+  return (
+    <section id="features" className="py-24 bg-white relative">
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-16 max-w-2xl mx-auto">
+          <h2 className="text-sm font-bold text-midori-green tracking-widest uppercase mb-3">Why Midori?</h2>
+          <h3 className="text-4xl font-serif text-midori-purple mb-6">Cultivating health with conscious farming.</h3>
+          <p className="text-gray-600">
+            We believe in quality over quantity. Every leaf is inspected to ensure it meets our strict standards of freshness and flavor.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {featuresList.map((feature, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              className="p-8 rounded-2xl bg-midori-light/30 hover:bg-midori-light hover:shadow-lg transition-all duration-300 group cursor-pointer border border-transparent hover:border-midori-green/10"
+            >
+              <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-midori-green mb-6 group-hover:scale-110 transition-transform group-hover:bg-midori-green group-hover:text-white">
+                {feature.icon}
+              </div>
+              <h4 className="text-xl font-bold text-midori-purple mb-3">{feature.title}</h4>
+              <p className="text-gray-600 text-sm leading-relaxed">{feature.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// FarmProcess Component
+const steps = [
+  {
+    id: 1,
+    title: "Pure Origins",
+    description: "We start with non-GMO, heirloom seeds sourced from the best breeders globally.",
+    icon: Sprout
+  },
+  {
+    id: 2,
+    title: "Hydroponic Care",
+    description: "Grown in nutrient-rich water environments, monitored 24/7 for pH and purity.",
+    icon: CloudRain
+  },
+  {
+    id: 3,
+    title: "Solar Harvest",
+    description: "Harvested at first light to ensure maximum crispness and nutrient retention.",
+    icon: Sun
+  },
+  {
+    id: 4,
+    title: "Farm to Fork",
+    description: "Delivered in eco-friendly packaging within hours of harvest.",
+    icon: Truck
+  }
+];
+
+const FarmProcess= () => {
+  return (
+    <section id="process" className="py-24 bg-midori-light/20 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-midori-green/20 to-transparent" />
+      
+      <div className="container mx-auto px-6">
+        <div className="text-center max-w-2xl mx-auto mb-20">
+          <motion.span 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="text-midori-green font-bold tracking-wider text-sm uppercase"
+          >
+            How it works
+          </motion.span>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-4xl md:text-5xl font-serif text-midori-purple mt-3 mb-6"
+          >
+            From Seed to Spoon
+          </motion.h2>
+          <p className="text-gray-600">
+            Transparent farming. No hidden chemicals, just pure science and nature working in harmony.
+          </p>
+        </div>
+
+        <div className="relative">
+          {/* Connecting Line (Desktop) */}
+          <div className="hidden md:block absolute top-12 left-0 w-full h-0.5 bg-gray-200">
+            <motion.div 
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+              className="h-full bg-midori-green origin-left"
+            />
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-12 relative z-10">
+            {steps.map((step, index) => (
+              <motion.div
+                key={step.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2, duration: 0.5 }}
+                className="flex flex-col items-center text-center group"
+              >
+                <div className="w-24 h-24 rounded-full bg-white border-4 border-midori-light mb-8 flex items-center justify-center relative z-10 group-hover:border-midori-green transition-colors duration-300 shadow-sm">
+                  <step.icon className="w-10 h-10 text-midori-green group-hover:scale-110 transition-transform duration-300" />
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-midori-purple text-white rounded-full flex items-center justify-center font-serif font-bold text-sm">
+                    {step.id}
+                  </div>
+                </div>
+                
+                <h3 className="text-xl font-bold text-midori-purple mb-3">{step.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{step.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ProductShowcase Component
+const categories = ['All', 'Leafy', 'Salad', 'Exotic', 'Herbs'];
+
+const ProductShowcase= () => {
+  const [activeCategory, setActiveCategory] = useState('All');
+
+  const filteredProducts = activeCategory === 'All' 
+    ? PRODUCTS 
+    : PRODUCTS.filter(p => p.category === activeCategory);
+
+  return (
+    <section id="products" className="py-32 bg-midori-purple text-white relative overflow-hidden">
+      {/* Dynamic Background */}
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-midori-green/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-midori-blue/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+          <div className="max-w-xl">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-5xl md:text-6xl font-serif mb-6 leading-tight"
+            >
+              Curated <br/>
+              <span className="text-midori-green italic">Freshness</span>
+            </motion.h2>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-gray-300 font-light text-lg"
+            >
+              Explore our premium selection of hydroponically grown greens, harvested daily for unmatched flavor and nutrition.
+            </motion.p>
+          </div>
+
+          {/* Filter Tabs */}
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-wrap gap-2"
+          >
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${
+                  activeCategory === cat 
+                    ? 'bg-midori-green border-midori-green text-white shadow-lg shadow-midori-green/20' 
+                    : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Product Grid */}
+        <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <AnimatePresence mode='popLayout'>
+            {filteredProducts.map((product) => (
+              <motion.div
+                layout
+                key={product.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+                className="group relative bg-white/5 backdrop-blur-sm rounded-[2rem] overflow-hidden border border-white/5 hover:border-midori-green/30 transition-all duration-500 hover:shadow-2xl hover:shadow-midori-green/10"
+              >
+                {/* Image Section */}
+                <div className="aspect-[5/4] relative overflow-hidden">
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors z-10" />
+                  <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  
+                  {/* Floating Price Tag */}
+                  <div className="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-md text-midori-purple px-4 py-1.5 rounded-full text-sm font-bold shadow-lg">
+                    {product.price}
+                  </div>
+
+                  {/* Add to Cart Overlay Button */}
+                  <button className="absolute bottom-4 right-4 z-20 w-12 h-12 bg-midori-green rounded-full flex items-center justify-center text-white opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 shadow-xl hover:bg-white hover:text-midori-green">
+                    <ShoppingBag className="w-5 h-5" />
+                  </button>
+                </div>
+                
+                {/* Content Section */}
+                <div className="p-8">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <span className="text-midori-green text-xs font-bold tracking-wider uppercase mb-1 block">
+                        {product.category}
+                      </span>
+                      <h3 className="text-2xl font-serif text-white group-hover:text-midori-green transition-colors">
+                        {product.name}
+                      </h3>
+                    </div>
+                  </div>
+                  
+                  <p className="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-2">
+                    {product.description}
+                  </p>
+
+                  <div className="flex items-center justify-between border-t border-white/10 pt-6 mt-auto">
+                    <div className="flex gap-2">
+                       {product.benefits.slice(0, 2).map((benefit, i) => (
+                        <span key={i} className="text-[10px] text-gray-400 bg-white/5 px-2 py-1 rounded-md border border-white/5">
+                          {benefit}
+                        </span>
+                      ))}
+                    </div>
+                    <button className="text-sm font-medium text-white flex items-center gap-1 group-hover:gap-2 transition-all">
+                      Details <ArrowRight className="w-3 h-3 text-midori-green" />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+        
+        <div className="text-center mt-20">
+            <button className="px-10 py-4 border border-white/20 rounded-full text-white hover:bg-white hover:text-midori-purple transition-all duration-300 uppercase tracking-widest text-xs font-bold">
+                View Full Catalog
+            </button>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Testimonials Component
+const Testimonials= () => {
+  return (
+    <section className="py-24 bg-midori-light/30">
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-serif text-midori-purple mb-4">Community Love</h2>
+          <div className="w-20 h-1 bg-midori-green mx-auto rounded-full" />
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {TESTIMONIALS.map((t) => (
+            <div key={t.id} className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative">
+              <Quote className="absolute top-8 right-8 text-midori-green/20 w-10 h-10" />
+              <p className="text-gray-600 italic mb-6 leading-relaxed">"{t.content}"</p>
+              <div>
+                <h4 className="font-bold text-midori-purple">{t.name}</h4>
+                <p className="text-xs text-gray-500 uppercase tracking-wide">{t.role}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Footer Component
+const Footer = () => {
+  return (
+    <footer id="contact" className="bg-midori-purple text-white pt-20 pb-10 border-t border-white/5">
+      <div className="container mx-auto px-6">
+        <div className="grid md:grid-cols-4 gap-12 mb-16">
+          <div className="col-span-1 md:col-span-2">
+            <div className="flex items-center gap-2 mb-6">
+              <Leaf className="text-midori-green" />
+              <span className="font-serif text-2xl">midori Supergreens</span>
+            </div>
+            <p className="text-gray-400 max-w-sm mb-8 font-light">
+              Bringing the revolution of fresh, hydroponic farming to the heart of Bangalore. 
+              Eat better, live longer.
+            </p>
+            <div className="flex gap-4">
+              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-midori-green transition-colors">
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-midori-green transition-colors">
+                <Phone className="w-5 h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-midori-green transition-colors">
+                <Mail className="w-5 h-5" />
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-lg mb-6">Quick Links</h4>
+            <ul className="space-y-4 text-gray-400">
+              <li><a href="#" className="hover:text-midori-green transition-colors">Home</a></li>
+              <li><a href="#products" className="hover:text-midori-green transition-colors">Products</a></li>
+              <li><a href="#about" className="hover:text-midori-green transition-colors">About Us</a></li>
+              <li><a href="#" className="hover:text-midori-green transition-colors">Sustainability</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-lg mb-6">Contact</h4>
+            <ul className="space-y-4 text-gray-400">
+              <li className="flex items-start gap-3">
+                <MapPin className="w-5 h-5 text-midori-green shrink-0" />
+                <span>Bangalore, Karnataka<br/>India</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-midori-green shrink-0" />
+                <span>+91 98765 43210</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-midori-green shrink-0" />
+                <span>hello@midorigreens.com</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+          <p>&copy; {new Date().getFullYear()} Midori Supergreens. All rights reserved.</p>
+          <div className="flex gap-6 mt-4 md:mt-0">
+            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+// Main App Component
+const App= () => {
+  return (
+    <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-midori-green selection:text-white">
+      <Navbar />
+      <main>
+        <Hero />
+        <Features />
+        <FarmProcess />
+        <ProductShowcase />
+        <section id="about" className="py-20 bg-midori-light relative overflow-hidden">
+             {/* Simple CTA Band */}
+             <div className="container mx-auto px-6 text-center relative z-10">
+                <h2 className="text-3xl md:text-5xl font-serif text-midori-purple mb-6">
+                    Taste the difference of true freshness.
+                </h2>
+                <button className="bg-midori-purple text-white px-10 py-4 rounded-full font-bold shadow-xl hover:bg-midori-green transition-colors duration-300 hover:scale-105 transform">
+                    Order Your First Box
+                </button>
+             </div>
+             {/* Decorative leaf shapes */}
+             <div className="absolute -left-20 top-0 w-64 h-64 bg-midori-green/10 rounded-full blur-3xl" />
+             <div className="absolute -right-20 bottom-0 w-64 h-64 bg-midori-blue/10 rounded-full blur-3xl" />
+        </section>
+        <Testimonials />
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+// Mount
+const root = createRoot(document.getElementById('root'));
+root.render(<App />);
+    </script>
+  </body>
+</html>

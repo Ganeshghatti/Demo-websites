@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agara Walks & Filter Kaapi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Babel Standalone for in-browser JSX compilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="icon" type="image/jpg" href="./assets/agra-walks/logo.jpg" />
+    
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              coffee: {
+                50: '#fcfaf8',
+                100: '#f6f1ec',
+                200: '#efe8de',
+                300: '#e0d1be',
+                400: '#d2ba9e',
+                500: '#c2a180',
+                600: '#a38060',
+                700: '#856448',
+                800: '#5e4331',
+                900: '#4a3728', // Primary brand color
+              },
+              nature: {
+                500: '#556B2F', // Olive green accent
+                600: '#3d4f20',
+              },
+              sand: '#F5F1E8',
+            },
+            fontFamily: {
+              serif: ['"Cormorant Garmond"', 'serif'],
+              sans: ['"Inter"', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      body {
+        background-color: #F5F1E8;
+        color: #4a3728;
+      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #F5F1E8;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #d2ba9e;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #a38060;
+      }
+    </style>
+    <script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+    "react-dom/client": "https://esm.sh/react-dom@^19.2.4/client",
+    "react": "https://esm.sh/react@^19.2.4",
+    "framer-motion": "https://esm.sh/framer-motion@^12.29.2",
+    "react/": "https://esm.sh/react@^19.2.4/"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module" data-presets="typescript,react">
+      import React, { useState, useEffect } from 'react';
+      import ReactDOM from 'react-dom/client';
+      import { motion, AnimatePresence } from 'framer-motion';
+      import { Menu, X, Bird, Coffee, Footprints, Instagram, Mail, Phone , Linkedin } from 'lucide-react';
+
+
+
+      const Button = ({ variant = 'primary', children, className = '', ...props }) => {
+        const baseStyles = "px-8 py-3 font-sans text-sm tracking-widest uppercase transition-all duration-300 ease-out";
+        
+        const variants = {
+          primary: "bg-coffee-900 text-sand hover:bg-coffee-800",
+          outline: "border border-coffee-900 text-coffee-900 hover:bg-coffee-900 hover:text-sand",
+          text: "text-coffee-900 underline underline-offset-4 decoration-coffee-400 hover:decoration-coffee-900 bg-transparent px-0 py-1",
+        };
+
+        return (
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className={`${baseStyles} ${variants[variant]} ${className}`}
+            {...props}
+          >
+            {children}
+          </motion.button>
+        );
+      };
+
+      // --- Navbar Component ---
+      const navItems= [
+        { label: 'Philosophy', href: '#philosophy' },
+        { label: 'Experiences', href: '#experiences' },
+        { label: 'Journal', href: '#journal' },
+        { label: 'Contact', href: '#contact' },
+      ];
+
+      const Navbar= () => {
+        const [isScrolled, setIsScrolled] = useState(false);
+        const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+        useEffect(() => {
+          const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+          };
+          window.addEventListener('scroll', handleScroll);
+          return () => window.removeEventListener('scroll', handleScroll);
+        }, []);
+
+        return (
+          <>
+            <motion.nav
+              initial={{ y: -100 }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+                isScrolled || isMobileOpen ? 'bg-sand/90 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-6'
+              }`}
+            >
+              <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
+                <a href="#" className="font-serif text-2xl md:text-3xl text-coffee-900 font-semibold tracking-tight">
+                  Agara<span className="text-nature-500 font-normal italic">&</span>Kaapi
+                </a>
+
+                {/* Desktop Nav */}
+                <div className="hidden md:flex space-x-12">
+                  {navItems.map((item) => (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      className="text-sm font-sans uppercase tracking-widest text-coffee-800 hover:text-nature-500 transition-colors duration-300 relative group"
+                    >
+                      {item.label}
+                      <span className="absolute -bottom-1 left-0 w-0 h-px bg-nature-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                  ))}
+                </div>
+
+                {/* Mobile Toggle */}
+                <button 
+                  className="md:hidden text-coffee-900"
+                  onClick={() => setIsMobileOpen(!isMobileOpen)}
+                >
+                  {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+              </div>
+            </motion.nav>
+
+            {/* Mobile Menu */}
+            <AnimatePresence>
+              {isMobileOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: '100vh' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="fixed inset-0 z-40 bg-sand pt-24 px-6 md:hidden overflow-hidden"
+                >
+                  <div className="flex flex-col space-y-8 text-center">
+                    {navItems.map((item) => (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        onClick={() => setIsMobileOpen(false)}
+                        className="text-3xl font-serif text-coffee-900 hover:text-nature-500 transition-colors"
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </>
+        );
+      };
+
+      // --- Hero Component ---
+      const Hero = () => {
+        return (
+          <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+            <div className="container mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              
+              {/* Text Content */}
+              <div className="lg:col-span-5 z-10 order-2 lg:order-1">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                >
+                  <span className="block text-nature-600 font-sans text-xs md:text-sm uppercase tracking-[0.2em] mb-4">
+                    Est. Bangalore 2024
+                  </span>
+                  <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-coffee-900 leading-[0.95] mb-8">
+                    Pause.<br />
+                    Walk.<br />
+                    <i className="font-normal text-nature-600">Sip.</i>
+                  </h1>
+                  <p className="font-sans text-coffee-700 text-lg leading-relaxed mb-10 max-w-md">
+                    Reconnect with the soul of the city through immersive heritage walks and the timeless ritual of filter kaapi by the lake.
+                  </p>
+                  <div className="flex gap-4">
+                    <a href="#contact">
+                    <Button>Join a Walk</Button>
+                    </a>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Image Content */}
+              <div className="lg:col-span-7 h-[50vh] lg:h-[85vh] relative order-1 lg:order-2">
+                 <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 1, ease: "circOut" }}
+                  className="w-full h-full relative"
+                 >
+                   {/* Main Image */}
+                   <div className="absolute inset-0 bg-coffee-200 overflow-hidden rounded-t-[10rem] lg:rounded-t-[20rem] lg:rounded-b-none rounded-b-[2rem]">
+                      <img 
+                        src="assets/agra-walks/1757908346320.jpg" 
+                        alt="Tranquil walk by the lake" 
+                        className="w-full h-full object-cover opacity-90 hover:scale-105 transition-transform duration-[2s]"
+                      />
+                   </div>
+                   
+                   {/* Floating Accent Image */}
+                   <motion.div 
+                     initial={{ opacity: 0, y: 50 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 1, delay: 0.5 }}
+                     className="absolute -bottom-8 -left-8 md:bottom-12 md:-left-12 w-48 h-64 md:w-64 md:h-80 bg-white p-2 shadow-xl rotate-[-6deg]"
+                   >
+                      <div className="w-full h-full border border-coffee-100 p-1">
+                        <img 
+                          src="https://picsum.photos/id/766/600/800" 
+                          alt="Authentic Filter Kaapi" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                   </motion.div>
+                 </motion.div>
+              </div>
+            </div>
+            
+            {/* Decorative text background */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15vw] font-serif text-coffee-900/5 whitespace-nowrap pointer-events-none select-none z-0">
+              Slow Living
+            </div>
+          </section>
+        );
+      };
+
+      // --- About Component ---
+      const About= () => {
+        const features = [
+          {
+            icon: <Footprints className="w-6 h-6" />,
+            title: "Mindful Steps",
+            description: "Guided walks that prioritize observation over information."
+          },
+          {
+            icon: <Bird className="w-6 h-6" />,
+            title: "Nature's Rhythm",
+            description: "Observing the diverse ecosystem of Agara Lake."
+          },
+          {
+            icon: <Coffee className="w-6 h-6" />,
+            title: "Filter Kaapi",
+            description: "Ending every journey with a warm, frothy brass tumbler."
+          }
+        ];
+
+        return (
+          <section id="philosophy" className="py-24 md:py-32 bg-white relative">
+            <div className="container mx-auto px-6 md:px-12">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center">
+                
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                >
+                   <h2 className="font-serif text-4xl md:text-5xl text-coffee-900 mb-8 leading-tight">
+                     Not just a walk, <br/>
+                     <span className="italic text-nature-600">a return to roots.</span>
+                   </h2>
+                   <p className="font-sans text-coffee-700 leading-loose mb-6">
+                     In the hustle of Bangalore's IT corridor, Agara Walks & Filter Kaapi offers a sanctuary of slowness. We believe that to truly know a city, you must walk its soil and taste its traditions.
+                   </p>
+                   <p className="font-sans text-coffee-700 leading-loose mb-10">
+                     Our curated experiences blend historical storytelling with ecological awareness, culminating in the shared joy of freshly brewed South Indian filter coffee. It is a space for community, conversation, and calm.
+                   </p>
+
+                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-12 border-t border-coffee-100 pt-12">
+                     {features.map((feature, idx) => (
+                       <div key={idx} className="flex flex-col gap-3">
+                         <div className="text-nature-600">{feature.icon}</div>
+                         <h3 className="font-serif text-lg text-coffee-900">{feature.title}</h3>
+                         <p className="text-xs font-sans text-coffee-600 leading-relaxed">{feature.description}</p>
+                       </div>
+                     ))}
+                   </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                  className="relative"
+                >
+                  <div className="aspect-[4/5] bg-coffee-100 overflow-hidden relative">
+                     <img 
+                       src="https://picsum.photos/id/225/800/1000" 
+                       alt="Community gathering" 
+                       className="w-full h-full object-cover"
+                     />
+                     <div className="absolute inset-0 border-[1px] border-white/20 m-4"></div>
+                  </div>
+                  <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-nature-600 p-6 flex items-center justify-center text-center">
+                    <span className="font-serif text-sand text-3xl italic leading-none">
+                      Since <br/> 2024
+                    </span>
+                  </div>
+                </motion.div>
+
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // --- Services Component ---
+      const experiences = [
+        {
+          id: '1',
+          title: 'Sunrise Heritage Walk',
+          description: 'Witness the lake come alive as we trace the history of the Agara region, followed by breakfast.',
+          duration: '2.5 Hours',
+          price: '',
+          image: 'https://picsum.photos/id/10/800/600'
+        },
+        {
+          id: '2',
+          title: 'Birding & Brewing',
+          description: 'A guided bird-watching session for beginners, paired with a workshop on brewing the perfect cup.',
+          duration: '3 Hours',
+          price: '',
+          image: 'https://picsum.photos/id/28/800/600'
+        },
+        {
+          id: '3',
+          title: 'Sunset Chronicles',
+          description: 'Folklore and urban legends of Bangalore discussed over evening snacks and coffee.',
+          duration: '2 Hours',
+          price: '',
+          image: '/assets/agra-walks/1766819371869.jpg'
+        }
+      ];
+
+      const Services = () => {
+        return (
+          <section id="experiences" className="py-24 bg-sand">
+            <div className="container mx-auto px-6 md:px-12">
+              <div className="text-center mb-20 max-w-2xl mx-auto">
+                <span className="text-nature-600 font-sans text-xs uppercase tracking-widest mb-3 block">Curated Experiences</span>
+                <h2 className="font-serif text-4xl md:text-5xl text-coffee-900 mb-6">Walk with us</h2>
+                <p className="text-coffee-700 font-sans">
+                  Choose from our selection of guided walks designed to slow down time and awaken your senses.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {experiences.map((exp, index) => (
+                  <motion.div
+                    key={exp.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="group cursor-pointer"
+                  >
+                    <div className="relative overflow-hidden mb-6 aspect-[4/3]">
+                      <div className="absolute inset-0 bg-coffee-900/10 group-hover:bg-transparent transition-colors duration-500 z-10" />
+                      <img 
+                        src={exp.image} 
+                        alt={exp.title} 
+                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                      />
+                      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-sans tracking-widest uppercase z-20">
+                        {exp.duration}
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-between items-baseline mb-3">
+                      <h3 className="font-serif text-2xl text-coffee-900 group-hover:text-nature-600 transition-colors">
+                        {exp.title}
+                      </h3>
+                      <span className="font-sans text-coffee-800 font-medium">{exp.price}</span>
+                    </div>
+                    
+                    <p className="font-sans text-coffee-600 text-sm leading-relaxed mb-6 border-b border-coffee-200 pb-6">
+                      {exp.description}
+                    </p>
+                    <a href="#contact">
+                    <Button variant="text" className="group-hover:translate-x-2 transition-transform">
+                      Book Experience &rarr;
+                    </Button>
+                    </a>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // --- Gallery Component ---
+      const Gallery= () => {
+        return (
+          <section id="journal" className="py-24 bg-white overflow-hidden">
+            <div className="container mx-auto px-6 md:px-12 mb-12 flex justify-between items-end">
+              <div>
+                 <h2 className="font-serif text-4xl text-coffee-900">Visual Journal</h2>
+              </div>
+              <div className="hidden md:block">
+                  <span className="font-sans text-xs tracking-widest uppercase text-coffee-500">@agara_walks</span>
+              </div>
+            </div>
+
+            <div className="container mx-auto px-6 md:px-12">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 h-[80vh] md:h-[60vh]">
+                  
+                  <motion.div 
+                     whileHover={{ y: -10 }}
+                     className="col-span-1 row-span-2 relative overflow-hidden rounded-sm"
+                  >
+                      <img src="https://picsum.photos/id/431/600/900" className="w-full h-full object-cover" alt="Coffee pouring" />
+                      <div className="absolute bottom-0 left-0 p-4 bg-gradient-to-t from-black/50 to-transparent w-full">
+                          <p className="text-white font-serif italic text-lg">The Brew</p>
+                      </div>
+                  </motion.div>
+
+                  <motion.div 
+                     whileHover={{ y: -10 }}
+                     className="col-span-1 row-span-1 relative overflow-hidden rounded-sm"
+                  >
+                      <img src="assets/agra-walks/1766823758222.jpg" className="w-full h-full object-cover" alt="Coffee beans" />
+                  </motion.div>
+
+                  <motion.div 
+                     whileHover={{ y: -10 }}
+                     className="col-span-1 md:col-span-2 row-span-1 md:row-span-2 relative overflow-hidden rounded-sm"
+                  >
+                      <img src="assets/agra-walks/1766214791029.jpg" className="w-full h-full object-cover object-bottom" alt="Lake View" />
+                      <div className="absolute top-4 right-4 text-white/80 font-sans text-xs tracking-widest border border-white/30 px-3 py-1 rounded-full">
+                          Walking
+                      </div>
+                  </motion.div>
+
+                   <motion.div 
+                     whileHover={{ y: -10 }}
+                     className="col-span-1 row-span-1 relative overflow-hidden rounded-sm md:block hidden"
+                  >
+                      <img src="assets/agra-walks/1757908346687.jpg" className="w-full h-full object-cover object-bottom" alt="Morning mist" />
+                  </motion.div>
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      // --- Footer Component ---
+      const Footer= () => {
+        return (
+          <footer id="contact" className="bg-coffee-900 text-sand py-20">
+            <div className="container mx-auto px-6 md:px-12">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+                
+                <div className="md:col-span-5">
+                  <h2 className="font-serif text-3xl md:text-4xl mb-6">Agara Walks <br/> <span className="text-nature-500 italic">&</span> Filter Kaapi</h2>
+                  <p className="font-sans text-coffee-300 text-sm leading-relaxed max-w-sm mb-8">
+                    We curate slow, meaningful experiences that celebrate the heritage, nature, and flavors of Bangalore. Join our community of explorers.
+                  </p>
+                  <div className="flex space-x-6">
+                    <a href="https://www.linkedin.com/company/agara-walks-filter-kaapi/people/" className="text-coffee-300 hover:text-white transition-colors">
+                      <Linkedin size={20} />
+                    </a>
+              
+                  </div>
+                </div>
+
+                <div className="md:col-span-3 md:col-start-7">
+                  <h3 className="font-sans text-xs uppercase tracking-widest text-coffee-400 mb-6">Sitemap</h3>
+                  <ul className="space-y-4 font-serif text-lg text-coffee-100">
+                    <li><a href="#philosophy" className="hover:text-nature-500 transition-colors">Philosophy</a></li>
+                    <li><a href="#experiences" className="hover:text-nature-500 transition-colors">Experiences</a></li>
+                    <li><a href="#journal" className="hover:text-nature-500 transition-colors">Journal</a></li>
+                    <li><a href="#" className="hover:text-nature-500 transition-colors">FAQ</a></li>
+                  </ul>
+                </div>
+
+                <div className="md:col-span-3">
+                   <h3 className="font-sans text-xs uppercase tracking-widest text-coffee-400 mb-6">Newsletter</h3>
+                   <p className="text-xs text-coffee-300 mb-4">Subscribe for updates on upcoming walks.</p>
+                   <div className="flex border-b border-coffee-700 pb-2">
+                     <input 
+                       type="email" 
+                       placeholder="Email Address" 
+                       className="bg-transparent border-none outline-none text-sand placeholder-coffee-600 w-full text-sm font-sans"
+                     />
+                     <button className="text-xs uppercase tracking-widest text-coffee-400 hover:text-white transition-colors">
+                       Send
+                     </button>
+                   </div>
+                </div>
+
+              </div>
+
+              <div className="border-t border-coffee-800 mt-20 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-coffee-500 font-sans">
+                <p>&copy; 2026 Agara Walks & Filter Kaapi. All rights reserved.</p>
+                <div className="flex space-x-6 mt-4 md:mt-0">
+                  <a href="#" className="hover:text-coffee-300">Privacy Policy</a>
+                  <a href="#" className="hover:text-coffee-300">Terms of Service</a>
+                </div>
+              </div>
+            </div>
+          </footer>
+        );
+      };
+
+      // --- App Component ---
+      const App= () => {
+        return (
+          <div className="bg-sand min-h-screen selection:bg-nature-600 selection:text-white">
+            <Navbar />
+            <main>
+              <Hero />
+              <About />
+              <Services />
+              <Gallery />
+            </main>
+            <Footer />
+          </div>
+        );
+      };
+
+      // --- Main Entry Point ---
+      const rootElement = document.getElementById('root');
+      if (!rootElement) {
+        throw new Error("Could not find root element to mount to");
+      }
+
+      const root = ReactDOM.createRoot(rootElement);
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
+    </script>
+  </body>
+</html>
